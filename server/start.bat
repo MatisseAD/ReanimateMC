@@ -1,1 +1,1 @@
-"C:\Users\conta\.jdks\ms-17.0.15\bin\java.exe" -jar spigot-1.20.2.jar nogui
+java -jar paper-1.21.4-231.jar nogui

@@ -1,11 +1,14 @@
 package fr.jachou.reanimatemc.data;
 
 
+import org.bukkit.entity.ArmorStand;
+
 public class KOData {
     private boolean isKo;
     private int taskId;
     private boolean crawling;
     private int barTaskId;
+    private ArmorStand mount;
 
     public boolean isKo() {
         return isKo;
@@ -37,6 +40,14 @@ public class KOData {
 
     public void setCrawling(boolean crawling) {
         this.crawling = crawling;
+    }
+
+    public ArmorStand getMount() {
+        return mount;
+    }
+
+    public void setMount(ArmorStand mount) {
+        this.mount = mount;
     }
 }
 

@@ -10,6 +10,8 @@ import fr.jachou.reanimatemc.data.KOData;
 import fr.jachou.reanimatemc.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
@@ -35,6 +37,7 @@ public class KOManager {
         long durationSeconds = plugin.getConfig().getLong("knockout.duration_seconds", 30);
         int taskId = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
             if (isKO(player)) {
+                removeMount(player, data);
                 player.setHealth(0);
                 koPlayers.remove(player.getUniqueId());
                 player.sendMessage(ChatColor.RED + ReanimateMC.lang.get("death_natural"));
@@ -81,7 +84,26 @@ public class KOManager {
 
         // Rendre le joueur KO plus visible pour les autres
         player.setGlowing(true);
+
+        ArmorStand seat = (ArmorStand) player.getWorld().spawnEntity(player.getLocation(), EntityType.ARMOR_STAND);
+        seat.setInvisible(true);
+        seat.setSmall(true);
+        seat.setGravity(false);
+        seat.setInvulnerable(true);
+        seat.addPassenger(player);
+        data.setMount(seat);
+
         player.sendMessage(ChatColor.RED + ReanimateMC.lang.get("ko_set"));
+    }
+
+    private void removeMount(Player player, KOData data) {
+        ArmorStand seat = data.getMount();
+        if (seat != null && seat.isValid()) {
+            seat.removePassenger(player);
+            seat.remove();
+            data.setMount(null);
+        }
+
     }
 
     public boolean isKO(Player player) {
@@ -91,8 +113,10 @@ public class KOManager {
     public void revive(final Player player) {
         if (!isKO(player))
             return;
+
         KOData data = koPlayers.get(player.getUniqueId());
         plugin.getServer().getScheduler().cancelTask(data.getTaskId());
+        removeMount(player, data);
         koPlayers.remove(player.getUniqueId());
 
         plugin.getServer().getScheduler().cancelTask(data.getBarTaskId());
@@ -127,6 +151,7 @@ public class KOManager {
             return;
         KOData data = koPlayers.get(victim.getUniqueId());
         plugin.getServer().getScheduler().cancelTask(data.getTaskId());
+        removeMount(victim, data);
         koPlayers.remove(victim.getUniqueId());
 
         victim.setHealth(0);
@@ -140,6 +165,10 @@ public class KOManager {
     public void cancelAllTasks() {
         for (KOData data : koPlayers.values()) {
             plugin.getServer().getScheduler().cancelTask(data.getTaskId());
+            ArmorStand seat = data.getMount();
+            if (seat != null && seat.isValid()) {
+                seat.remove();
+            }
         }
         koPlayers.clear();
     }

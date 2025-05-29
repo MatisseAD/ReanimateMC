@@ -10,10 +10,7 @@ package fr.jachou.reanimatemc;
 
 import fr.jachou.reanimatemc.commands.ReanimateMCCommand;
 import fr.jachou.reanimatemc.externals.Metrics;
-import fr.jachou.reanimatemc.listeners.ExecutionListener;
-import fr.jachou.reanimatemc.listeners.LootListener;
-import fr.jachou.reanimatemc.listeners.PlayerDamageListener;
-import fr.jachou.reanimatemc.listeners.ReanimationListener;
+import fr.jachou.reanimatemc.listeners.*;
 import fr.jachou.reanimatemc.managers.KOManager;
 import fr.jachou.reanimatemc.utils.Lang;
 import org.bukkit.Bukkit;
@@ -55,6 +52,7 @@ public final class ReanimateMC extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ReanimationListener(koManager), this);
         getServer().getPluginManager().registerEvents(new ExecutionListener(koManager), this);
         getServer().getPluginManager().registerEvents(new LootListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerKOListener(koManager), this);
 
         // Enregistrement de la commande principale
         getCommand("reanimatemc").setExecutor(new ReanimateMCCommand(koManager));
