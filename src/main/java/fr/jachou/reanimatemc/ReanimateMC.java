@@ -75,7 +75,9 @@ public final class ReanimateMC extends JavaPlugin {
                     }
                 }
             }
-        }.runTaskTimer(this, 0L, 20L); // Exécute toutes les 20 ticks (1 seconde)
+        }.runTaskTimer(this, 0L, 20L);
+
+        Bukkit.getConsoleSender().sendMessage("ReanimateMC running on version " + getDescription().getVersion() + "!");
     }
 
     @Override
@@ -88,6 +90,8 @@ public final class ReanimateMC extends JavaPlugin {
                 player.sendMessage(ChatColor.RED + lang.get("plugin_disabled"));
             }
         }
+
+        Bukkit.getConsoleSender().sendMessage("ReanimateMC has been disabled.");
     }
 
     public KOManager getKoManager() {

@@ -9,6 +9,7 @@ public class KOData {
     private boolean crawling;
     private int barTaskId;
     private ArmorStand mount;
+    private String originalListName;
 
     public boolean isKo() {
         return isKo;
@@ -48,6 +49,14 @@ public class KOData {
 
     public void setMount(ArmorStand mount) {
         this.mount = mount;
+    }
+
+    public String getOriginalListName() {
+        return originalListName;
+    }
+
+    public void setOriginalListName(String originalListName) {
+        this.originalListName = originalListName;
     }
 }
 

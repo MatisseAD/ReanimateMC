@@ -25,6 +25,9 @@ public class PlayerDamageListener implements Listener {
 
         Player player = (Player) event.getEntity();
 
+        if (!ReanimateMC.getInstance().getConfig().getBoolean("knockout.enabled"))
+            return;
+
         if (Utils.isNPC(player)) return;
 
         if (player.getHealth() - event.getFinalDamage() <= 0) {

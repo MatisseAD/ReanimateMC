@@ -32,12 +32,23 @@ public class KOManager {
 
         KOData data = new KOData();
         data.setKo(true);
-        data.setCrawling(false); // Par défaut, non en mode crawl (immobilisé)
+        data.setCrawling(false);
+
+        String currentListName = player.getPlayerListName();
+        if (currentListName.isEmpty()) {
+            currentListName = player.getName();
+        }
+        data.setOriginalListName(currentListName);
+
+        String koTagName = ChatColor.RED + "[KO] " + player.getName();
+        player.setPlayerListName(koTagName);
+
         // Programmation de la mort naturelle après un délai (en secondes)
         long durationSeconds = plugin.getConfig().getLong("knockout.duration_seconds", 30);
         int taskId = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
             if (isKO(player)) {
                 removeMount(player, data);
+                restoreListName(player, data);
                 player.setHealth(0);
                 koPlayers.remove(player.getUniqueId());
                 player.sendMessage(ChatColor.RED + ReanimateMC.lang.get("death_natural"));
@@ -96,6 +107,15 @@ public class KOManager {
         player.sendMessage(ChatColor.RED + ReanimateMC.lang.get("ko_set"));
     }
 
+    private void restoreListName(Player player, KOData data) {
+        String orig = data.getOriginalListName();
+        if (orig != null) {
+            player.setPlayerListName(orig);
+        } else {
+            player.setPlayerListName(player.getName());
+        }
+    }
+
     private void removeMount(Player player, KOData data) {
         ArmorStand seat = data.getMount();
         if (seat != null && seat.isValid()) {
@@ -127,7 +147,6 @@ public class KOManager {
         // Désactiver l'effet de glow
         player.setGlowing(false);
 
-        // Forcer le joueur à ne plus avoir l'effet de glow
 
 
         player.sendMessage(ChatColor.GREEN + ReanimateMC.lang.get("revived"));
