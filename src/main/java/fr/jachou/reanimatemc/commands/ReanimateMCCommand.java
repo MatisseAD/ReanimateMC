@@ -1,6 +1,7 @@
 package fr.jachou.reanimatemc.commands;
 
 import fr.jachou.reanimatemc.ReanimateMC;
+import fr.jachou.reanimatemc.gui.ConfigGUI;
 import fr.jachou.reanimatemc.managers.KOManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -13,10 +14,12 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 public class ReanimateMCCommand implements CommandExecutor, TabCompleter {
-    private KOManager koManager;
+    private final KOManager koManager;
+    private final ConfigGUI configGui;
 
-    public ReanimateMCCommand(KOManager koManager) {
+    public ReanimateMCCommand(KOManager koManager, ConfigGUI configGui) {
         this.koManager = koManager;
+        this.configGui = configGui;
     }
 
     @Override
@@ -117,6 +120,17 @@ public class ReanimateMCCommand implements CommandExecutor, TabCompleter {
             sender.sendMessage(ChatColor.GREEN + ReanimateMC.lang.get("glowing_effect_removed"));
 
 
+        } else if (subCommand.equalsIgnoreCase("gui")) {
+            if (!(sender instanceof Player)) {
+                sender.sendMessage(ChatColor.RED + ReanimateMC.lang.get("command_gui_player_only"));
+                return true;
+            }
+            Player player = (Player) sender;
+            if (!player.hasPermission("reanimatemc.admin")) {
+                player.sendMessage(ChatColor.RED + ReanimateMC.lang.get("no_permission"));
+                return true;
+            }
+            configGui.openGUI(player);
         } else {
             sender.sendMessage(ChatColor.YELLOW + ReanimateMC.lang.get("command_unknown"));
         }
@@ -127,7 +141,7 @@ public class ReanimateMCCommand implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
         // Tout les tab completions
         if (strings.length == 1) {
-            return List.of("reload", "revive", "knockout", "status", "crawl", "removeGlowingEffect");
+            return List.of("reload", "revive", "knockout", "status", "crawl", "removeGlowingEffect", "gui");
         } else if (strings.length == 2) {
             // Si le premier argument est "revive", "knockout" ou "status", on affiche les joueurs en ligne
             if (strings[0].equalsIgnoreCase("revive") || strings[0].equalsIgnoreCase("knockout") || strings[0].equalsIgnoreCase("status") || strings[0].equalsIgnoreCase("removeGlowingEffect")) {

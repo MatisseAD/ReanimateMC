@@ -36,3 +36,21 @@ actionbar_crawl_disabled: "Mode rampant désactivé !"
 loot_opening: "Ouverture de l’inventaire de %player%…"
 loot_no_permission: "Vous n'avez pas la permission de piller les joueurs KO."
 ko_shift_click_cancelled: "Vous ne pouvez pas faire un shift click en état K.O."
+
+
+gui_title: "Configuration ReanimateMC"
+toggle_on: "&aActivé"
+toggle_off: "&cDésactivé"
+
+option_reanimation_require: "Objet Spécial Requis"
+option_knockout_enabled: "Système KO Activé"
+option_knockout_move: "Désactiver la Mobilité en KO"
+option_knockout_particles: "Particules en KO"
+option_knockout_sound: "Son de Battement en KO"
+option_execution_enabled: "Système d'Exécution Activé"
+option_execution_broadcast: "Diffusion d'Exécution"
+option_prone_enabled: "Mode Allongé Activé"
+option_prone_crawl: "Autoriser le Mode Ramper"
+option_looting_enabled: "Pillage Activé"
+
+message_gui_toggle: "%option% est maintenant %state%"

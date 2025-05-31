@@ -1,7 +1,6 @@
 language: "en"
 
 reanimation:
-  required_item: "GOLDEN_APPLE"
   require_special_item: true
   duration_ticks: 100
   health_restored: 4

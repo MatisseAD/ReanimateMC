@@ -25,11 +25,11 @@ public class ExecutionListener implements Listener {
 
         if (!koManager.isKO(victim))
             return;
-        if (!ReanimateMC.getInstance().getConfig().getBoolean("execution.enabled", true))
+        if (!ReanimateMC.getInstance().getConfig().getBoolean("execution.enabled"))
             return;
 
         damager.sendMessage(ChatColor.RED + ReanimateMC.lang.get("execution_in_progress"));
-        int holdDuration = ReanimateMC.getInstance().getConfig().getInt("execution.hold_duration_ticks", 40);
+        int holdDuration = ReanimateMC.getInstance().getConfig().getInt("execution.hold_duration_ticks");
 
         // Après le délai, si le joueur est toujours K.O., l'exécution s’effectue
         ReanimateMC.getInstance().getServer().getScheduler().runTaskLater(ReanimateMC.getInstance(), () -> {

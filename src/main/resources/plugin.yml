@@ -1,24 +1,26 @@
 name: ReanimateMC
 main: fr.jachou.reanimatemc.ReanimateMC
-version: 1.0
+version: 1.1.02
 api-version: 1.13
 commands:
   reanimatemc:
-    description: Commande principale pour ReanimateMC
-    usage: /<command> <reload|revive|knockout|status|crawl>
+    description: Main command for ReanimateMC
+    usage: "/<command> <reload|revive|knockout|status|crawl|gui> [player]"
+
 permissions:
   reanimatemc.revive:
-    description: Permet de réanimer un joueur
+    description: Allows reviving a KO’d player
     default: true
   reanimatemc.execute:
-    description: Permet d’achever un joueur
+    description: Allows executing a KO’d player
     default: true
   reanimatemc.bypass:
-    description: Ne passe pas en K.O, meurt directement
+    description: Bypass KO and die instantly
     default: op
   reanimatemc.admin:
-    description: Accès aux commandes d’administration
+    description: Grants access to admin commands (reload, gui, etc.)
     default: op
   reanimatemc.loot:
-    description: Permet d’ouvrir l’inventaire d’un joueur KO
+    description: Allows looting KO’d players’ inventories
     default: op
+
