@@ -46,6 +46,8 @@ public class ConfigGUI implements Listener {
                 new GuiOption("option_prone_crawl", 8));
         OPTIONS.put("looting.enabled",
                 new GuiOption("option_looting_enabled", 9));
+        OPTIONS.put("tablist.enabled",
+                new GuiOption("option_tablist_enabled", 10));
     }
 
     // Represents one toggleable boolean option in the GUI

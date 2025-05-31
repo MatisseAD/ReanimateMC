@@ -34,14 +34,16 @@ public class KOManager {
         data.setKo(true);
         data.setCrawling(false);
 
-        String currentListName = player.getPlayerListName();
-        if (currentListName.isEmpty()) {
-            currentListName = player.getName();
-        }
-        data.setOriginalListName(currentListName);
+        if (plugin.getConfig().getBoolean("tablist.enabled")) {
+            String currentListName = player.getPlayerListName();
+            if (currentListName.isEmpty()) {
+                currentListName = player.getName();
+            }
+            data.setOriginalListName(currentListName);
 
-        String koTagName = ChatColor.RED + "[KO] " + player.getName();
-        player.setPlayerListName(koTagName);
+            String koTagName = ChatColor.RED + "[KO] " + player.getName();
+            player.setPlayerListName(koTagName);
+        }
 
         // Programmation de la mort naturelle après un délai (en secondes)
         long durationSeconds = plugin.getConfig().getLong("knockout.duration_seconds", 30);
@@ -108,11 +110,13 @@ public class KOManager {
     }
 
     private void restoreListName(Player player, KOData data) {
-        String orig = data.getOriginalListName();
-        if (orig != null) {
-            player.setPlayerListName(orig);
-        } else {
-            player.setPlayerListName(player.getName());
+        if (plugin.getConfig().getBoolean("tablist.enabled")) {
+            String originalName = data.getOriginalListName();
+            if (originalName != null && !originalName.isEmpty()) {
+                player.setPlayerListName(originalName);
+            } else {
+                player.setPlayerListName(player.getName());
+            }
         }
     }
 
@@ -147,7 +151,8 @@ public class KOManager {
         // Désactiver l'effet de glow
         player.setGlowing(false);
 
-
+        // Restauration du nom de la liste du joueur
+        restoreListName(player, data);
 
         player.sendMessage(ChatColor.GREEN + ReanimateMC.lang.get("revived"));
 
