@@ -13,6 +13,7 @@ knockout:
   movement_disabled: true
   use_particles: true
   heartbeat_sound: true
+  blindness: true
 
 execution:
   enabled: true

@@ -75,22 +75,23 @@ public class KOManager {
         data.setBarTaskId(barTaskId);
 
         // Application de la posture prone avec une option de ramper
+        boolean blind = plugin.getConfig().getBoolean("knockout.blindness", true);
         if (plugin.getConfig().getBoolean("prone.enabled", false)) {
             // Si l'option de crawl est activée, on applique par défaut un effet très fort pour ne pas permettre le déplacement
             boolean allowCrawl = plugin.getConfig().getBoolean("prone.allow_crawl", false);
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 255, false, false));
             if (allowCrawl) {
-                // Par défaut, pas en mode crawl = immobilisé
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 255, false, false));
                 player.setSwimming(true);
-            } else {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 255, false, false));
             }
-            // Application de l'effet d'aveuglement pour renforcer l'immersion du prone
-            player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, Integer.MAX_VALUE, 0, false, false));
+            if (blind) {
+                player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, Integer.MAX_VALUE, 0, false, false));
+            }
         } else {
             // Comportement initial (pour les cas où prone n'est pas activé)
             if (plugin.getConfig().getBoolean("knockout.movement_disabled", true)) {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 255, false, false));
+            }
+            if (blind) {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, Integer.MAX_VALUE, 0, false, false));
             }
         }
@@ -98,11 +99,7 @@ public class KOManager {
         // Rendre le joueur KO plus visible pour les autres
         player.setGlowing(true);
 
-        ArmorStand seat = (ArmorStand) player.getWorld().spawnEntity(player.getLocation(), EntityType.ARMOR_STAND);
-        seat.setInvisible(true);
-        seat.setSmall(true);
-        seat.setGravity(false);
-        seat.setInvulnerable(true);
+        ArmorStand seat = createMount(player.getLocation());
         seat.addPassenger(player);
         data.setMount(seat);
 
@@ -130,6 +127,21 @@ public class KOManager {
 
     }
 
+    /**
+     * Create an invisible armor stand used as mount for immobilising the player.
+     * The stand is spawned slightly lower to avoid floating.
+     */
+    private ArmorStand createMount(org.bukkit.Location loc) {
+        org.bukkit.Location seatLoc = loc.clone().subtract(0, 1.0, 0);
+        ArmorStand seat = (ArmorStand) loc.getWorld().spawnEntity(seatLoc, EntityType.ARMOR_STAND);
+        seat.setInvisible(true);
+        seat.setSmall(true);
+        seat.setGravity(false);
+        seat.setInvulnerable(true);
+        seat.setMarker(true);
+        return seat;
+    }
+
     public boolean isKO(Player player) {
         return koPlayers.containsKey(player.getUniqueId());
     }
@@ -150,6 +162,7 @@ public class KOManager {
         player.removePotionEffect(PotionEffectType.BLINDNESS);
         // Désactiver l'effet de glow
         player.setGlowing(false);
+        player.setSwimming(false);
 
         // Restauration du nom de la liste du joueur
         restoreListName(player, data);
@@ -213,10 +226,20 @@ public class KOManager {
             // Mode crawl : appliquer un effet de SLOW de niveau configuré (laisser un minimum de déplacement)
             int crawlLevel = plugin.getConfig().getInt("prone.crawl_slowness_level", 5);
             player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, crawlLevel, false, false));
+            removeMount(player, data);
+            player.setSwimming(true);
             player.sendMessage(ChatColor.GREEN + ReanimateMC.lang.get("crawl_enabled"));
         } else {
             // Retour à l'immobilisation complète (prone non-crawling)
             player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 255, false, false));
+            if (data.getMount() == null || !data.getMount().isValid()) {
+                ArmorStand seat = createMount(player.getLocation());
+                seat.addPassenger(player);
+                data.setMount(seat);
+            } else if (!data.getMount().getPassengers().contains(player)) {
+                data.getMount().addPassenger(player);
+            }
+            player.setSwimming(false);
             player.sendMessage(ChatColor.GREEN + ReanimateMC.lang.get("crawl_disabled"));
         }
     }

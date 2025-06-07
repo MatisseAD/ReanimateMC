@@ -28,6 +28,12 @@ public class ExecutionListener implements Listener {
         if (!ReanimateMC.getInstance().getConfig().getBoolean("execution.enabled"))
             return;
 
+        // If this hit just caused the KO, don't instantly execute
+        if (victim.getHealth() - event.getFinalDamage() <= 0)
+            return;
+
+        event.setCancelled(true);
+
         damager.sendMessage(ChatColor.RED + ReanimateMC.lang.get("execution_in_progress"));
         int holdDuration = ReanimateMC.getInstance().getConfig().getInt("execution.hold_duration_ticks");
 
