@@ -52,5 +52,6 @@ option_execution_broadcast: "Diffusion d'Exécution"
 option_prone_enabled: "Mode Allongé Activé"
 option_prone_crawl: "Autoriser le Mode Ramper"
 option_looting_enabled: "Pillage Activé"
+option_knockout_blindness: "Cécité en KO"
 
 message_gui_toggle: "%option% est maintenant %state%"
