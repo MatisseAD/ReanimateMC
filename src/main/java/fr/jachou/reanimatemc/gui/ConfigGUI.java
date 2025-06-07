@@ -48,6 +48,8 @@ public class ConfigGUI implements Listener {
                 new GuiOption("option_looting_enabled", 9));
         OPTIONS.put("tablist.enabled",
                 new GuiOption("option_tablist_enabled", 10));
+        OPTIONS.put("knockout.blindness",
+                new GuiOption("option_knockout_blindness", 11));
     }
 
     // Represents one toggleable boolean option in the GUI
