@@ -37,6 +37,12 @@ loot_opening: "Ouverture de l’inventaire de %player%…"
 loot_no_permission: "Vous n'avez pas la permission de piller les joueurs KO."
 ko_shift_click_cancelled: "Vous ne pouvez pas faire un shift click en état K.O."
 
+command_gui_player_only: "Cette commande est réservée aux joueurs."
+command_remove_glowing_usage: "Usage : /reanimatemc removeGlowingEffect <joueur>"
+player_not_glowing: "Ce joueur n'est pas lumineux."
+plugin_disabled: "Le plugin est désactivé, vous avez été réanimé."
+revive_start: "Début de la réanimation... restez accroupi !"
+
 
 gui_title: "Configuration ReanimateMC"
 toggle_on: "&aActivé"
@@ -53,5 +59,6 @@ option_prone_enabled: "Mode Allongé Activé"
 option_prone_crawl: "Autoriser le Mode Ramper"
 option_looting_enabled: "Pillage Activé"
 option_knockout_blindness: "Cécité en KO"
+option_tablist_enabled: "Tag KO dans le tab"
 
 message_gui_toggle: "%option% est maintenant %state%"

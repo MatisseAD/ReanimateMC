@@ -2,6 +2,7 @@ language: "en"
 
 reanimation:
   require_special_item: true
+  required_item: GOLDEN_APPLE
   duration_ticks: 100
   health_restored: 4
   cooldown: 60
