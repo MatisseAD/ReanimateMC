@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.RayTraceResult;
@@ -24,6 +25,7 @@ import java.util.UUID;
 public class ReanimationListener implements Listener {
     private KOManager koManager;
     private final Map<UUID, BukkitTask> activeReviveTasks = new HashMap<>();
+    private final Map<UUID, Long> lastInteract = new HashMap<>();
 
     public ReanimationListener(KOManager koManager) {
         this.koManager = koManager;
@@ -33,8 +35,17 @@ public class ReanimationListener implements Listener {
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
         if (!(event.getRightClicked() instanceof Player)) return;
 
+        if (event.getHand() != EquipmentSlot.HAND) return;
+
         Player target = (Player) event.getRightClicked();
         Player reviver = event.getPlayer();
+
+        long now = System.currentTimeMillis();
+        Long last = lastInteract.get(reviver.getUniqueId());
+        if (last != null && now - last < 5) {
+            return;
+        }
+        lastInteract.put(reviver.getUniqueId(), now);
 
         // Ignore NPCs
         if (Utils.isNPC(target) || Utils.isNPC(reviver)) return;
