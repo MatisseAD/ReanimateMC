@@ -13,6 +13,7 @@ import fr.jachou.reanimatemc.externals.Metrics;
 import fr.jachou.reanimatemc.gui.ConfigGUI;
 import fr.jachou.reanimatemc.listeners.*;
 import fr.jachou.reanimatemc.managers.KOManager;
+import fr.jachou.reanimatemc.managers.StatsManager;
 import fr.jachou.reanimatemc.utils.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -28,8 +29,13 @@ public final class ReanimateMC extends JavaPlugin {
 
     private static ReanimateMC instance;
     private KOManager koManager;
+    private StatsManager statsManager;
     public static Lang lang;
     private ConfigGUI configGui;
+
+    public StatsManager getStatsManager() {
+        return statsManager;
+    }
 
     public static ReanimateMC getInstance() {
         return instance;
@@ -42,6 +48,9 @@ public final class ReanimateMC extends JavaPlugin {
 
         // Langues
         lang = new Lang(this);
+
+        // Statistics manager
+        statsManager = new StatsManager(this);
 
         // Inclure les Metrics
         int pluginId = 20034;
@@ -78,6 +87,18 @@ public final class ReanimateMC extends JavaPlugin {
         }.runTaskTimer(this, 0L, 20L);
 
         Bukkit.getConsoleSender().sendMessage("ReanimateMC running on version " + getDescription().getVersion() + "!");
+
+        if (getConfig().getBoolean("first_run", true)) {
+            Bukkit.getScheduler().runTaskLater(this, () -> {
+                for (Player p : Bukkit.getOnlinePlayers()) {
+                    if (p.hasPermission("reanimatemc.admin")) {
+                        p.sendMessage(ChatColor.GOLD + lang.get("first_run_message"));
+                    }
+                }
+            }, 40L);
+            getConfig().set("first_run", false);
+            saveConfig();
+        }
     }
 
     @Override

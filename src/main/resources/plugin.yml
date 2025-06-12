@@ -2,6 +2,8 @@ name: ReanimateMC
 main: fr.jachou.reanimatemc.ReanimateMC
 version: 1.1.03
 api-version: 1.20
+authors:
+  - Jachou
 commands:
   reanimatemc:
     description: Main command for ReanimateMC

@@ -1,4 +1,5 @@
 language: "en"
+first_run: true
 
 reanimation:
   require_special_item: true

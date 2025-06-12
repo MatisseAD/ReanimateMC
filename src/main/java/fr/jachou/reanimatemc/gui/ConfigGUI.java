@@ -52,6 +52,10 @@ public class ConfigGUI implements Listener {
                 new GuiOption("option_knockout_blindness", 11));
     }
 
+    private static final int STATS_SLOT = 18;
+    private static final int INFO_SLOT = 19;
+    private static final int LANG_SLOT = 20;
+
     // Represents one toggleable boolean option in the GUI
     private static class GuiOption {
         final String langKey;  // e.g. "option_reanimation_require"
@@ -70,7 +74,7 @@ public class ConfigGUI implements Listener {
 
     /** Open the configuration GUI for the given player. */
     public void openGUI(Player player) {
-        Inventory inv = Bukkit.createInventory(null, 9*2,
+        Inventory inv = Bukkit.createInventory(null, 9*3,
                 ChatColor.translateAlternateColorCodes('&',
                         ReanimateMC.lang.get("gui_title"))
         );
@@ -98,6 +102,38 @@ public class ConfigGUI implements Listener {
 
             inv.setItem(opt.slot, wool);
         }
+
+        ItemStack stats = new ItemStack(Material.PAPER);
+        ItemMeta sMeta = stats.getItemMeta();
+        sMeta.setDisplayName(ChatColor.AQUA + ReanimateMC.lang.get("stats_title"));
+        sMeta.setLore(Arrays.asList(
+                ChatColor.WHITE + ReanimateMC.lang.get("stats_ko", "value", String.valueOf(plugin.getStatsManager().getKnockoutCount())),
+                ChatColor.WHITE + ReanimateMC.lang.get("stats_revive", "value", String.valueOf(plugin.getStatsManager().getReviveCount()))
+        ));
+        sMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS, ItemFlag.HIDE_ENCHANTS);
+        stats.setItemMeta(sMeta);
+        inv.setItem(STATS_SLOT, stats);
+
+        ItemStack info = new ItemStack(Material.BOOK);
+        ItemMeta iMeta = info.getItemMeta();
+        iMeta.setDisplayName(ChatColor.GREEN + ReanimateMC.lang.get("plugin_info"));
+        String authors = String.join(", ", plugin.getDescription().getAuthors());
+        if (authors.isEmpty()) authors = "?";
+        iMeta.setLore(Arrays.asList(
+                ChatColor.WHITE + ReanimateMC.lang.get("info_version", "value", plugin.getDescription().getVersion()),
+                ChatColor.WHITE + ReanimateMC.lang.get("info_authors", "value", authors)
+        ));
+        iMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS, ItemFlag.HIDE_ENCHANTS);
+        info.setItemMeta(iMeta);
+        inv.setItem(INFO_SLOT, info);
+
+        ItemStack langItem = new ItemStack(Material.OAK_SIGN);
+        ItemMeta lMeta = langItem.getItemMeta();
+        lMeta.setDisplayName(ChatColor.YELLOW + ReanimateMC.lang.get("change_language"));
+        lMeta.setLore(Arrays.asList(ChatColor.WHITE + plugin.getConfig().getString("language")));
+        lMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS, ItemFlag.HIDE_ENCHANTS);
+        langItem.setItemMeta(lMeta);
+        inv.setItem(LANG_SLOT, langItem);
 
         player.openInventory(inv);
     }
@@ -130,6 +166,25 @@ public class ConfigGUI implements Listener {
                 break;
             }
         }
+        if (slot == LANG_SLOT) {
+            String current = cfg.getString("language", "en");
+            String next = current.equalsIgnoreCase("en") ? "fr" : "en";
+            cfg.set("language", next);
+            plugin.saveConfig();
+            ReanimateMC.lang.loadLanguage();
+
+            ItemStack langItem = new ItemStack(Material.OAK_SIGN);
+            ItemMeta lMeta = langItem.getItemMeta();
+            lMeta.setDisplayName(ChatColor.YELLOW + ReanimateMC.lang.get("change_language"));
+            lMeta.setLore(Arrays.asList(ChatColor.WHITE + next));
+            lMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS, ItemFlag.HIDE_ENCHANTS);
+            langItem.setItemMeta(lMeta);
+            inv.setItem(LANG_SLOT, langItem);
+
+            player.sendMessage(ChatColor.GRAY + ReanimateMC.lang.get("language_changed", "lang", next));
+            return;
+        }
+
         if (configPath == null) return;  // not a toggle‐slot
 
         // Toggle the boolean in the configuration
