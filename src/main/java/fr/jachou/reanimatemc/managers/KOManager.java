@@ -32,7 +32,8 @@ public class KOManager {
 
         KOData data = new KOData();
         data.setKo(true);
-        data.setCrawling(false);
+        boolean autoCrawl = plugin.getConfig().getBoolean("prone.auto_crawl", false);
+        data.setCrawling(autoCrawl);
 
         if (plugin.getConfig().getBoolean("tablist.enabled")) {
             String currentListName = player.getPlayerListName();
@@ -77,11 +78,16 @@ public class KOManager {
         // Application de la posture prone avec une option de ramper
         boolean blind = plugin.getConfig().getBoolean("knockout.blindness", true);
         if (plugin.getConfig().getBoolean("prone.enabled", false)) {
-            // Si l'option de crawl est activée, on applique par défaut un effet très fort pour ne pas permettre le déplacement
             boolean allowCrawl = plugin.getConfig().getBoolean("prone.allow_crawl", false);
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 255, false, false));
-            if (allowCrawl) {
+            if (data.isCrawling() && allowCrawl) {
+                int crawlLevel = plugin.getConfig().getInt("prone.crawl_slowness_level", 5);
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, crawlLevel, false, false));
                 player.setSwimming(true);
+            } else {
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 255, false, false));
+                if (allowCrawl) {
+                    player.setSwimming(true);
+                }
             }
             if (blind) {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, Integer.MAX_VALUE, 0, false, false));
@@ -100,8 +106,13 @@ public class KOManager {
         player.setGlowing(true);
 
         ArmorStand seat = createMount(player.getLocation());
-        seat.addPassenger(player);
-        data.setMount(seat);
+        if (!data.isCrawling()) {
+            seat.addPassenger(player);
+            data.setMount(seat);
+        } else {
+            data.setMount(null);
+            seat.remove();
+        }
 
         player.sendMessage(ChatColor.RED + ReanimateMC.lang.get("ko_set"));
     }
@@ -146,12 +157,20 @@ public class KOManager {
         return koPlayers.containsKey(player.getUniqueId());
     }
 
+    public KOData getKOData(Player player) {
+        return koPlayers.get(player.getUniqueId());
+    }
+
     public void revive(final Player player) {
         if (!isKO(player))
             return;
 
         KOData data = koPlayers.get(player.getUniqueId());
         plugin.getServer().getScheduler().cancelTask(data.getTaskId());
+        if (data.getSuicideTaskId() != -1) {
+            plugin.getServer().getScheduler().cancelTask(data.getSuicideTaskId());
+            data.setSuicideTaskId(-1);
+        }
         removeMount(player, data);
         koPlayers.remove(player.getUniqueId());
 
@@ -188,6 +207,10 @@ public class KOManager {
             return;
         KOData data = koPlayers.get(victim.getUniqueId());
         plugin.getServer().getScheduler().cancelTask(data.getTaskId());
+        if (data.getSuicideTaskId() != -1) {
+            plugin.getServer().getScheduler().cancelTask(data.getSuicideTaskId());
+            data.setSuicideTaskId(-1);
+        }
         removeMount(victim, data);
         koPlayers.remove(victim.getUniqueId());
 
@@ -199,9 +222,31 @@ public class KOManager {
         }
     }
 
+    public void suicide(Player player) {
+        if (!isKO(player))
+            return;
+        KOData data = koPlayers.get(player.getUniqueId());
+        plugin.getServer().getScheduler().cancelTask(data.getTaskId());
+        plugin.getServer().getScheduler().cancelTask(data.getBarTaskId());
+        if (data.getSuicideTaskId() != -1) {
+            plugin.getServer().getScheduler().cancelTask(data.getSuicideTaskId());
+            data.setSuicideTaskId(-1);
+        }
+        removeMount(player, data);
+        restoreListName(player, data);
+        koPlayers.remove(player.getUniqueId());
+
+        player.setHealth(0);
+        player.sendMessage(ChatColor.RED + ReanimateMC.lang.get("suicide_complete"));
+    }
+
     public void cancelAllTasks() {
         for (KOData data : koPlayers.values()) {
             plugin.getServer().getScheduler().cancelTask(data.getTaskId());
+            plugin.getServer().getScheduler().cancelTask(data.getBarTaskId());
+            if (data.getSuicideTaskId() != -1) {
+                plugin.getServer().getScheduler().cancelTask(data.getSuicideTaskId());
+            }
             ArmorStand seat = data.getMount();
             if (seat != null && seat.isValid()) {
                 seat.remove();

@@ -36,6 +36,8 @@ actionbar_crawl_disabled: "Mode rampant désactivé !"
 loot_opening: "Ouverture de l’inventaire de %player%…"
 loot_no_permission: "Vous n'avez pas la permission de piller les joueurs KO."
 ko_shift_click_cancelled: "Vous ne pouvez pas faire un shift click en état K.O."
+suicide_start: "Abandon... vous mourrez dans %time%s"
+suicide_complete: "Vous avez abandonné..."
 
 command_gui_player_only: "Cette commande est réservée aux joueurs."
 command_remove_glowing_usage: "Usage : /reanimatemc removeGlowingEffect <joueur>"

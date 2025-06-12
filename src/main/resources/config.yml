@@ -15,6 +15,7 @@ knockout:
   use_particles: true
   heartbeat_sound: true
   blindness: true
+  suicide_hold_seconds: 3
 
 execution:
   enabled: true
@@ -30,6 +31,7 @@ prone:
   enabled: true
   allow_crawl: true
   crawl_slowness_level: 5
+  auto_crawl: false
 
 looting:
   enabled: true
