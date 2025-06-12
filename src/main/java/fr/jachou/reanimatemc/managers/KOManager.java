@@ -115,6 +115,8 @@ public class KOManager {
         }
 
         player.sendMessage(ChatColor.RED + ReanimateMC.lang.get("ko_set"));
+
+        ReanimateMC.getInstance().getStatsManager().addKnockout();
     }
 
     private void restoreListName(Player player, KOData data) {
@@ -200,6 +202,8 @@ public class KOManager {
         player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, nauseaDuration * 20, 0));
         player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, slownessDuration * 20, 1));
         player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, resistanceDuration * 20, 1));
+
+        ReanimateMC.getInstance().getStatsManager().addRevive();
     }
 
     public void execute(final Player victim) {

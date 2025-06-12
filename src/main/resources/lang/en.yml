@@ -63,3 +63,14 @@ option_knockout_blindness: "Blindness On KO"
 option_tablist_enabled: "Tablist KO Tag"
 
 message_gui_toggle: "%option% is now %state%"
+
+# New GUI additions
+stats_title: "Statistics"
+stats_ko: "KOs: %value%"
+stats_revive: "Revives: %value%"
+plugin_info: "Plugin Info"
+info_version: "Version: %value%"
+info_authors: "Authors: %value%"
+change_language: "Change Language"
+language_changed: "Language changed to %lang%"
+first_run_message: "Use /reanimatemc gui to configure the plugin!"
