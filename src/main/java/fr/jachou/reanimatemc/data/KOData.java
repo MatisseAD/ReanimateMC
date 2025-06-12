@@ -8,6 +8,7 @@ public class KOData {
     private int taskId;
     private boolean crawling;
     private int barTaskId;
+    private int suicideTaskId = -1;
     private ArmorStand mount;
     private String originalListName;
 
@@ -21,6 +22,14 @@ public class KOData {
 
     public int getBarTaskId() {
         return barTaskId;
+    }
+
+    public int getSuicideTaskId() {
+        return suicideTaskId;
+    }
+
+    public void setSuicideTaskId(int suicideTaskId) {
+        this.suicideTaskId = suicideTaskId;
     }
 
     public void setKo(boolean isKo) {
