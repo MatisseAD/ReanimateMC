@@ -10,6 +10,8 @@ public class KOData {
     private int barTaskId;
     private int suicideTaskId = -1;
     private ArmorStand mount;
+    private ArmorStand label;
+    private double originalJumpStrength = 0.0;
     private String originalListName;
 
     public boolean isKo() {
@@ -22,6 +24,22 @@ public class KOData {
 
     public int getBarTaskId() {
         return barTaskId;
+    }
+
+    public ArmorStand getLabel() {
+        return label;
+    }
+
+    public void setLabel(ArmorStand label) {
+        this.label = label;
+    }
+
+    public double getOriginalJumpStrength() {
+        return originalJumpStrength;
+    }
+
+    public void setOriginalJumpStrength(double originalJumpStrength) {
+        this.originalJumpStrength = originalJumpStrength;
     }
 
     public int getSuicideTaskId() {
