@@ -2,6 +2,7 @@ package fr.jachou.reanimatemc.managers;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -16,6 +17,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 
 public class KOManager {
     private JavaPlugin plugin;
@@ -64,16 +67,43 @@ public class KOManager {
         AtomicInteger secondsLeft = new AtomicInteger((int) durationSeconds);
 
         // Tâche répétitive pour le countdown
+        ArmorStand label = (ArmorStand) player.getWorld().spawnEntity(player.getLocation().add(0, 2.1, 0), EntityType.ARMOR_STAND);
+        label.setInvisible(true);
+        label.setMarker(true);
+        label.setCustomNameVisible(true);
+        label.setGravity(false);
+
         int barTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
             int sec = secondsLeft.getAndDecrement();
             if (sec >= 0 && koPlayers.containsKey(player.getUniqueId())) {
                 Utils.sendActionBar(player,
                         ReanimateMC.lang.get("actionbar_ko_countdown", "time", String.valueOf(sec))
                 );
+                label.setCustomName(ChatColor.RED + "KO - " + sec + "s");
+            } else {
+                label.remove();
             }
         }, 0L, 20L);
 
         data.setBarTaskId(barTaskId);
+        data.setLabel(label);
+
+        // Additional negative effects during KO
+        int weaknessLvl = plugin.getConfig().getInt("knockout.weakness_level", 0);
+        if (weaknessLvl > 0) {
+            player.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, Integer.MAX_VALUE, weaknessLvl - 1, false, false));
+        }
+        int fatigueLvl = plugin.getConfig().getInt("knockout.fatigue_level", 0);
+        if (fatigueLvl > 0) {
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, Integer.MAX_VALUE, fatigueLvl - 1, false, false));
+        }
+
+        // Disable jumping
+        AttributeInstance jumpAttr = player.getAttribute(Attribute.GENERIC_JUMP_STRENGTH);
+        if (jumpAttr != null) {
+            data.setOriginalJumpStrength(jumpAttr.getBaseValue());
+            jumpAttr.setBaseValue(0.0);
+        }
 
         // Application de la posture prone avec une option de ramper
         boolean blind = plugin.getConfig().getBoolean("knockout.blindness", true);
@@ -174,6 +204,10 @@ public class KOManager {
             data.setSuicideTaskId(-1);
         }
         removeMount(player, data);
+        ArmorStand label = data.getLabel();
+        if (label != null && label.isValid()) {
+            label.remove();
+        }
         koPlayers.remove(player.getUniqueId());
 
         plugin.getServer().getScheduler().cancelTask(data.getBarTaskId());
@@ -181,9 +215,15 @@ public class KOManager {
         // Suppression des effets d'immobilisation et d'aveuglement
         player.removePotionEffect(PotionEffectType.SLOW);
         player.removePotionEffect(PotionEffectType.BLINDNESS);
+        player.removePotionEffect(PotionEffectType.WEAKNESS);
+        player.removePotionEffect(PotionEffectType.SLOW_DIGGING);
         // Désactiver l'effet de glow
         player.setGlowing(false);
         player.setSwimming(false);
+        AttributeInstance jumpAttr = player.getAttribute(Attribute.GENERIC_JUMP_STRENGTH);
+        if (jumpAttr != null) {
+            jumpAttr.setBaseValue(data.getOriginalJumpStrength());
+        }
 
         // Restauration du nom de la liste du joueur
         restoreListName(player, data);
@@ -216,6 +256,16 @@ public class KOManager {
             data.setSuicideTaskId(-1);
         }
         removeMount(victim, data);
+        ArmorStand label = data.getLabel();
+        if (label != null && label.isValid()) {
+            label.remove();
+        }
+        AttributeInstance jumpAttr = victim.getAttribute(Attribute.GENERIC_JUMP_STRENGTH);
+        if (jumpAttr != null) {
+            jumpAttr.setBaseValue(data.getOriginalJumpStrength());
+        }
+        victim.removePotionEffect(PotionEffectType.WEAKNESS);
+        victim.removePotionEffect(PotionEffectType.SLOW_DIGGING);
         koPlayers.remove(victim.getUniqueId());
 
         victim.setHealth(0);
@@ -237,6 +287,16 @@ public class KOManager {
             data.setSuicideTaskId(-1);
         }
         removeMount(player, data);
+        ArmorStand label = data.getLabel();
+        if (label != null && label.isValid()) {
+            label.remove();
+        }
+        AttributeInstance jumpAttr = player.getAttribute(Attribute.GENERIC_JUMP_STRENGTH);
+        if (jumpAttr != null) {
+            jumpAttr.setBaseValue(data.getOriginalJumpStrength());
+        }
+        player.removePotionEffect(PotionEffectType.WEAKNESS);
+        player.removePotionEffect(PotionEffectType.SLOW_DIGGING);
         restoreListName(player, data);
         koPlayers.remove(player.getUniqueId());
 
@@ -245,7 +305,9 @@ public class KOManager {
     }
 
     public void cancelAllTasks() {
-        for (KOData data : koPlayers.values()) {
+        for (Map.Entry<UUID, KOData> entry : koPlayers.entrySet()) {
+            UUID uuid = entry.getKey();
+            KOData data = entry.getValue();
             plugin.getServer().getScheduler().cancelTask(data.getTaskId());
             plugin.getServer().getScheduler().cancelTask(data.getBarTaskId());
             if (data.getSuicideTaskId() != -1) {
@@ -254,6 +316,23 @@ public class KOManager {
             ArmorStand seat = data.getMount();
             if (seat != null && seat.isValid()) {
                 seat.remove();
+            }
+            ArmorStand label = data.getLabel();
+            if (label != null && label.isValid()) {
+                label.remove();
+            }
+            Player p = Bukkit.getPlayer(uuid);
+            if (p != null) {
+                AttributeInstance jumpAttr = p.getAttribute(Attribute.GENERIC_JUMP_STRENGTH);
+                if (jumpAttr != null) {
+                    jumpAttr.setBaseValue(data.getOriginalJumpStrength());
+                }
+                p.removePotionEffect(PotionEffectType.WEAKNESS);
+                p.removePotionEffect(PotionEffectType.SLOW_DIGGING);
+                p.removePotionEffect(PotionEffectType.SLOW);
+                p.removePotionEffect(PotionEffectType.BLINDNESS);
+                p.setGlowing(false);
+                p.setSwimming(false);
             }
         }
         koPlayers.clear();
