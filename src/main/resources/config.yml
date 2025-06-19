@@ -17,6 +17,8 @@ knockout:
   heartbeat_sound: true
   blindness: true
   suicide_hold_seconds: 3
+  weakness_level: 1
+  fatigue_level: 1
 
 execution:
   enabled: true
