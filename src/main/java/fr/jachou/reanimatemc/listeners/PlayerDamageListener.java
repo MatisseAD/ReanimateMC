@@ -4,6 +4,7 @@ import fr.jachou.reanimatemc.ReanimateMC;
 import fr.jachou.reanimatemc.managers.KOManager;
 import fr.jachou.reanimatemc.utils.Utils;
 import org.bukkit.Color;
+import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -31,6 +32,13 @@ public class PlayerDamageListener implements Listener {
         if (Utils.isNPC(player)) return;
 
         if (player.getHealth() - event.getFinalDamage() <= 0) {
+            // If the player holds a Totem of Undying in either hand, let the
+            // vanilla mechanic handle it (no KO state applied)
+            if (player.getInventory().getItemInMainHand().getType() == Material.TOTEM_OF_UNDYING ||
+                    player.getInventory().getItemInOffHand().getType() == Material.TOTEM_OF_UNDYING) {
+                return;
+            }
+
             event.setCancelled(true);
             if (!koManager.isKO(player)) {
                 koManager.setKO(player);
