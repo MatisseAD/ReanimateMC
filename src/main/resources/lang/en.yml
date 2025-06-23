@@ -35,7 +35,7 @@ actionbar_crawl_enabled: "Crawl mode enabled!"
 actionbar_crawl_disabled: "Crawl mode disabled!"
 loot_opening: "Opening %player%’s inventory…"
 loot_no_permission: "You do not have permission to loot KO’d players."
-ko_shift_click_cancelled: "You cannot shift-click while you're ko."
+ko_shift_click_cancelled: "You decided to endure."
 suicide_start: "Giving up... you will die in %time%s"
 suicide_complete: "You gave up..."
 
