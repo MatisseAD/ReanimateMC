@@ -12,6 +12,7 @@ import fr.jachou.reanimatemc.commands.ReanimateMCCommand;
 import fr.jachou.reanimatemc.externals.Metrics;
 import fr.jachou.reanimatemc.gui.ConfigGUI;
 import fr.jachou.reanimatemc.listeners.*;
+import fr.jachou.reanimatemc.listeners.SetupReminderListener;
 import fr.jachou.reanimatemc.managers.KOManager;
 import fr.jachou.reanimatemc.managers.StatsManager;
 import fr.jachou.reanimatemc.utils.Lang;
@@ -89,17 +90,17 @@ public final class ReanimateMC extends JavaPlugin {
 
         Bukkit.getConsoleSender().sendMessage("ReanimateMC running on version " + getDescription().getVersion() + "!");
 
-        if (getConfig().getBoolean("first_run", true)) {
+        if (!getConfig().getBoolean("setup_completed", false)) {
             Bukkit.getScheduler().runTaskLater(this, () -> {
                 for (Player p : Bukkit.getOnlinePlayers()) {
-                    if (p.hasPermission("reanimatemc.admin")) {
+                    if (p.hasPermission("reanimatemc.admin") || p.hasPermission("*")) {
                         p.sendMessage(ChatColor.GOLD + lang.get("first_run_message"));
                     }
                 }
             }, 40L);
-            getConfig().set("first_run", false);
-            saveConfig();
         }
+
+        getServer().getPluginManager().registerEvents(new SetupReminderListener(this), this);
     }
 
     @Override

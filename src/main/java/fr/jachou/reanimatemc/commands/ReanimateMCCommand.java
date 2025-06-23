@@ -120,7 +120,7 @@ public class ReanimateMCCommand implements CommandExecutor, TabCompleter {
             sender.sendMessage(ChatColor.GREEN + ReanimateMC.lang.get("glowing_effect_removed"));
 
 
-        } else if (subCommand.equalsIgnoreCase("gui")) {
+        } else if (subCommand.equalsIgnoreCase("gui") || subCommand.equalsIgnoreCase("config")) {
             if (!(sender instanceof Player)) {
                 sender.sendMessage(ChatColor.RED + ReanimateMC.lang.get("command_gui_player_only"));
                 return true;
@@ -131,6 +131,11 @@ public class ReanimateMCCommand implements CommandExecutor, TabCompleter {
                 return true;
             }
             configGui.openGUI(player);
+            if (!ReanimateMC.getInstance().getConfig().getBoolean("setup_completed", false)) {
+                ReanimateMC.getInstance().getConfig().set("setup_completed", true);
+                ReanimateMC.getInstance().saveConfig();
+                player.sendMessage(ChatColor.GREEN + ReanimateMC.lang.get("setup_complete"));
+            }
         } else {
             sender.sendMessage(ChatColor.YELLOW + ReanimateMC.lang.get("command_unknown"));
         }
@@ -141,7 +146,7 @@ public class ReanimateMCCommand implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
         // Tout les tab completions
         if (strings.length == 1) {
-            return List.of("reload", "revive", "knockout", "status", "crawl", "removeGlowingEffect", "gui");
+            return List.of("reload", "revive", "knockout", "status", "crawl", "removeGlowingEffect", "config");
         } else if (strings.length == 2) {
             // Si le premier argument est "revive", "knockout" ou "status", on affiche les joueurs en ligne
             if (strings[0].equalsIgnoreCase("revive") || strings[0].equalsIgnoreCase("knockout") || strings[0].equalsIgnoreCase("status") || strings[0].equalsIgnoreCase("removeGlowingEffect")) {

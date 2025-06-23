@@ -55,6 +55,7 @@ public class ConfigGUI implements Listener {
     private static final int STATS_SLOT = 18;
     private static final int INFO_SLOT = 19;
     private static final int LANG_SLOT = 20;
+    private static final java.util.List<String> LANGS = java.util.Arrays.asList("en", "fr", "es", "de", "pt", "it");
 
     // Represents one toggleable boolean option in the GUI
     private static class GuiOption {
@@ -167,8 +168,10 @@ public class ConfigGUI implements Listener {
             }
         }
         if (slot == LANG_SLOT) {
-            String current = cfg.getString("language", "en");
-            String next = current.equalsIgnoreCase("en") ? "fr" : "en";
+            String current = cfg.getString("language", "en").toLowerCase();
+            int idx = LANGS.indexOf(current);
+            if (idx == -1) idx = 0;
+            String next = LANGS.get((idx + 1) % LANGS.size());
             cfg.set("language", next);
             plugin.saveConfig();
             ReanimateMC.lang.loadLanguage();

@@ -1,5 +1,6 @@
 language: "en"
 first_run: true
+setup_completed: false
 
 reanimation:
   require_special_item: true
