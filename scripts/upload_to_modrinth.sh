@@ -15,7 +15,7 @@ set -euo pipefail
 #   JAR_PATH           - path to plugin jar (default target/ReanimateMC.jar)
 
 JAR_PATH=${JAR_PATH:-target/ReanimateMC.jar}
-PROJECT_ID=${PROJECT_ID:?Project ID not set}
+PROJECT_ID=eMlTUU6r
 MODRINTH_TOKEN=${MODRINTH_TOKEN:?API token not set}
 VERSION_NAME=${VERSION_NAME:?Version name not set}
 VERSION_NUMBER=${VERSION_NUMBER:?Version number not set}

@@ -99,12 +99,6 @@ public class KOManager {
             player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, Integer.MAX_VALUE, fatigueLvl - 1, false, false));
         }
 
-        // Disable jumping
-        AttributeInstance jumpAttr = player.getAttribute(Attribute.GENERIC_JUMP_STRENGTH);
-        if (jumpAttr != null) {
-            data.setOriginalJumpStrength(jumpAttr.getBaseValue());
-            jumpAttr.setBaseValue(0.0);
-        }
 
         // Application de la posture prone avec une option de ramper
         boolean blind = plugin.getConfig().getBoolean("knockout.blindness", true);
@@ -176,7 +170,7 @@ public class KOManager {
      * The stand is spawned slightly lower to avoid floating.
      */
     private ArmorStand createMount(org.bukkit.Location loc) {
-        org.bukkit.Location seatLoc = loc.clone().subtract(0, 0.5, 0);
+        org.bukkit.Location seatLoc = loc.clone().subtract(0, 0, 0);
         ArmorStand seat = (ArmorStand) loc.getWorld().spawnEntity(seatLoc, EntityType.ARMOR_STAND);
         seat.setInvisible(true);
         seat.setSmall(true);
@@ -221,10 +215,7 @@ public class KOManager {
         // Désactiver l'effet de glow
         player.setGlowing(false);
         player.setSwimming(false);
-        AttributeInstance jumpAttr = player.getAttribute(Attribute.GENERIC_JUMP_STRENGTH);
-        if (jumpAttr != null) {
-            jumpAttr.setBaseValue(data.getOriginalJumpStrength());
-        }
+
 
         // Restauration du nom de la liste du joueur
         restoreListName(player, data);
@@ -261,10 +252,6 @@ public class KOManager {
         if (label != null && label.isValid()) {
             label.remove();
         }
-        AttributeInstance jumpAttr = victim.getAttribute(Attribute.GENERIC_JUMP_STRENGTH);
-        if (jumpAttr != null) {
-            jumpAttr.setBaseValue(data.getOriginalJumpStrength());
-        }
         victim.removePotionEffect(PotionEffectType.WEAKNESS);
         victim.removePotionEffect(PotionEffectType.SLOW_DIGGING);
         koPlayers.remove(victim.getUniqueId());
@@ -291,10 +278,6 @@ public class KOManager {
         ArmorStand label = data.getLabel();
         if (label != null && label.isValid()) {
             label.remove();
-        }
-        AttributeInstance jumpAttr = player.getAttribute(Attribute.GENERIC_JUMP_STRENGTH);
-        if (jumpAttr != null) {
-            jumpAttr.setBaseValue(data.getOriginalJumpStrength());
         }
         player.removePotionEffect(PotionEffectType.WEAKNESS);
         player.removePotionEffect(PotionEffectType.SLOW_DIGGING);
@@ -324,10 +307,6 @@ public class KOManager {
             }
             Player p = Bukkit.getPlayer(uuid);
             if (p != null) {
-                AttributeInstance jumpAttr = p.getAttribute(Attribute.GENERIC_JUMP_STRENGTH);
-                if (jumpAttr != null) {
-                    jumpAttr.setBaseValue(data.getOriginalJumpStrength());
-                }
                 p.removePotionEffect(PotionEffectType.WEAKNESS);
                 p.removePotionEffect(PotionEffectType.SLOW_DIGGING);
                 p.removePotionEffect(PotionEffectType.SLOW);
