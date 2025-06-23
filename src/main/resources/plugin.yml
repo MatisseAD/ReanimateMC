@@ -7,7 +7,7 @@ authors:
 commands:
   reanimatemc:
     description: Main command for ReanimateMC
-    usage: "/<command> <reload|revive|knockout|status|crawl|gui> [player]"
+    usage: "/<command> <reload|revive|knockout|status|crawl|config> [player]"
 
 permissions:
   reanimatemc.revive:
@@ -20,7 +20,7 @@ permissions:
     description: Bypass KO and die instantly
     default: op
   reanimatemc.admin:
-    description: Grants access to admin commands (reload, gui, etc.)
+    description: Grants access to admin commands (reload, config, etc.)
     default: op
   reanimatemc.loot:
     description: Allows looting KO’d players’ inventories

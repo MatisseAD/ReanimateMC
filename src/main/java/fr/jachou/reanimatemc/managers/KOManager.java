@@ -80,6 +80,7 @@ public class KOManager {
                         ReanimateMC.lang.get("actionbar_ko_countdown", "time", String.valueOf(sec))
                 );
                 label.setCustomName(ChatColor.RED + "KO - " + sec + "s");
+                label.teleport(player.getLocation().add(0, 2.1, 0));
             } else {
                 label.remove();
             }
@@ -175,7 +176,7 @@ public class KOManager {
      * The stand is spawned slightly lower to avoid floating.
      */
     private ArmorStand createMount(org.bukkit.Location loc) {
-        org.bukkit.Location seatLoc = loc.clone().subtract(0, 1.0, 0);
+        org.bukkit.Location seatLoc = loc.clone().subtract(0, 0.5, 0);
         ArmorStand seat = (ArmorStand) loc.getWorld().spawnEntity(seatLoc, EntityType.ARMOR_STAND);
         seat.setInvisible(true);
         seat.setSmall(true);
