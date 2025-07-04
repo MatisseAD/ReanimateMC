@@ -97,25 +97,3 @@ Jachou
 # Statistics
 
 <img src="https://bstats.org/signatures/bukkit/ReanimateMC.svg" alt="BStats">
-## Automated Modrinth Upload
-
-A helper script is provided in `scripts/upload_to_modrinth.sh` to publish a new plugin version directly to Modrinth. The script uses the Modrinth HTTP API and requires `curl` to be installed.
-
-### Usage
-
-```bash
-export MODRINTH_TOKEN=your_token_here
-export PROJECT_ID=your_project_id
-export VERSION_NAME="Release 1.0"
-export VERSION_NUMBER="1.0.0"
-# Optional settings
-export GAME_VERSIONS_JSON='["1.20.1"]'
-export LOADERS_JSON='["spigot"]'
-export VERSION_TYPE=release
-export CHANGELOG_FILE=changelog.txt
-export JAR_PATH=target/ReanimateMC.jar
-
-./scripts/upload_to_modrinth.sh
-```
-
-The script uploads the specified JAR file and creates a new version on Modrinth with the provided metadata.
