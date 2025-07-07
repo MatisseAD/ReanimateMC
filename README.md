@@ -13,6 +13,10 @@
 ### Overview
 ReanimateMC is a revolutionary plugin that transforms Minecraft’s conventional death system. Instead of a player dying instantly when their health reaches zero, the plugin introduces an intermediary state—KO (knockout). This innovative mechanic allows for dynamic role-play and strategic decision-making by giving players a chance to be revived by teammates or executed by adversaries. Perfect for Hardcore Survival, role-play, or tactical PVP servers, ReanimateMC injects a new level of depth into the gameplay experience.
 
+### New Features
+- KO state now persists if a player disconnects.
+- KO players can press the swap-hand key to send a distress signal that places a beacon and alerts allies.
+
 
 ## Commands
 

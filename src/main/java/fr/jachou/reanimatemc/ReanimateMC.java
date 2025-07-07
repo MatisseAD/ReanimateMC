@@ -71,6 +71,7 @@ public final class ReanimateMC extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new LootListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerKOListener(koManager), this);
         getServer().getPluginManager().registerEvents(new TotemListener(koManager), this);
+        getServer().getPluginManager().registerEvents(new PlayerConnectionListener(koManager), this);
 
         // Enregistrement de la commande principale
         getCommand("reanimatemc").setExecutor(new ReanimateMCCommand(koManager, configGui));
