@@ -11,6 +11,8 @@ public class KOData {
     private int suicideTaskId = -1;
     private ArmorStand mount;
     private ArmorStand label;
+    private ArmorStand helpMarker;
+    private long endTimestamp;
     private double originalJumpStrength = 0.0;
     private String originalListName;
 
@@ -32,6 +34,22 @@ public class KOData {
 
     public void setLabel(ArmorStand label) {
         this.label = label;
+    }
+
+    public ArmorStand getHelpMarker() {
+        return helpMarker;
+    }
+
+    public void setHelpMarker(ArmorStand helpMarker) {
+        this.helpMarker = helpMarker;
+    }
+
+    public long getEndTimestamp() {
+        return endTimestamp;
+    }
+
+    public void setEndTimestamp(long endTimestamp) {
+        this.endTimestamp = endTimestamp;
     }
 
     public double getOriginalJumpStrength() {

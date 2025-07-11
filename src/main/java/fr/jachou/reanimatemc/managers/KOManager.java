@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.io.File;
+import java.io.IOException;
 
 import fr.jachou.reanimatemc.ReanimateMC;
 import fr.jachou.reanimatemc.data.KOData;
@@ -23,13 +25,28 @@ import org.bukkit.attribute.AttributeInstance;
 public class KOManager {
     private JavaPlugin plugin;
     private Map<UUID, KOData> koPlayers;
+    private final File offlineFile;
+    private final org.bukkit.configuration.file.YamlConfiguration offlineConfig;
 
     public KOManager(JavaPlugin plugin) {
         this.plugin = plugin;
         koPlayers = new HashMap<>();
+        offlineFile = new File(plugin.getDataFolder(), "offlineko.yml");
+        if (!offlineFile.exists()) {
+            try {
+                offlineFile.createNewFile();
+            } catch (IOException ignored) {
+            }
+        }
+        offlineConfig = org.bukkit.configuration.file.YamlConfiguration.loadConfiguration(offlineFile);
     }
 
     public void setKO(final Player player) {
+        long durationSeconds = plugin.getConfig().getLong("knockout.duration_seconds", 30);
+        setKO(player, (int) durationSeconds);
+    }
+
+    public void setKO(final Player player, int durationSeconds) {
         if (isKO(player))
             return;
 
@@ -50,7 +67,7 @@ public class KOManager {
         }
 
         // Programmation de la mort naturelle après un délai (en secondes)
-        long durationSeconds = plugin.getConfig().getLong("knockout.duration_seconds", 30);
+        data.setEndTimestamp(System.currentTimeMillis() + (durationSeconds * 1000L));
         int taskId = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
             if (isKO(player)) {
                 removeMount(player, data);
@@ -203,6 +220,11 @@ public class KOManager {
         if (label != null && label.isValid()) {
             label.remove();
         }
+        ArmorStand marker = data.getHelpMarker();
+        if (marker != null && marker.isValid()) {
+            marker.remove();
+            data.setHelpMarker(null);
+        }
         koPlayers.remove(player.getUniqueId());
 
         plugin.getServer().getScheduler().cancelTask(data.getBarTaskId());
@@ -252,6 +274,11 @@ public class KOManager {
         if (label != null && label.isValid()) {
             label.remove();
         }
+        ArmorStand marker = data.getHelpMarker();
+        if (marker != null && marker.isValid()) {
+            marker.remove();
+            data.setHelpMarker(null);
+        }
         victim.removePotionEffect(PotionEffectType.WEAKNESS);
         victim.removePotionEffect(PotionEffectType.SLOW_DIGGING);
         koPlayers.remove(victim.getUniqueId());
@@ -279,6 +306,11 @@ public class KOManager {
         if (label != null && label.isValid()) {
             label.remove();
         }
+        ArmorStand marker = data.getHelpMarker();
+        if (marker != null && marker.isValid()) {
+            marker.remove();
+            data.setHelpMarker(null);
+        }
         player.removePotionEffect(PotionEffectType.WEAKNESS);
         player.removePotionEffect(PotionEffectType.SLOW_DIGGING);
         restoreListName(player, data);
@@ -304,6 +336,11 @@ public class KOManager {
             ArmorStand label = data.getLabel();
             if (label != null && label.isValid()) {
                 label.remove();
+            }
+            ArmorStand marker = data.getHelpMarker();
+            if (marker != null && marker.isValid()) {
+                marker.remove();
+                data.setHelpMarker(null);
             }
             Player p = Bukkit.getPlayer(uuid);
             if (p != null) {
@@ -350,5 +387,82 @@ public class KOManager {
             player.setSwimming(false);
             player.sendMessage(ChatColor.GREEN + ReanimateMC.lang.get("crawl_disabled"));
         }
+    }
+
+    // Handle player disconnect while KO
+    public void handleLogout(Player player) {
+        if (!isKO(player)) return;
+        KOData data = koPlayers.get(player.getUniqueId());
+        int remaining = (int) Math.max(0, (data.getEndTimestamp() - System.currentTimeMillis()) / 1000);
+        offlineConfig.set(player.getUniqueId().toString(), remaining);
+        try {
+            offlineConfig.save(offlineFile);
+        } catch (IOException ignored) {
+        }
+        plugin.getServer().getScheduler().cancelTask(data.getTaskId());
+        plugin.getServer().getScheduler().cancelTask(data.getBarTaskId());
+        if (data.getSuicideTaskId() != -1) {
+            plugin.getServer().getScheduler().cancelTask(data.getSuicideTaskId());
+        }
+        ArmorStand seat = data.getMount();
+        if (seat != null && seat.isValid()) {
+            seat.removePassenger(player);
+            seat.remove();
+        }
+        ArmorStand label = data.getLabel();
+        if (label != null && label.isValid()) {
+            label.remove();
+        }
+        ArmorStand marker = data.getHelpMarker();
+        if (marker != null && marker.isValid()) {
+            marker.remove();
+            data.setHelpMarker(null);
+        }
+        player.removePotionEffect(PotionEffectType.SLOW);
+        player.removePotionEffect(PotionEffectType.BLINDNESS);
+        player.removePotionEffect(PotionEffectType.WEAKNESS);
+        player.removePotionEffect(PotionEffectType.SLOW_DIGGING);
+        player.setGlowing(false);
+        player.setSwimming(false);
+        restoreListName(player, data);
+        koPlayers.remove(player.getUniqueId());
+    }
+
+    public int pullOfflineKO(UUID uuid) {
+        int sec = offlineConfig.getInt(uuid.toString(), -1);
+        if (sec >= 0) {
+            offlineConfig.set(uuid.toString(), null);
+            try {
+                offlineConfig.save(offlineFile);
+            } catch (IOException ignored) {
+            }
+        }
+        return sec;
+    }
+
+    public void sendDistress(Player player) {
+        if (!isKO(player)) return;
+        KOData data = koPlayers.get(player.getUniqueId());
+        ArmorStand existing = data.getHelpMarker();
+        if (existing != null && existing.isValid()) {
+            existing.remove();
+        }
+        data.setHelpMarker(null);
+
+        ArmorStand marker = (ArmorStand) player.getWorld().spawnEntity(player.getLocation(), EntityType.ARMOR_STAND);
+        marker.setInvisible(true);
+        marker.setMarker(true);
+        marker.setCustomNameVisible(true);
+        marker.setGravity(false);
+        marker.setGlowing(true);
+        marker.setCustomName(ChatColor.RED + "HELP!");
+        data.setHelpMarker(marker);
+
+        String msg = ReanimateMC.lang.get("distress_broadcast", "player", player.getName(),
+                "x", String.valueOf(player.getLocation().getBlockX()),
+                "y", String.valueOf(player.getLocation().getBlockY()),
+                "z", String.valueOf(player.getLocation().getBlockZ()));
+        Bukkit.broadcastMessage(ChatColor.GOLD + msg);
+        player.sendMessage(ChatColor.GREEN + ReanimateMC.lang.get("distress_sent"));
     }
 }
