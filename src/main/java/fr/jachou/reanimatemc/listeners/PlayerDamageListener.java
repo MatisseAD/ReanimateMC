@@ -11,9 +11,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
 
 public class PlayerDamageListener implements Listener {
-    private KOManager koManager;
+    private final KOManager koManager;
 
     public PlayerDamageListener(KOManager koManager) {
         this.koManager = koManager;
@@ -21,17 +22,24 @@ public class PlayerDamageListener implements Listener {
 
     @EventHandler
     public void onPlayerDamage(EntityDamageEvent event) {
-        if (!(event.getEntity() instanceof Player))
+        if (!(event.getEntity() instanceof Player player))
             return;
-
-        Player player = (Player) event.getEntity();
 
         if (!ReanimateMC.getInstance().getConfig().getBoolean("knockout.enabled"))
             return;
 
         if (Utils.isNPC(player)) return;
 
-        if (player.getHealth() - event.getFinalDamage() <= 0) {
+        double currentHealth = player.getHealth();
+        double finalDamage = 0.0;
+
+        for (DamageModifier modifier : DamageModifier.values()) {
+            if (event.isApplicable(modifier)) {
+                finalDamage += event.getDamage(modifier);
+            }
+        }
+
+        if (finalDamage >= currentHealth) {
             // If the player holds a Totem of Undying in either hand, let the
             // vanilla mechanic handle it (no KO state applied)
             if (player.getInventory().getItemInMainHand().getType() == Material.TOTEM_OF_UNDYING ||
@@ -42,6 +50,7 @@ public class PlayerDamageListener implements Listener {
             event.setCancelled(true);
             if (!koManager.isKO(player)) {
                 koManager.setKO(player);
+                player.setHealth(1.0);
 
                 // Particules (ex. particules rouges) si activées
                 if (ReanimateMC.getInstance().getConfig().getBoolean("knockout.use_particles", true)) {
