@@ -39,6 +39,10 @@ public class ReanimateMCCommand implements CommandExecutor, TabCompleter {
             ReanimateMC.lang.loadLanguage();
             sender.sendMessage(ChatColor.GREEN + ReanimateMC.lang.get("config_reloaded"));
         } else if (subCommand.equalsIgnoreCase("revive")) {
+            if (!sender.hasPermission("reanimatemc.revive")) {
+                sender.sendMessage(ChatColor.RED + ReanimateMC.lang.get("no_permission"));
+                return true;
+            }
             if (args.length < 2) {
                 sender.sendMessage(ChatColor.YELLOW + ReanimateMC.lang.get("command_revive_usage"));
                 return true;
@@ -55,6 +59,10 @@ public class ReanimateMCCommand implements CommandExecutor, TabCompleter {
             koManager.revive(target);
             sender.sendMessage(ChatColor.GREEN + ReanimateMC.lang.get("revived_confirmation", "player", target.getName()));
         } else if (subCommand.equalsIgnoreCase("knockout")) {
+            if (!sender.hasPermission("reanimatemc.knockout")) {
+                sender.sendMessage(ChatColor.RED + ReanimateMC.lang.get("no_permission"));
+                return true;
+            }
             if (args.length < 2) {
                 sender.sendMessage(ChatColor.YELLOW + ReanimateMC.lang.get("command_knockout_usage"));
                 return true;
@@ -71,6 +79,10 @@ public class ReanimateMCCommand implements CommandExecutor, TabCompleter {
             koManager.setKO(target);
             sender.sendMessage(ChatColor.GREEN + ReanimateMC.lang.get("knockout_set", "player", target.getName()));
         } else if (subCommand.equalsIgnoreCase("status")) {
+            if (!sender.hasPermission("reanimatemc.status")) {
+                sender.sendMessage(ChatColor.RED + ReanimateMC.lang.get("no_permission"));
+                return true;
+            }
             if (args.length < 2) {
                 sender.sendMessage(ChatColor.YELLOW + ReanimateMC.lang.get("command_status_usage"));
                 return true;
@@ -83,24 +95,29 @@ public class ReanimateMCCommand implements CommandExecutor, TabCompleter {
             String status = koManager.isKO(target) ? ReanimateMC.lang.get("status_ko") : ReanimateMC.lang.get("status_normal");
             sender.sendMessage(ChatColor.AQUA + target.getName() + " : " + status);
         } else if (subCommand.equalsIgnoreCase("crawl")) {
-            // Permet au joueur KO de basculer entre l'immobilisation totale et le mode crawl
             if (!(sender instanceof Player)) {
                 sender.sendMessage("This command can only be executed by a player.");
                 return true;
             }
             Player player = (Player) sender;
+            if (!player.hasPermission("reanimatemc.crawl")) {
+                player.sendMessage(ChatColor.RED + ReanimateMC.lang.get("no_permission"));
+                return true;
+            }
             if (!koManager.isKO(player)) {
                 player.sendMessage(ChatColor.RED + ReanimateMC.lang.get("not_in_ko"));
                 return true;
             }
-            // Vérifier que l'option "prone.allow_crawl" est activée
             if (!ReanimateMC.getInstance().getConfig().getBoolean("prone.allow_crawl", false)) {
                 player.sendMessage(ChatColor.RED + ReanimateMC.lang.get("crawl_not_allowed"));
                 return true;
             }
             koManager.toggleCrawl(player);
         } else if (subCommand.equalsIgnoreCase("removeGlowingEffect")) {
-            // Permet de retirer l'effet de glow d'un joueur KO
+            if (!sender.hasPermission("reanimatemc.removeglow")) {
+                sender.sendMessage(ChatColor.RED + ReanimateMC.lang.get("no_permission"));
+                return true;
+            }
             if (args.length < 2) {
                 sender.sendMessage(ChatColor.YELLOW + ReanimateMC.lang.get("command_remove_glowing_usage"));
                 return true;
@@ -110,16 +127,8 @@ public class ReanimateMCCommand implements CommandExecutor, TabCompleter {
                 sender.sendMessage(ChatColor.RED + ReanimateMC.lang.get("player_not_found"));
                 return true;
             }
-
-            /*if (target.isGlowing()) {
-                sender.sendMessage(ChatColor.RED + ReanimateMC.lang.get("player_not_glowing"));
-                return true;
-            }*/
-
             target.setGlowing(false);
             sender.sendMessage(ChatColor.GREEN + ReanimateMC.lang.get("glowing_effect_removed"));
-
-
         } else if (subCommand.equalsIgnoreCase("gui") || subCommand.equalsIgnoreCase("config")) {
             if (!(sender instanceof Player)) {
                 sender.sendMessage(ChatColor.RED + ReanimateMC.lang.get("command_gui_player_only"));

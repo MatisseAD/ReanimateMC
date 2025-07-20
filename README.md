@@ -88,6 +88,29 @@ ReanimateMC is a revolutionary plugin that transforms Minecraft’s conventional
 
 </details>
 
+## Permissions
+<details>
+<summary>Spoiler</summary>
+
+### reanimatemc.admin
+-   **Description:** Grants access to all administrative commands, including reloading the plugin and managing player states.
+----------
+### reanimatemc.revive
+-   **Description:** Allows players to forcefully revive others who are in the KO state.
+----------
+### reanimatemc.knockout
+-   **Description:** Permits players to force a player into the KO state.
+----------
+### reanimatemc.status
+-   **Description:** Enables players to check the current state of any player (KO, revived, or normal).
+----------
+### reanimatemc.crawl
+-   **Description:** Allows players in the KO state to toggle between being fully immobilized and crawling slowly.
+----------
+### reanimatemc.removeGlowingEffect
+-   **Description:** Grants the ability to forcefully remove the glowing effect from a player, typically used by operators.
+</details>
+
 
 ## Compatibility:
 Bukkit, Spigot, Magma, Sponge
