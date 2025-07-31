@@ -25,9 +25,11 @@ public class PlayerConnectionListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        int remaining = koManager.pullOfflineKO(player.getUniqueId());
+        long remaining = koManager.pullOfflineKO(player.getUniqueId());
         if (remaining > 0) {
-            Bukkit.getScheduler().runTaskLater(ReanimateMC.getInstance(), () -> koManager.setKO(player, remaining), 1L);
+            Bukkit.getScheduler().runTaskLater(ReanimateMC.getInstance(), () -> koManager.setKO(player, (int) remaining), 1L);
+        } else if (remaining == 0) {
+            player.setHealth(0);
         }
     }
 }
