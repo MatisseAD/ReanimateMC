@@ -16,6 +16,7 @@ ReanimateMC is a revolutionary plugin that transforms Minecraft’s conventional
 ### New Features
 - KO state now persists if a player disconnects.
 - KO players can press the swap-hand key to send a distress signal that places a beacon and alerts allies.
+- Offline KO timer now continues counting down and will kill the player if it expires before they reconnect.
 
 
 ## Commands

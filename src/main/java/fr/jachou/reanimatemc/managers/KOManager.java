@@ -393,8 +393,8 @@ public class KOManager {
     public void handleLogout(Player player) {
         if (!isKO(player)) return;
         KOData data = koPlayers.get(player.getUniqueId());
-        int remaining = (int) Math.max(0, (data.getEndTimestamp() - System.currentTimeMillis()) / 1000);
-        offlineConfig.set(player.getUniqueId().toString(), remaining);
+        long endTs = data.getEndTimestamp();
+        offlineConfig.set(player.getUniqueId().toString(), endTs);
         try {
             offlineConfig.save(offlineFile);
         } catch (IOException ignored) {
@@ -428,16 +428,28 @@ public class KOManager {
         koPlayers.remove(player.getUniqueId());
     }
 
-    public int pullOfflineKO(UUID uuid) {
-        int sec = offlineConfig.getInt(uuid.toString(), -1);
-        if (sec >= 0) {
-            offlineConfig.set(uuid.toString(), null);
-            try {
-                offlineConfig.save(offlineFile);
-            } catch (IOException ignored) {
-            }
+    public long pullOfflineKO(UUID uuid) {
+        if (!offlineConfig.contains(uuid.toString())) {
+            return -1L;
         }
-        return sec;
+
+        Object raw = offlineConfig.get(uuid.toString());
+        offlineConfig.set(uuid.toString(), null);
+        try {
+            offlineConfig.save(offlineFile);
+        } catch (IOException ignored) {
+        }
+
+        if (raw instanceof Number) {
+            long val = ((Number) raw).longValue();
+            long now = System.currentTimeMillis();
+            if (val > now) {
+                return (val - now) / 1000L;
+            }
+            return val;
+        }
+
+        return -1L;
     }
 
     public void sendDistress(Player player) {

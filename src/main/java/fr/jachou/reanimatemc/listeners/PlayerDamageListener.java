@@ -9,9 +9,9 @@ import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
 
 public class PlayerDamageListener implements Listener {
     private final KOManager koManager;
@@ -20,7 +20,7 @@ public class PlayerDamageListener implements Listener {
         this.koManager = koManager;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerDamage(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player player))
             return;
@@ -31,13 +31,7 @@ public class PlayerDamageListener implements Listener {
         if (Utils.isNPC(player)) return;
 
         double currentHealth = player.getHealth();
-        double finalDamage = 0.0;
-
-        for (DamageModifier modifier : DamageModifier.values()) {
-            if (event.isApplicable(modifier)) {
-                finalDamage += event.getDamage(modifier);
-            }
-        }
+        double finalDamage = event.getFinalDamage();
 
         if (finalDamage >= currentHealth) {
             // If the player holds a Totem of Undying in either hand, let the
