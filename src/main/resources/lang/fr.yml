@@ -78,3 +78,40 @@ first_run_message: "Utilisez /reanimatemc config pour configurer le plugin !"
 setup_complete: "Plugin configuré ! Merci."
 distress_sent: "Signal de détresse envoyé !"
 distress_broadcast: "%player% a besoin d'aide en %x%, %y%, %z% !"
+
+# Catégories
+category_reanimation: "Réanimation"
+category_reanimation_desc: "Options de réanimation et d'exécution"
+category_knockout: "Knockout"
+category_knockout_desc: "Options de mise KO"
+category_gameplay: "Gameplay"
+category_gameplay_desc: "Options de gameplay"
+category_interface: "Interface"
+category_interface_desc: "Options d'interface"
+
+# Actions GUI
+click_toggle: "Clic gauche: Basculer"
+config_path: "Chemin: %path%"
+click_stats: "Clic pour voir plus de détails"
+plugin_name: "Plugin ReanimateMC"
+current_lang: "Actuel: %lang%"
+click_change_lang: "Clic pour changer"
+
+# Boutons utilitaires
+reload_config: "Recharger Config"
+reload_desc1: "Recharge la configuration"
+reload_desc2: "depuis le fichier"
+save: "Sauvegarder"
+save_desc1: "Sauvegarde les modifications"
+save_desc2: "dans le fichier de config"
+reset: "Réinitialiser"
+reset_desc1: "Remet toutes les options"
+reset_desc2: "à leur valeur par défaut"
+reset_warning: "ATTENTION: Irréversible!"
+close: "Fermer"
+close_desc: "Ferme cette interface"
+
+# Messages d'actions
+config_saved: "Configuration sauvegardée!"
+config_reset: "Toutes les options ont été réinitialisées!"
+reset_confirm: "Maintenez Shift + Clic pour confirmer la réinitialisation!"

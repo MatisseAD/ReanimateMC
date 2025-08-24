@@ -74,3 +74,42 @@ info_authors: "제작자: %value%"
 change_language: "언어 변경"
 language_changed: "언어가 %lang%로 변경됐습니다"
 first_run_message: "/reanimatemc gui 를 사용해 플러그인을 수정하세요!"
+
+
+# 카테고리
+category_reanimation: "부활"
+category_reanimation_desc: "부활 및 처형 옵션"
+category_knockout: "기절"
+category_knockout_desc: "기절 옵션"
+category_gameplay: "게임플레이"
+category_gameplay_desc: "게임플레이 옵션"
+category_interface: "인터페이스"
+category_interface_desc: "인터페이스 옵션"
+
+# GUI 작업
+click_toggle: "좌클릭: 토글"
+config_path: "경로: %path%"
+click_stats: "자세한 내용을 보려면 클릭"
+plugin_name: "ReanimateMC 플러그인"
+current_lang: "현재: %lang%"
+click_change_lang: "변경하려면 클릭"
+
+# 유틸리티 버튼
+reload_config: "설정 재로드"
+reload_desc1: "설정을 재로드합니다"
+reload_desc2: "파일에서"
+save: "저장"
+save_desc1: "수정사항을 저장합니다"
+save_desc2: "설정 파일에"
+reset: "재설정"
+reset_desc1: "모든 옵션을 재설정합니다"
+reset_desc2: "기본값으로"
+reset_warning: "경고: 되돌릴 수 없습니다!"
+close: "닫기"
+close_desc: "이 인터페이스를 닫습니다"
+
+# 액션 메시지
+config_saved: "설정이 저장되었습니다!"
+config_reloaded: "설정이 재로드되었습니다!"
+config_reset: "모든 옵션이 재설정되었습니다!"
+reset_confirm: "재설정을 확인하려면 Shift + 클릭을 유지하세요!"

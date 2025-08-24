@@ -77,3 +77,41 @@ first_run_message: "Use /reanimatemc config to configure the plugin!"
 setup_complete: "Plugin configured! Thank you."
 distress_sent: "Distress signal sent!"
 distress_broadcast: "%player% needs help at %x%, %y%, %z%!"
+
+# Categories
+category_reanimation: "Reanimation"
+category_reanimation_desc: "Reanimation and execution options"
+category_knockout: "Knockout"
+category_knockout_desc: "Knockout options"
+category_gameplay: "Gameplay"
+category_gameplay_desc: "Gameplay options"
+category_interface: "Interface"
+category_interface_desc: "Interface options"
+
+# GUI Actions
+click_toggle: "Left click: Toggle"
+config_path: "Path: %path%"
+click_stats: "Click for more details"
+plugin_name: "ReanimateMC Plugin"
+current_lang: "Current: %lang%"
+click_change_lang: "Click to change"
+
+# Utility buttons
+reload_config: "Reload Config"
+reload_desc1: "Reload configuration"
+reload_desc2: "from file"
+save: "Save"
+save_desc1: "Save modifications"
+save_desc2: "to config file"
+reset: "Reset"
+reset_desc1: "Reset all options"
+reset_desc2: "to default values"
+reset_warning: "WARNING: Irreversible!"
+close: "Close"
+close_desc: "Close this interface"
+
+# Action messages
+config_saved: "Configuration saved!"
+config_reloaded: "Configuration reloaded!"
+config_reset: "All options have been reset!"
+reset_confirm: "Hold Shift + Click to confirm reset!"

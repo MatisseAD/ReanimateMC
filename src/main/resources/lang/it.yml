@@ -59,3 +59,41 @@ option_execution_broadcast: "Trasmetti esecuzione"
 option_prone_enabled: "Modalità prono abilitata"
 option_prone_crawl: "Consenti modalità strisciare"
 option_looting_enabled: "Saccheggio abilitato"
+
+# Categorie
+category_reanimation: "Rianimazione"
+category_reanimation_desc: "Opzioni di rianimazione ed esecuzione"
+category_knockout: "Knockout"
+category_knockout_desc: "Opzioni knockout"
+category_gameplay: "Gameplay"
+category_gameplay_desc: "Opzioni di gameplay"
+category_interface: "Interfaccia"
+category_interface_desc: "Opzioni interfaccia"
+
+# Azioni GUI
+click_toggle: "Clic sinistro: Attivare/Disattivare"
+config_path: "Percorso: %path%"
+click_stats: "Clicca per più dettagli"
+plugin_name: "Plugin ReanimateMC"
+current_lang: "Attuale: %lang%"
+click_change_lang: "Clicca per cambiare"
+
+# Pulsanti utility
+reload_config: "Ricarica Config"
+reload_desc1: "Ricarica la configurazione"
+reload_desc2: "dal file"
+save: "Salva"
+save_desc1: "Salva le modifiche"
+save_desc2: "nel file di config"
+reset: "Ripristina"
+reset_desc1: "Ripristina tutte le opzioni"
+reset_desc2: "ai valori predefiniti"
+reset_warning: "ATTENZIONE: Irreversibile!"
+close: "Chiudi"
+close_desc: "Chiude questa interfaccia"
+
+# Messaggi azioni
+config_saved: "Configurazione salvata!"
+config_reloaded: "Configurazione ricaricata!"
+config_reset: "Tutte le opzioni sono state ripristinate!"
+reset_confirm: "Tieni premuto Shift + Clic per confermare il ripristino!"

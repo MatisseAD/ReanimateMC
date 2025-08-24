@@ -59,3 +59,41 @@ option_execution_broadcast: "Hinrichtung ankündigen"
 option_prone_enabled: "Liegend-Modus aktiviert"
 option_prone_crawl: "Kriechmodus erlauben"
 option_looting_enabled: "Plündern aktiviert"
+
+# Kategorien
+category_reanimation: "Wiederbelebung"
+category_reanimation_desc: "Wiederbelebungs- und Hinrichtungsoptionen"
+category_knockout: "Knockout"
+category_knockout_desc: "Knockout-Optionen"
+category_gameplay: "Gameplay"
+category_gameplay_desc: "Gameplay-Optionen"
+category_interface: "Benutzeroberfläche"
+category_interface_desc: "Oberflächenoptionen"
+
+# GUI-Aktionen
+click_toggle: "Linksklick: Umschalten"
+config_path: "Pfad: %path%"
+click_stats: "Klicken für mehr Details"
+plugin_name: "ReanimateMC Plugin"
+current_lang: "Aktuell: %lang%"
+click_change_lang: "Klicken zum Ändern"
+
+# Utility-Schaltflächen
+reload_config: "Config neu laden"
+reload_desc1: "Konfiguration neu laden"
+reload_desc2: "aus Datei"
+save: "Speichern"
+save_desc1: "Änderungen speichern"
+save_desc2: "in Config-Datei"
+reset: "Zurücksetzen"
+reset_desc1: "Alle Optionen zurücksetzen"
+reset_desc2: "auf Standardwerte"
+reset_warning: "WARNUNG: Unwiderruflich!"
+close: "Schließen"
+close_desc: "Diese Oberfläche schließen"
+
+# Aktionsnachrichten
+config_saved: "Konfiguration gespeichert!"
+config_reloaded: "Konfiguration neu geladen!"
+config_reset: "Alle Optionen wurden zurückgesetzt!"
+reset_confirm: "Shift + Klick halten zum Bestätigen!"

@@ -59,3 +59,42 @@ option_execution_broadcast: "Transmitir execução"
 option_prone_enabled: "Modo deitar ativado"
 option_prone_crawl: "Permitir modo rastejar"
 option_looting_enabled: "Saque habilitado"
+
+
+# Categorias
+category_reanimation: "Reanimação"
+category_reanimation_desc: "Opções de reanimação e execução"
+category_knockout: "Knockout"
+category_knockout_desc: "Opções de knockout"
+category_gameplay: "Jogabilidade"
+category_gameplay_desc: "Opções de jogabilidade"
+category_interface: "Interface"
+category_interface_desc: "Opções de interface"
+
+# Ações GUI
+click_toggle: "Clique esquerdo: Alternar"
+config_path: "Caminho: %path%"
+click_stats: "Clique para mais detalhes"
+plugin_name: "Plugin ReanimateMC"
+current_lang: "Atual: %lang%"
+click_change_lang: "Clique para mudar"
+
+# Botões utilitários
+reload_config: "Recarregar Config"
+reload_desc1: "Recarrega a configuração"
+reload_desc2: "do arquivo"
+save: "Salvar"
+save_desc1: "Salva as modificações"
+save_desc2: "no arquivo de config"
+reset: "Resetar"
+reset_desc1: "Reseta todas as opções"
+reset_desc2: "para valores padrão"
+reset_warning: "AVISO: Irreversível!"
+close: "Fechar"
+close_desc: "Fecha esta interface"
+
+# Mensagens de ações
+config_saved: "Configuração salva!"
+config_reloaded: "Configuração recarregada!"
+config_reset: "Todas as opções foram resetadas!"
+reset_confirm: "Segure Shift + Clique para confirmar o reset!"
