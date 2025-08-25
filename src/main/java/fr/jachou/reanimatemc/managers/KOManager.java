@@ -9,6 +9,8 @@ import java.io.File;
 import java.io.IOException;
 
 import fr.jachou.reanimatemc.ReanimateMC;
+import fr.jachou.reanimatemc.api.PlayerKOEvent;
+import fr.jachou.reanimatemc.api.PlayerReanimatedEvent;
 import fr.jachou.reanimatemc.data.KOData;
 import fr.jachou.reanimatemc.utils.Utils;
 import org.bukkit.Bukkit;
@@ -48,6 +50,13 @@ public class KOManager {
 
     public void setKO(final Player player, int durationSeconds) {
         if (isKO(player))
+            return;
+
+        // Fire the event
+        PlayerKOEvent event = new PlayerKOEvent(player, durationSeconds);
+        Bukkit.getPluginManager().callEvent(event);
+
+        if (event.isCancelled())
             return;
 
         KOData data = new KOData();
@@ -205,9 +214,13 @@ public class KOManager {
         return koPlayers.get(player.getUniqueId());
     }
 
-    public void revive(final Player player) {
+    public void revive(final Player player, final Player playerWhoRevive) {
         if (!isKO(player))
             return;
+
+        PlayerReanimatedEvent event = new PlayerReanimatedEvent(player, playerWhoRevive, true);
+        Bukkit.getPluginManager().callEvent(event);
+
 
         KOData data = koPlayers.get(player.getUniqueId());
         plugin.getServer().getScheduler().cancelTask(data.getTaskId());

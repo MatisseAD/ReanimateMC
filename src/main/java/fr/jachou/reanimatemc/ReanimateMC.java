@@ -110,7 +110,7 @@ public final class ReanimateMC extends JavaPlugin {
         koManager.cancelAllTasks();
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (koManager.isKO(player)) {
-                koManager.revive(player);
+                player.setHealth(0);
                 player.sendMessage(ChatColor.RED + lang.get("plugin_disabled"));
             }
         }

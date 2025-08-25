@@ -180,7 +180,7 @@ public class ReanimationListener implements Listener {
                         }
                     }
                 }
-                koManager.revive(target);
+                koManager.revive(target, reviver);
                 target.sendMessage(ChatColor.GREEN +
                         ReanimateMC.lang.get("revived_by", "player", reviver.getName()));
                 reviver.sendMessage(ChatColor.GREEN +

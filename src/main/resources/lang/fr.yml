@@ -65,7 +65,6 @@ option_tablist_enabled: "Tag KO dans le tab"
 
 message_gui_toggle: "%option% est maintenant %state%"
 
-# Nouvelles options GUI
 stats_title: "Statistiques"
 stats_ko: "KO : %value%"
 stats_revive: "Réanimations : %value%"
@@ -79,7 +78,6 @@ setup_complete: "Plugin configuré ! Merci."
 distress_sent: "Signal de détresse envoyé !"
 distress_broadcast: "%player% a besoin d'aide en %x%, %y%, %z% !"
 
-# Catégories
 category_reanimation: "Réanimation"
 category_reanimation_desc: "Options de réanimation et d'exécution"
 category_knockout: "Knockout"
@@ -89,7 +87,6 @@ category_gameplay_desc: "Options de gameplay"
 category_interface: "Interface"
 category_interface_desc: "Options d'interface"
 
-# Actions GUI
 click_toggle: "Clic gauche: Basculer"
 config_path: "Chemin: %path%"
 click_stats: "Clic pour voir plus de détails"
@@ -97,7 +94,6 @@ plugin_name: "Plugin ReanimateMC"
 current_lang: "Actuel: %lang%"
 click_change_lang: "Clic pour changer"
 
-# Boutons utilitaires
 reload_config: "Recharger Config"
 reload_desc1: "Recharge la configuration"
 reload_desc2: "depuis le fichier"
@@ -111,7 +107,43 @@ reset_warning: "ATTENTION: Irréversible!"
 close: "Fermer"
 close_desc: "Ferme cette interface"
 
-# Messages d'actions
 config_saved: "Configuration sauvegardée!"
 config_reset: "Toutes les options ont été réinitialisées!"
 reset_confirm: "Maintenez Shift + Clic pour confirmer la réinitialisation!"
+
+category_effects: "Effets"
+category_effects_desc: "Effets de réanimation"
+
+current_value: "Valeur: %value%"
+current_material: "Matériau: %material%"
+click_modify_number: "Clic: Modifier | Shift+Clic: +1"
+click_modify_material: "Clic pour modifier le matériau"
+shift_click_increment: "Shift+Clic: Incrémenter"
+
+enter_new_value: "Entrez une nouvelle valeur pour %option% (actuel: %current%)"
+enter_new_material: "Entrez un nouveau matériau pour %option% (actuel: %current%)"
+type_cancel_to_abort: "Tapez 'cancel' pour annuler"
+edit_cancelled: "Édition annulée"
+value_updated: "%option% mis à jour: %value%"
+material_updated: "%option% mis à jour: %material%"
+value_incremented: "%option% incrémenté: %value%"
+invalid_number: "Nombre invalide!"
+invalid_number_negative: "Le nombre doit être positif!"
+invalid_material: "Matériau invalide: %material%"
+
+# Options spécifiques
+option_reanimation_item: "Objet requis"
+option_reanimation_duration: "Durée réanimation"
+option_reanimation_health: "Vie restaurée"
+option_reanimation_cooldown: "Cooldown réanimation"
+option_revive_cooldown: "Cooldown revival"
+option_execution_duration: "Durée exécution"
+option_knockout_duration: "Durée knockout"
+option_knockout_suicide: "Durée suicide"
+option_knockout_weakness: "Niveau faiblesse"
+option_knockout_fatigue: "Niveau fatigue"
+option_prone_slowness: "Niveau lenteur ramper"
+option_prone_auto: "Ramper automatique"
+option_effect_nausea: "Durée nausée"
+option_effect_slowness: "Durée lenteur"
+option_effect_resistance: "Durée résistance"

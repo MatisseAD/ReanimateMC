@@ -51,6 +51,6 @@ public class TotemListener implements Listener {
             }
         }
 
-        koManager.revive(player);
+        koManager.revive(player, player);
     }
 }

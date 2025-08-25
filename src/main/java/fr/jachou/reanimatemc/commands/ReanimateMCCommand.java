@@ -56,7 +56,8 @@ public class ReanimateMCCommand implements CommandExecutor, TabCompleter {
                 sender.sendMessage(ChatColor.RED + ReanimateMC.lang.get("player_not_ko"));
                 return true;
             }
-            koManager.revive(target);
+            Player player = (Player) sender;
+            koManager.revive(target, player);
             sender.sendMessage(ChatColor.GREEN + ReanimateMC.lang.get("revived_confirmation", "player", target.getName()));
         } else if (subCommand.equalsIgnoreCase("knockout")) {
             if (!sender.hasPermission("reanimatemc.knockout")) {

@@ -17,8 +17,8 @@ public class Lang {
     }
 
     public void loadLanguage() {
-        // Récupère la langue définie dans la config (par défaut "fr")
-        language = plugin.getConfig().getString("language", "fr");
+        // Récupère la langue définie dans la config (par défaut "en")
+        language = plugin.getConfig().getString("language", "en");
         File langFolder = new File(plugin.getDataFolder(), "lang");
         if (!langFolder.exists()) {
             langFolder.mkdirs();

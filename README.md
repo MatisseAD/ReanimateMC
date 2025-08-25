@@ -116,6 +116,9 @@ ReanimateMC is a revolutionary plugin that transforms Minecraft’s conventional
 ## Compatibility:
 Bukkit, Spigot, Magma, Sponge
 
+## Language Support:
+English, French, Spasnish, German, Italian, Dutch, Russian, Chinese, Korean, Polish, 
+
 ## Native Version :
 1.20.1
 
