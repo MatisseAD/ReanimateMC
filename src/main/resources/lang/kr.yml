@@ -150,3 +150,8 @@ option_prone_auto: "자동 기어가기"
 option_effect_nausea: "멀미 지속시간"
 option_effect_slowness: "느림 지속시간"
 option_effect_resistance: "저항 지속시간"
+
+update_available: "새 버전 사용 가능:"
+update_log: "새 버전 사용 가능: %version% -> %url%"
+update_command_available: "업데이트 사용 가능: %version% — %url%"
+update_up_to_date: "현재 마인크래프트 버전에 대해 최신 상태입니다."

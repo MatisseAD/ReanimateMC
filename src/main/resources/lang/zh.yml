@@ -145,3 +145,8 @@ option_prone_auto: "自动爬行"
 option_effect_nausea: "恶心持续时间"
 option_effect_slowness: "缓慢持续时间"
 option_effect_resistance: "抗性持续时间"
+
+update_available: "新版本可用："
+update_log: "新版本可用：%version% -> %url%"
+update_command_available: "更新可用：%version% — %url%"
+update_up_to_date: "你的 Minecraft 版本已是最新。"

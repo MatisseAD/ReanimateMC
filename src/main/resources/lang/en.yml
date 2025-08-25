@@ -152,3 +152,8 @@ option_prone_auto: "Auto crawl"
 option_effect_nausea: "Nausea duration"
 option_effect_slowness: "Slowness duration"
 option_effect_resistance: "Resistance duration"
+
+update_available: "New version available:"
+update_log: "New version available: %version% -> %url%"
+update_command_available: "Update available: %version% — %url%"
+update_up_to_date: "You are up to date for your Minecraft version."

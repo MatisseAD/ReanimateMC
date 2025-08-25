@@ -145,3 +145,8 @@ option_prone_auto: "Автоматическое ползание"
 option_effect_nausea: "Длительность тошноты"
 option_effect_slowness: "Длительность замедления"
 option_effect_resistance: "Длительность сопротивления"
+
+update_available: "Доступна новая версия:"
+update_log: "Доступна новая версия: %version% -> %url%"
+update_command_available: "Доступно обновление: %version% — %url%"
+update_up_to_date: "Вы используете актуальную версию для вашей версии Minecraft."

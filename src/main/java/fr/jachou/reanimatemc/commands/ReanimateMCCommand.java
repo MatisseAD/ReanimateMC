@@ -25,7 +25,7 @@ public class ReanimateMCCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length < 1) {
-            sender.sendMessage(ChatColor.YELLOW + ReanimateMC.lang.get("command_usage"));
+            Bukkit.getScheduler().runTaskAsynchronously(ReanimateMC.getInstance(), () -> ReanimateMC.getInstance().getNotifier().notifySenderIfOutdated(sender));
             return true;
         }
 
@@ -130,6 +130,7 @@ public class ReanimateMCCommand implements CommandExecutor, TabCompleter {
             }
             target.setGlowing(false);
             sender.sendMessage(ChatColor.GREEN + ReanimateMC.lang.get("glowing_effect_removed"));
+
         } else if (subCommand.equalsIgnoreCase("gui") || subCommand.equalsIgnoreCase("config")) {
             if (!(sender instanceof Player)) {
                 sender.sendMessage(ChatColor.RED + ReanimateMC.lang.get("command_gui_player_only"));

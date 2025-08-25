@@ -135,3 +135,8 @@ option_prone_auto: "Rastejamento automático"
 option_effect_nausea: "Duração náusea"
 option_effect_slowness: "Duração lentidão"
 option_effect_resistance: "Duração resistência"
+
+update_available: "Nova versão disponível:"
+update_log: "Nova versão disponível: %version% -> %url%"
+update_command_available: "Atualização disponível: %version% — %url%"
+update_up_to_date: "Você está atualizado para sua versão do Minecraft."
