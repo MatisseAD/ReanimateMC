@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReanimateMC Wiki</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+</head>
+<body>
+    <nav class="sidebar">
+        <div class="logo">
+            <h2>ReanimateMC Wiki</h2>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#overview" class="nav-link active">Overview</a></li>
+            <li><a href="#features" class="nav-link">Features</a></li>
+            <li><a href="#commands" class="nav-link">Commands</a></li>
+            <li><a href="#permissions" class="nav-link">Permissions</a></li>
+            <li><a href="#installation" class="nav-link">Installation</a></li>
+            <li><a href="#configuration" class="nav-link">Configuration</a></li>
+            <li><a href="#language-support" class="nav-link">Language Support</a></li>
+            <li><a href="#compatibility" class="nav-link">Compatibility</a></li>
+            <li><a href="#statistics" class="nav-link">Statistics</a></li>
+        </ul>
+    </nav>
+
+    <main class="content">
+        <header class="header">
+            <h1>ReanimateMC Plugin Wiki</h1>
+            <div class="badges">
+                <span class="badge version">Version 1.2.02</span>
+                <span class="badge minecraft">Minecraft 1.21.5</span>
+                <span class="badge spigot">Spigot 1.21.5</span>
+            </div>
+        </header>
+
+        <section id="overview" class="section active">
+            <h2>Overview</h2>
+            <div class="content-card">
+                <img src="https://i.postimg.cc/3RHh8WJy/reanimate-mc-cover.jpg" alt="ReanimateMC Cover" class="cover-image">
+                
+                <p>ReanimateMC is a revolutionary plugin that transforms Minecraft's conventional death system. Instead of a player dying instantly when their health reaches zero, the plugin introduces an intermediary state—KO (knockout). This innovative mechanic allows for dynamic role-play and strategic decision-making by giving players a chance to be revived by teammates or executed by adversaries.</p>
+                
+                <p>Perfect for Hardcore Survival, role-play, or tactical PVP servers, ReanimateMC injects a new level of depth into the gameplay experience.</p>
+                
+                <div class="feature-highlight">
+                    <h3>Key Benefits</h3>
+                    <ul>
+                        <li>Enhanced roleplay opportunities</li>
+                        <li>Strategic team-based gameplay</li>
+                        <li>Persistent KO state even when offline</li>
+                        <li>Distress signal system for coordination</li>
+                        <li>Highly configurable and multilingual</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="section">
+            <h2>New Features</h2>
+            <div class="content-card">
+                <div class="feature-grid">
+                    <div class="feature-item">
+                        <h3>🔄 Persistent KO State</h3>
+                        <p>KO state now persists if a player disconnects, ensuring continuity in gameplay.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3>🚨 Distress Signal</h3>
+                        <p>KO players can press the swap-hand key to send a distress signal that places a beacon and alerts allies.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3>⏰ Offline Timer</h3>
+                        <p>Offline KO timer continues counting down and will eliminate the player if it expires before they reconnect.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3>🐛 Crawling System</h3>
+                        <p>Players in KO state can toggle between prone and crawling modes for tactical movement.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="commands" class="section">
+            <h2>Commands</h2>
+            <div class="content-card">
+                <div class="command-list">
+                    <div class="command-item">
+                        <h3>/reanimatemc reload</h3>
+                        <p><strong>Permission:</strong> <code>reanimatemc.admin</code></p>
+                        <p><strong>Description:</strong> Reloads the plugin's configuration and language files.</p>
+                    </div>
+                    
+                    <div class="command-item">
+                        <h3>/reanimatemc revive &lt;player&gt;</h3>
+                        <p><strong>Permission:</strong> <code>reanimatemc.revive</code></p>
+                        <p><strong>Description:</strong> Forcefully revives a player who is in the KO state.</p>
+                    </div>
+                    
+                    <div class="command-item">
+                        <h3>/reanimatemc knockout &lt;player&gt;</h3>
+                        <p><strong>Permission:</strong> <code>reanimatemc.admin</code></p>
+                        <p><strong>Description:</strong> Forces a player to enter the KO (knockout) state.</p>
+                    </div>
+                    
+                    <div class="command-item">
+                        <h3>/reanimatemc status &lt;player&gt;</h3>
+                        <p><strong>Permission:</strong> No special permission required</p>
+                        <p><strong>Description:</strong> Displays the current state of the player (KO, revived, or normal).</p>
+                    </div>
+                    
+                    <div class="command-item">
+                        <h3>/reanimatemc crawl</h3>
+                        <p><strong>Permission:</strong> <code>reanimatemc.crawl</code></p>
+                        <p><strong>Description:</strong> Toggles the KO player's state between being fully immobilized (prone) and crawling slowly.</p>
+                    </div>
+                    
+                    <div class="command-item">
+                        <h3>/reanimatemc removeGlowingEffect &lt;player&gt;</h3>
+                        <p><strong>Permission:</strong> Operator</p>
+                        <p><strong>Description:</strong> Force removes the glowing effect from a player.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="permissions" class="section">
+            <h2>Permissions</h2>
+            <div class="content-card">
+                <div class="permissions-list">
+                    <div class="permission-item">
+                        <h3>reanimatemc.admin</h3>
+                        <p>Grants access to all administrative commands, including reloading the plugin and managing player states.</p>
+                    </div>
+                    
+                    <div class="permission-item">
+                        <h3>reanimatemc.revive</h3>
+                        <p>Allows players to forcefully revive others who are in the KO state.</p>
+                    </div>
+                    
+                    <div class="permission-item">
+                        <h3>reanimatemc.knockout</h3>
+                        <p>Permits players to force a player into the KO state.</p>
+                    </div>
+                    
+                    <div class="permission-item">
+                        <h3>reanimatemc.status</h3>
+                        <p>Enables players to check the current state of any player (KO, revived, or normal).</p>
+                    </div>
+                    
+                    <div class="permission-item">
+                        <h3>reanimatemc.crawl</h3>
+                        <p>Allows players in the KO state to toggle between being fully immobilized and crawling slowly.</p>
+                    </div>
+                    
+                    <div class="permission-item">
+                        <h3>reanimatemc.removeGlowingEffect</h3>
+                        <p>Grants the ability to forcefully remove the glowing effect from a player, typically used by operators.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="installation" class="section">
+            <h2>Installation</h2>
+            <div class="content-card">
+                <div class="installation-steps">
+                    <h3>Requirements</h3>
+                    <ul>
+                        <li>Minecraft Server 1.20.1 or higher</li>
+                        <li>Java 16 or higher</li>
+                        <li>Spigot, Paper, Bukkit, or compatible server software</li>
+                    </ul>
+                    
+                    <h3>Installation Steps</h3>
+                    <ol>
+                        <li>Download the latest ReanimateMC.jar from the releases page</li>
+                        <li>Place the jar file in your server's <code>plugins</code> folder</li>
+                        <li>Start or restart your server</li>
+                        <li>Configure the plugin using <code>/reanimatemc</code> commands</li>
+                        <li>Enjoy enhanced gameplay!</li>
+                    </ol>
+                    
+                    <div class="warning">
+                        <strong>Note:</strong> Make sure to backup your server before installing any new plugins.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="configuration" class="section">
+            <h2>Configuration</h2>
+            <div class="content-card">
+                <p>ReanimateMC offers extensive configuration options to customize the plugin behavior to your server's needs.</p>
+                
+                <div class="config-section">
+                    <h3>Main Configuration</h3>
+                    <p>The main configuration file is located at <code>plugins/ReanimateMC/config.yml</code></p>
+                    
+                    <h4>Key Configuration Options:</h4>
+                    <ul>
+                        <li><code>knockout.duration_seconds</code> - Duration of KO state in seconds</li>
+                        <li><code>prone.auto_crawl</code> - Whether players automatically enter crawl mode</li>
+                        <li><code>tablist.enabled</code> - Show KO status in tab list</li>
+                        <li><code>setup_completed</code> - Initial setup completion flag</li>
+                    </ul>
+                </div>
+                
+                <div class="config-section">
+                    <h3>Language Files</h3>
+                    <p>Customize messages and text in multiple languages. Language files are located in <code>plugins/ReanimateMC/lang/</code></p>
+                </div>
+            </div>
+        </section>
+
+        <section id="language-support" class="section">
+            <h2>Language Support</h2>
+            <div class="content-card">
+                <p>ReanimateMC supports multiple languages out of the box:</p>
+                <div class="language-grid">
+                    <div class="language-item">🇺🇸 English</div>
+                    <div class="language-item">🇫🇷 French</div>
+                    <div class="language-item">🇪🇸 Spanish</div>
+                    <div class="language-item">🇩🇪 German</div>
+                    <div class="language-item">🇮🇹 Italian</div>
+                    <div class="language-item">🇳🇱 Dutch</div>
+                    <div class="language-item">🇷🇺 Russian</div>
+                    <div class="language-item">🇨🇳 Chinese</div>
+                    <div class="language-item">🇰🇷 Korean</div>
+                    <div class="language-item">🇵🇱 Polish</div>
+                    <div class="language-item">🇵🇹 Portuguese</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="compatibility" class="section">
+            <h2>Compatibility</h2>
+            <div class="content-card">
+                <h3>Server Software</h3>
+                <div class="compatibility-grid">
+                    <div class="compat-item">✅ Bukkit</div>
+                    <div class="compat-item">✅ Spigot</div>
+                    <div class="compat-item">✅ Paper</div>
+                    <div class="compat-item">✅ Purpur</div>
+                    <div class="compat-item">✅ Magma</div>
+                    <div class="compat-item">✅ Sponge</div>
+                </div>
+                
+                <h3>Minecraft Versions</h3>
+                <p><strong>Native Version:</strong> 1.20.1</p>
+                <p><strong>Supported:</strong> 1.20.1 - 1.21.5</p>
+            </div>
+        </section>
+
+        <section id="statistics" class="section">
+            <h2>Statistics</h2>
+            <div class="content-card">
+                <div class="stats-container">
+                    <h3>Plugin Usage Statistics</h3>
+                    <p>ReanimateMC uses bStats to collect anonymous usage statistics to help improve the plugin.</p>
+                    
+                    <div class="stats-image">
+                        <img src="https://bstats.org/signatures/bukkit/ReanimateMC.svg" alt="BStats" class="bstats-chart">
+                    </div>
+                    
+                    <p class="stats-note">
+                        <em>Statistics help the developer understand how the plugin is being used and prioritize new features. All data is anonymized and aggregated.</em>
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
