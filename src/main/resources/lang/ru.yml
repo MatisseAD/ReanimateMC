@@ -16,6 +16,7 @@ config_reloaded: "Конфигурация и язык перезагружен�
 command_revive_usage: "Использование: /reanimatemc revive <игрок>"
 player_not_found: "Игрок не найден."
 player_not_ko: "Игрок не в нокауте."
+player_ko: "%player% нокаутирован в %world% (X: %x%, Y: %y%, Z: %z%)"
 command_knockout_usage: "Использование: /reanimatemc knockout <игрок>"
 player_already_ko: "Игрок уже в состоянии нокаута."
 knockout_set: "%player% теперь в состоянии нокаута."
