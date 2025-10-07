@@ -62,6 +62,7 @@ option_prone_crawl: "允许爬行模式"
 option_looting_enabled: "掠夺启用"
 option_knockout_blindness: "击倒失明"
 option_tablist_enabled: "玩家列表击倒标签"
+option_chat_notification_enabled: "玩家被擊倒時在聊天中通知"
 
 message_gui_toggle: "%option% 现在 %state%"
 

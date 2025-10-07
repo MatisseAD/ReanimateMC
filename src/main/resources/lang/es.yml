@@ -60,6 +60,7 @@ option_execution_broadcast: "Transmitir ejecución"
 option_prone_enabled: "Modo prono habilitado"
 option_prone_crawl: "Permitir modo de arrastre"
 option_looting_enabled: "Saqueo habilitado"
+option_chat_notification_enabled: "Notificacion en chat cuando un jugador queda K.O."
 
 
 # Categorías

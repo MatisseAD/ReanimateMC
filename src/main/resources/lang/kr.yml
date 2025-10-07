@@ -62,6 +62,7 @@ option_prone_crawl: "서행 모드 허용"
 option_looting_enabled: "약탈 황성화"
 option_knockout_blindness: "기절시 실명"
 option_tablist_enabled: "탭리스트 기절 표기"
+option_chat_notification_enabled: "플레이어가 K.O.되었을 때 채팅 알림"
 
 message_gui_toggle: "%option%이(가) %state%"
 

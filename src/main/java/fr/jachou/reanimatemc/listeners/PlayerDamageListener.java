@@ -46,7 +46,11 @@ public class PlayerDamageListener implements Listener {
             if (!koManager.isKO(player)) {
                 koManager.setKO(player);
                 player.setHealth(1.0);
-                notifyPlayerIsKO(player);
+
+                // Envoi d'une notification dans le chat si l'option est activée
+                if (ReanimateMC.getInstance().getConfig().getBoolean("chat_notification.enabled",false)){
+                    notifyPlayerIsKO(player);
+                }
 
                 // Particules (ex. particules rouges) si activées
                 if (ReanimateMC.getInstance().getConfig().getBoolean("knockout.use_particles", true)) {

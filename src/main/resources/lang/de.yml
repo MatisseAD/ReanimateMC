@@ -60,6 +60,7 @@ option_execution_broadcast: "Hinrichtung ankündigen"
 option_prone_enabled: "Liegend-Modus aktiviert"
 option_prone_crawl: "Kriechmodus erlauben"
 option_looting_enabled: "Plündern aktiviert"
+option_chat_notification_enabled: "Benachrichtigung im Chat, wenn ein Spieler K.O. geht."
 
 # Kategorien
 category_reanimation: "Wiederbelebung"

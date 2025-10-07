@@ -87,6 +87,8 @@ public class ConfigGUI implements Listener {
         // Interface (Ligne 4: slots 28-29)
         INTERFACE_OPTIONS.put("tablist.enabled",
                 new GuiOption("option_tablist_enabled", 28, OptionType.BOOLEAN));
+        INTERFACE_OPTIONS.put("chat_notification.enabled",
+                new GuiOption("option_chat_notification_enabled", 29, OptionType.BOOLEAN));        
 
         // Effets (Ligne 5: slots 37-39)
         EFFECTS_OPTIONS.put("effects_on_revive.nausea",
@@ -695,6 +697,8 @@ public class ConfigGUI implements Listener {
         cfg.set("prone.auto_crawl", false);
         cfg.set("looting.enabled", true);
         cfg.set("tablist.enabled", true);
+        cfg.set("chat_notification.enabled", false);
+
 
         cfg.set("effects_on_revive.nausea", 5);
         cfg.set("effects_on_revive.slowness", 10);

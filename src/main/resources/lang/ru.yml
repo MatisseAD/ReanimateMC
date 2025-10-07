@@ -62,6 +62,7 @@ option_prone_crawl: "Разрешить режим ползания"
 option_looting_enabled: "Грабеж включен"
 option_knockout_blindness: "Слепота в КО"
 option_tablist_enabled: "Тег КО в табе"
+option_chat_notification_enabled: "Уведомление в чате, когда игрок нокаутирован."
 
 message_gui_toggle: "%option% теперь %state%"
 

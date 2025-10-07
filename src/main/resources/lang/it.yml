@@ -60,6 +60,7 @@ option_execution_broadcast: "Trasmetti esecuzione"
 option_prone_enabled: "Modalità prono abilitata"
 option_prone_crawl: "Consenti modalità strisciare"
 option_looting_enabled: "Saccheggio abilitato"
+option_chat_notification_enabled: "Notifica in chat quando un giocatore va K.O."
 
 # Categorie
 category_reanimation: "Rianimazione"

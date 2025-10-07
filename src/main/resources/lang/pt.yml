@@ -60,6 +60,7 @@ option_execution_broadcast: "Transmitir execução"
 option_prone_enabled: "Modo deitar ativado"
 option_prone_crawl: "Permitir modo rastejar"
 option_looting_enabled: "Saque habilitado"
+option_chat_notification_enabled: "Notificação no chat quando um jogador é nocauteado."
 
 
 # Categorias
