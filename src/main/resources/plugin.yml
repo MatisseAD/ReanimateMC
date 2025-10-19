@@ -8,7 +8,7 @@ authors:
 commands:
   reanimatemc:
     description: Main command for ReanimateMC
-    usage: "/<command> <reload|revive|knockout|status|crawl|config> [player]"
+    usage: "/<command> <reload|revive|knockout|status|crawl|config|summon|dismiss|npcs> [player]"
 
 permissions:
   reanimatemc.revive:
@@ -27,3 +27,21 @@ permissions:
     description: Allows looting KO’d players’ inventories
     default: op
 
+  reanimatemc.summon:
+    description: Allows summoning NPC reanimators
+    default: false
+  reanimatemc.summon.use.golem:
+    description: Allows summoning Iron Golem reanimators
+    default: false
+  reanimatemc.summon.use.healer:
+    description: Allows summoning Healing Golem reanimators
+    default: false
+  reanimatemc.summon.use.protector:
+    description: Allows summoning Protective Golem reanimators
+    default: false
+  reanimatemc.summon.overridecost:
+    description: Bypass summon costs and cooldowns
+    default: op
+  reanimatemc.summon.admin:
+    description: Admin control over all NPCs
+    default: op
