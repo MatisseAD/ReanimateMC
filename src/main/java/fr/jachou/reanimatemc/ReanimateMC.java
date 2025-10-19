@@ -14,6 +14,7 @@ import fr.jachou.reanimatemc.gui.ConfigGUI;
 import fr.jachou.reanimatemc.listeners.*;
 import fr.jachou.reanimatemc.listeners.SetupReminderListener;
 import fr.jachou.reanimatemc.managers.KOManager;
+import fr.jachou.reanimatemc.managers.NPCSummonManager;
 import fr.jachou.reanimatemc.managers.StatsManager;
 import fr.jachou.reanimatemc.utils.Lang;
 import fr.jachou.reanimatemc.utils.updater.UpdateChecker;
@@ -33,6 +34,7 @@ public final class ReanimateMC extends JavaPlugin {
     private static ReanimateMC instance;
     private KOManager koManager;
     private StatsManager statsManager;
+    private NPCSummonManager npcSummonManager;
     public static Lang lang;
     private ConfigGUI configGui;
     private UpdateNotifier notifier;
@@ -63,6 +65,9 @@ public final class ReanimateMC extends JavaPlugin {
         // Initialisation du gestionnaire des états K.O.
         koManager = new KOManager(this);
 
+        // Initialisation du gestionnaire de NPCs
+        npcSummonManager = new NPCSummonManager(this, koManager);
+
         // Instantiate and register GUI listener
         configGui = new ConfigGUI(this);
         getServer().getPluginManager().registerEvents(configGui, this);
@@ -77,8 +82,8 @@ public final class ReanimateMC extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerConnectionListener(koManager), this);
 
         // Enregistrement de la commande principale
-        getCommand("reanimatemc").setExecutor(new ReanimateMCCommand(koManager, configGui));
-        getCommand("reanimatemc").setTabCompleter(new ReanimateMCCommand(koManager, configGui));
+        getCommand("reanimatemc").setExecutor(new ReanimateMCCommand(koManager, configGui, npcSummonManager));
+        getCommand("reanimatemc").setTabCompleter(new ReanimateMCCommand(koManager, configGui, npcSummonManager));
 
         // Tâche pour vérfier si les joueurs ont l'effet glowing
         new BukkitRunnable() {
@@ -122,6 +127,12 @@ public final class ReanimateMC extends JavaPlugin {
     public void onDisable() {
         // Annulation de toutes les tâches programmées relatives aux joueurs en K.O.
         koManager.cancelAllTasks();
+        
+        // Cleanup NPC summons
+        if (npcSummonManager != null) {
+            npcSummonManager.cleanup();
+        }
+        
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (koManager.isKO(player)) {
                 player.setHealth(0);
@@ -138,5 +149,9 @@ public final class ReanimateMC extends JavaPlugin {
 
     public UpdateNotifier getNotifier() {
         return notifier;
+    }
+
+    public NPCSummonManager getNpcSummonManager() {
+        return npcSummonManager;
     }
 }

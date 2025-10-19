@@ -42,3 +42,12 @@ looting:
 
 tablist:
   enabled: true
+
+npc_summon:
+  enabled: true
+  max_summons_per_player: 1
+  summon_cooldown: 300
+  offline_timeout: 300
+  require_item: false
+  required_item: NETHER_STAR
+
