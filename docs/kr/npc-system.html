@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NPC 시스템 - ReanimateMC 문서</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-heart-pulse"></i>
+                <span>ReanimateMC</span>
+            </div>
+            <button class="nav-toggle" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="nav-links">
+                <a href="index.html">홈</a>
+                <a href="commands.html">명령어</a>
+                <a href="permissions.html">권한</a>
+                <a href="configuration.html">설정</a>
+                <a href="npc-system.html" class="active">NPC 시스템</a>
+                <a href="api.html">API</a>
+            </div>
+            <div class="language-selector">
+                <i class="fas fa-globe"></i>
+                <select id="lang-select" onchange="changeLanguage(this.value)">
+                    <option value="en">English</option>
+                    <option value="fr">Français</option>
+                    <option value="es">Español</option>
+                    <option value="de">Deutsch</option>
+                    <option value="it">Italiano</option>
+                    <option value="ru">Русский</option>
+                    <option value="zh">中文</option>
+                    <option value="kr" selected>한국어</option>
+                    <option value="pt">Português</option>
+                </select>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="section">
+            <h1 class="section-title">NPC Summon System</h1>
+            <p style="text-align: center; color: #7f8c8d; margin-bottom: 3rem;">
+                AI-controlled NPCs that can revive KO'd players and provide protection
+            </p>
+
+            <div class="gameplay-item">
+                <h2><i class="fas fa-robot"></i> System Overview</h2>
+                <p>
+                    The NPC Summon System allows players to summon AI-controlled NPCs (Iron Golems) that can:
+                </p>
+                <ul>
+                    <li>Automatically revive KO'd players</li>
+                    <li>Follow and protect their summoner</li>
+                    <li>Attack hostile mobs (Protector type)</li>
+                    <li>Provide healing support (Healer type)</li>
+                </ul>
+            </div>
+
+            <div style="margin-top: 3rem;">
+                <h2 class="section-title" style="font-size: 2rem;">NPC Types</h2>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: linear-gradient(135deg, #95a5a6, #7f8c8d);">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <h3>Golem (Standard)</h3>
+                        <p><strong>Permission:</strong> <code>reanimatemc.summon.use.golem</code></p>
+                        <ul style="text-align: left;">
+                            <li>Basic reanimator NPC</li>
+                            <li>Follows summoner</li>
+                            <li>Revives KO'd players</li>
+                            <li>100 HP base health</li>
+                        </ul>
+                        <p style="margin-top: 1rem;"><strong>Best for:</strong> General use, beginners</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: linear-gradient(135deg, #27ae60, #229954);">
+                            <i class="fas fa-heart-pulse"></i>
+                        </div>
+                        <h3>Healer (Medic)</h3>
+                        <p><strong>Permission:</strong> <code>reanimatemc.summon.use.healer</code></p>
+                        <ul style="text-align: left;">
+                            <li>Specialized in revival</li>
+                            <li>Same as Golem currently</li>
+                            <li>Future: Periodic healing</li>
+                            <li>100 HP base health</li>
+                        </ul>
+                        <p style="margin-top: 1rem;"><strong>Best for:</strong> Support roles, team gameplay</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: linear-gradient(135deg, #e74c3c, #c0392b);">
+                            <i class="fas fa-shield-halved"></i>
+                        </div>
+                        <h3>Protector (Tank)</h3>
+                        <p><strong>Permission:</strong> <code>reanimatemc.summon.use.protector</code></p>
+                        <ul style="text-align: left;">
+                            <li>Can revive like Golem</li>
+                            <li>Attacks hostile mobs</li>
+                            <li>10 block aggro range</li>
+                            <li>200 HP (double health)</li>
+                        </ul>
+                        <p style="margin-top: 1rem;"><strong>Best for:</strong> Combat, exploration, defense</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 3rem;">
+                <h2 class="section-title" style="font-size: 2rem;">How to Use NPCs</h2>
+                
+                <div class="quick-start-grid">
+                    <div class="quick-start-step">
+                        <div class="step-number">1</div>
+                        <h3>Summon</h3>
+                        <p>Use <code>/reanimatemc summon &lt;type&gt;</code> to summon an NPC.</p>
+                        <pre style="margin-top: 0.5rem;"><code>/rmc summon golem
+/rmc summon healer
+/rmc summon protector</code></pre>
+                    </div>
+
+                    <div class="quick-start-step">
+                        <div class="step-number">2</div>
+                        <h3>Target Player</h3>
+                        <p>Optionally specify a player to revive:</p>
+                        <pre style="margin-top: 0.5rem;"><code>/rmc summon healer Steve</code></pre>
+                        <p style="margin-top: 0.5rem; font-size: 0.9rem;">NPC will pathfind to the target and revive them.</p>
+                    </div>
+
+                    <div class="quick-start-step">
+                        <div class="step-number">3</div>
+                        <h3>NPC Follows</h3>
+                        <p>NPC follows you automatically after summoning or completing a task.</p>
+                        <p style="margin-top: 0.5rem; font-size: 0.9rem;">Stays within 10 blocks, stops at 3 blocks distance.</p>
+                    </div>
+
+                    <div class="quick-start-step">
+                        <div class="step-number">4</div>
+                        <h3>Dismiss</h3>
+                        <p>Remove your NPCs when done:</p>
+                        <pre style="margin-top: 0.5rem;"><code>/rmc dismiss all</code></pre>
+                        <p style="margin-top: 0.5rem; font-size: 0.9rem;">View active NPCs with <code>/rmc npcs</code></p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 3rem;">
+                <h2 class="section-title" style="font-size: 2rem;">NPC Behavior</h2>
+                
+                <div class="gameplay-item">
+                    <h3><i class="fas fa-walking"></i> Following Behavior</h3>
+                    <ul>
+                        <li><strong>Distance > 10 blocks:</strong> NPC pathfinds towards owner</li>
+                        <li><strong>Distance < 3 blocks:</strong> NPC stops moving</li>
+                        <li><strong>Owner moves away:</strong> NPC resumes following</li>
+                        <li><strong>Obstacles:</strong> Uses Minecraft pathfinding to navigate</li>
+                    </ul>
+                </div>
+
+                <div class="gameplay-item" style="margin-top: 2rem;">
+                    <h3><i class="fas fa-heart"></i> Revival Behavior</h3>
+                    <ul>
+                        <li>When target is specified, NPC pathfinds to KO'd player</li>
+                        <li>At distance < 3 blocks, NPC initiates revival</li>
+                        <li>Revival uses normal <code>koManager.revive()</code> mechanics</li>
+                        <li>After revival, NPC returns to following owner</li>
+                        <li>Particle effects: Hearts + enchantment sound</li>
+                    </ul>
+                </div>
+
+                <div class="gameplay-item" style="margin-top: 2rem;">
+                    <h3><i class="fas fa-crosshairs"></i> Combat Behavior (Protector Only)</h3>
+                    <ul>
+                        <li>Scans for hostile mobs within 10 blocks</li>
+                        <li>Targets closest hostile mob</li>
+                        <li>Uses vanilla Iron Golem attack mechanics</li>
+                        <li>Returns to following after combat</li>
+                        <li>Higher health (200 HP) for survivability</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="margin-top: 3rem;">
+                <h2 class="section-title" style="font-size: 2rem;">Requirements & Restrictions</h2>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Requirement</th>
+                            <th>Default</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Base Permission</td>
+                            <td><code>reanimatemc.summon</code></td>
+                            <td>Required for ANY summon command</td>
+                        </tr>
+                        <tr>
+                            <td>Type Permission</td>
+                            <td><code>reanimatemc.summon.use.&lt;type&gt;</code></td>
+                            <td>Specific permission for each NPC type</td>
+                        </tr>
+                        <tr>
+                            <td>Cooldown</td>
+                            <td>300 seconds (5 min)</td>
+                            <td>Time between summons (configurable)</td>
+                        </tr>
+                        <tr>
+                            <td>Max Summons</td>
+                            <td>1 per player</td>
+                            <td>Maximum active NPCs (configurable)</td>
+                        </tr>
+                        <tr>
+                            <td>Item Cost</td>
+                            <td>Disabled</td>
+                            <td>Optional item requirement (configurable)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="margin-top: 3rem;">
+                <h2 class="section-title" style="font-size: 2rem;">설정</h2>
+                
+                <div class="gameplay-item">
+                    <h3>NPC 시스템 Settings</h3>
+                    <pre><code>npc_summon:
+  enabled: true                    # Enable/disable system
+  max_summons_per_player: 1        # NPCs per player
+  summon_cooldown: 300             # Cooldown in seconds
+  offline_timeout: 300             # Time before NPC despawns if owner offline
+  require_item: false              # Require item to summon
+  required_item: NETHER_STAR       # Item required (if enabled)
+  item_to_summon_golem: GOLD_INGOT # Specific item for golem</code></pre>
+                </div>
+
+                <div class="gameplay-item" style="margin-top: 2rem;">
+                    <h3>Customization Tips</h3>
+                    <ul>
+                        <li><strong>Free summons:</strong> <code>require_item: false</code></li>
+                        <li><strong>Economy integration:</strong> Set <code>require_item: true</code> with expensive items</li>
+                        <li><strong>Multiple NPCs:</strong> Increase <code>max_summons_per_player</code> for VIPs</li>
+                        <li><strong>Quick respawn:</strong> Reduce <code>summon_cooldown</code> for action servers</li>
+                        <li><strong>Persistent NPCs:</strong> Increase <code>offline_timeout</code> significantly</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="margin-top: 3rem;">
+                <h2 class="section-title" style="font-size: 2rem;">Use Cases & Scenarios</h2>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <h3>Emergency Revival</h3>
+                        <p><strong>Scenario:</strong> Player is KO'd during combat far from teammates.</p>
+                        <p><strong>Solution:</strong></p>
+                        <pre style="text-align: left; font-size: 0.85rem;"><code>1. Teammate uses:
+   /rmc summon healer KOPlayer
+2. Healer pathfinds to KOPlayer
+3. Automatic revival at distance
+4. KOPlayer saved!</code></pre>
+                    </div>
+
+                    <div class="feature-card">
+                        <h3>Cave Exploration</h3>
+                        <p><strong>Scenario:</strong> Exploring dangerous caves with lots of mobs.</p>
+                        <p><strong>Solution:</strong></p>
+                        <pre style="text-align: left; font-size: 0.85rem;"><code>1. Summon Protector:
+   /rmc summon protector
+2. Protector follows you
+3. Attacks hostile mobs
+4. Provides backup safety</code></pre>
+                    </div>
+
+                    <div class="feature-card">
+                        <h3>Team Raids</h3>
+                        <p><strong>Scenario:</strong> Group raiding a dungeon or stronghold.</p>
+                        <p><strong>Solution:</strong></p>
+                        <pre style="text-align: left; font-size: 0.85rem;"><code>1. Each player summons:
+   /rmc summon healer
+2. Multiple healers follow
+3. Auto-revive fallen members
+4. Higher success rate</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 3rem;">
+                <h2 class="section-title" style="font-size: 2rem;">Technical Details</h2>
+                
+                <div class="gameplay-item">
+                    <h3><i class="fas fa-code"></i> Implementation</h3>
+                    <p><strong>Architecture:</strong> Native Bukkit/Paper implementation (no Citizens2 dependency)</p>
+                    <p><strong>Entity Type:</strong> Iron Golem with custom behaviors</p>
+                    <p><strong>AI:</strong> BukkitRunnable tasks for pathfinding and behavior</p>
+                    <p><strong>Persistence:</strong> NPCs are removed on server restart</p>
+                </div>
+
+                <div class="gameplay-item" style="margin-top: 2rem;">
+                    <h3><i class="fas fa-check-circle"></i> Features</h3>
+                    <ul>
+                        <li>Visual customization: Golden name tag with glow effect</li>
+                        <li>Summon ritual: Soul fire particles + beacon sound</li>
+                        <li>Auto-cleanup: Invalid NPCs removed every second</li>
+                        <li>Offline handling: NPCs despawn after timeout if owner disconnects</li>
+                        <li>Permission-based types: Fine-grained control per NPC type</li>
+                    </ul>
+                </div>
+
+                <div class="gameplay-item" style="margin-top: 2rem;">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Limitations</h3>
+                    <ul>
+                        <li>Pathfinding: Uses vanilla mechanics (less smooth than Citizens2)</li>
+                        <li>Appearance: Limited to Iron Golem model</li>
+                        <li>Cross-world: Following may be imperfect across world boundaries</li>
+                        <li>No persistence: NPCs don't survive server restarts</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="margin-top: 3rem; text-align: center;">
+                <a href="configuration.html" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> 설정
+                </a>
+                <a href="api.html" class="btn btn-primary">
+                    <i class="fas fa-arrow-right"></i> Developer API
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>ReanimateMC</h4>
+                <p>A revolutionary Minecraft plugin by Jachou</p>
+                <p class="version">Version 1.2.02</p>
+            </div>
+            <div class="footer-section">
+                <h4>Links</h4>
+                <ul>
+                    <li><a href="https://github.com/MatisseAD/ReanimateMC" target="_blank">GitHub</a></li>
+                    <li><a href="https://github.com/MatisseAD/ReanimateMC/issues" target="_blank">Report Issues</a></li>
+                    <li><a href="https://github.com/MatisseAD/ReanimateMC/releases" target="_blank">Downloads</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>문서</h4>
+                <ul>
+                    <li><a href="commands.html">명령어</a></li>
+                    <li><a href="permissions.html">권한</a></li>
+                    <li><a href="configuration.html">설정</a></li>
+                    <li><a href="api.html">API</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 ReanimateMC. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../assets/js/main.js"></script>
+</body>
+</html>

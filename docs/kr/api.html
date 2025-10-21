@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Developer API - ReanimateMC 문서</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-heart-pulse"></i>
+                <span>ReanimateMC</span>
+            </div>
+            <button class="nav-toggle" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="nav-links">
+                <a href="index.html">홈</a>
+                <a href="commands.html">명령어</a>
+                <a href="permissions.html">권한</a>
+                <a href="configuration.html">설정</a>
+                <a href="npc-system.html">NPC 시스템</a>
+                <a href="api.html" class="active">API</a>
+            </div>
+            <div class="language-selector">
+                <i class="fas fa-globe"></i>
+                <select id="lang-select" onchange="changeLanguage(this.value)">
+                    <option value="en">English</option>
+                    <option value="fr">Français</option>
+                    <option value="es">Español</option>
+                    <option value="de">Deutsch</option>
+                    <option value="it">Italiano</option>
+                    <option value="ru">Русский</option>
+                    <option value="zh">中文</option>
+                    <option value="kr" selected>한국어</option>
+                    <option value="pt">Português</option>
+                </select>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="section">
+            <h1 class="section-title">Developer API</h1>
+            <p style="text-align: center; color: #7f8c8d; margin-bottom: 3rem;">
+                Integrate ReanimateMC into your plugins
+            </p>
+
+            <div class="gameplay-item">
+                <h2><i class="fas fa-code"></i> API Overview</h2>
+                <p>
+                    ReanimateMC provides a comprehensive API for developers to integrate the KO system into their plugins.
+                    You can listen to events, access the KO manager, and programmatically control the KO state of players.
+                </p>
+            </div>
+
+            <div style="margin-top: 3rem;">
+                <h2 class="section-title" style="font-size: 2rem;">Getting Started</h2>
+                
+                <div class="gameplay-item">
+                    <h3><i class="fab fa-java"></i> Adding ReanimateMC as a Dependency</h3>
+                    
+                    <h4 style="margin-top: 1.5rem;">plugin.yml</h4>
+                    <pre><code>name: YourPlugin
+version: 1.0.0
+depend: [ReanimateMC]
+# or for optional dependency
+# softdepend: [ReanimateMC]</code></pre>
+
+                    <h4 style="margin-top: 1.5rem;">Maven (pom.xml)</h4>
+                    <pre><code>&lt;dependencies&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;fr.jachou&lt;/groupId&gt;
+        &lt;artifactId&gt;ReanimateMC&lt;/artifactId&gt;
+        &lt;version&gt;1.2.02&lt;/version&gt;
+        &lt;scope&gt;provided&lt;/scope&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;</code></pre>
+
+                    <h4 style="margin-top: 1.5rem;">Gradle (build.gradle)</h4>
+                    <pre><code>dependencies {
+    compileOnly 'fr.jachou:ReanimateMC:1.2.02'
+}</code></pre>
+                </div>
+
+                <div class="gameplay-item" style="margin-top: 2rem;">
+                    <h3>Basic Plugin Setup</h3>
+                    <pre><code>import fr.jachou.reanimatemc.ReanimateMC;
+import fr.jachou.reanimatemc.managers.KOManager;
+
+public class YourPlugin extends JavaPlugin {
+    private ReanimateMC reanimateMC;
+    private KOManager koManager;
+    
+    @Override
+    public void onEnable() {
+        // Get ReanimateMC instance
+        reanimateMC = (ReanimateMC) getServer()
+            .getPluginManager().getPlugin("ReanimateMC");
+        
+        if (reanimateMC == null) {
+            getLogger().warning("ReanimateMC not found!");
+            return;
+        }
+        
+        // Get KO Manager
+        koManager = reanimateMC.getKoManager();
+        
+        // Register event listeners
+        getServer().getPluginManager()
+            .registerEvents(new YourEventListener(), this);
+    }
+}</code></pre>
+                </div>
+            </div>
+
+            <div style="margin-top: 3rem;">
+                <h2 class="section-title" style="font-size: 2rem;">Events API</h2>
+                
+                <div class="gameplay-item">
+                    <h3><i class="fas fa-bolt"></i> PlayerKOEvent</h3>
+                    <p>Fired when a player enters the KO state.</p>
+                    
+                    <h4 style="margin-top: 1rem;">Methods:</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Method</th>
+                                <th>Return Type</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>getPlayer()</code></td>
+                                <td>Player</td>
+                                <td>The player entering KO state</td>
+                            </tr>
+                            <tr>
+                                <td><code>getDuration()</code></td>
+                                <td>int</td>
+                                <td>KO duration in seconds</td>
+                            </tr>
+                            <tr>
+                                <td><code>isCancelled()</code></td>
+                                <td>boolean</td>
+                                <td>Check if event is cancelled</td>
+                            </tr>
+                            <tr>
+                                <td><code>setCancelled(boolean)</code></td>
+                                <td>void</td>
+                                <td>Cancel the KO event</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4 style="margin-top: 1.5rem;">Example Usage:</h4>
+                    <pre><code>@EventHandler
+public void onPlayerKO(PlayerKOEvent event) {
+    Player player = event.getPlayer();
+    int duration = event.getDuration();
+    
+    // Custom logic when player enters KO
+    if (player.hasPermission("server.vip")) {
+        // VIP players get longer KO duration
+        // Note: Cannot modify duration directly
+        getLogger().info(player.getName() + " is VIP, extending KO");
+    }
+    
+    // Cancel KO for staff members
+    if (player.hasPermission("server.staff")) {
+        event.setCancelled(true);
+        player.sendMessage("Staff bypass: KO cancelled");
+    }
+    
+    // Notify team members
+    notifyTeam(player, duration);
+}</code></pre>
+                </div>
+
+                <div class="gameplay-item" style="margin-top: 2rem;">
+                    <h3><i class="fas fa-heart"></i> PlayerReanimatedEvent</h3>
+                    <p>Fired when a player is revived from KO state.</p>
+                    
+                    <h4 style="margin-top: 1rem;">Methods:</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Method</th>
+                                <th>Return Type</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>getPlayer()</code></td>
+                                <td>Player</td>
+                                <td>The player being revived</td>
+                            </tr>
+                            <tr>
+                                <td><code>getReanimator()</code></td>
+                                <td>Player</td>
+                                <td>Player performing revival (can be null)</td>
+                            </tr>
+                            <tr>
+                                <td><code>isSuccessful()</code></td>
+                                <td>boolean</td>
+                                <td>Whether revival was successful</td>
+                            </tr>
+                            <tr>
+                                <td><code>getTimestamp()</code></td>
+                                <td>long</td>
+                                <td>Timestamp of revival attempt</td>
+                            </tr>
+                            <tr>
+                                <td><code>getPlayerName()</code></td>
+                                <td>String</td>
+                                <td>Name of revived player</td>
+                            </tr>
+                            <tr>
+                                <td><code>getReanimatorName()</code></td>
+                                <td>String</td>
+                                <td>Name of reanimator (or "Unknown")</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4 style="margin-top: 1.5rem;">Example Usage:</h4>
+                    <pre><code>@EventHandler
+public void onPlayerRevived(PlayerReanimatedEvent event) {
+    Player patient = event.getPlayer();
+    Player medic = event.getReanimator();
+    boolean successful = event.isSuccessful();
+    
+    if (!successful) return;
+    
+    // Reward the medic
+    if (medic != null) {
+        // Give XP
+        medic.giveExp(50);
+        
+        // Economy reward (if you have Vault)
+        economy.depositPlayer(medic, 100.0);
+        
+        // Send message
+        medic.sendMessage(ChatColor.GREEN + 
+            "You saved " + patient.getName() + "!");
+        
+        // Add to statistics
+        addToStats(medic, "revivals_performed");
+    }
+    
+    // Log the revival
+    logRevival(patient, medic, event.getTimestamp());
+}</code></pre>
+                </div>
+            </div>
+
+            <div style="margin-top: 3rem;">
+                <h2 class="section-title" style="font-size: 2rem;">KOManager API</h2>
+                
+                <div class="gameplay-item">
+                    <h3><i class="fas fa-toolbox"></i> Manager Methods</h3>
+                    <p>The KOManager provides methods to interact with the KO system programmatically.</p>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Method</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>isKO(Player player)</code></td>
+                                <td>Check if player is currently in KO state</td>
+                            </tr>
+                            <tr>
+                                <td><code>getKOData(Player player)</code></td>
+                                <td>Get KOData object for player (can be null)</td>
+                            </tr>
+                            <tr>
+                                <td><code>setKO(Player player)</code></td>
+                                <td>Set player to KO state (default duration)</td>
+                            </tr>
+                            <tr>
+                                <td><code>setKO(Player player, int seconds)</code></td>
+                                <td>Set player to KO for specific duration</td>
+                            </tr>
+                            <tr>
+                                <td><code>revive(Player target, Player reviver)</code></td>
+                                <td>Revive a KO'd player</td>
+                            </tr>
+                            <tr>
+                                <td><code>execute(Player player)</code></td>
+                                <td>Execute a KO'd player (permanent death)</td>
+                            </tr>
+                            <tr>
+                                <td><code>toggleCrawl(Player player)</code></td>
+                                <td>Toggle crawling mode for KO'd player</td>
+                            </tr>
+                            <tr>
+                                <td><code>sendDistress(Player player)</code></td>
+                                <td>Send distress signal for KO'd player</td>
+                            </tr>
+                            <tr>
+                                <td><code>handleLogout(Player player)</code></td>
+                                <td>Handle player logout while KO'd</td>
+                            </tr>
+                            <tr>
+                                <td><code>pullOfflineKO(UUID uuid)</code></td>
+                                <td>Get remaining KO time for offline player</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="gameplay-item" style="margin-top: 2rem;">
+                    <h3>Example Usage:</h3>
+                    <pre><code>// Check if player is KO'd
+if (koManager.isKO(player)) {
+    player.sendMessage("You are currently KO'd!");
+}
+
+// Force KO a player
+koManager.setKO(player, 30); // 30 seconds
+
+// Revive a player
+if (koManager.isKO(target)) {
+    koManager.revive(target, reviverPlayer);
+}
+
+// Execute a KO'd player
+if (koManager.isKO(target)) {
+    koManager.execute(target);
+}
+
+// Get KO data
+KOData koData = koManager.getKOData(player);
+if (koData != null && koData.isKo()) {
+    // Player is KO'd, access KO-specific data
+    long endTime = koData.getEndTimestamp();
+    boolean crawling = koData.isCrawling();
+}</code></pre>
+                </div>
+            </div>
+
+            <div style="margin-top: 3rem;">
+                <h2 class="section-title" style="font-size: 2rem;">Integration Examples</h2>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <h3><i class="fas fa-coins"></i> Economy Integration</h3>
+                        <pre style="text-align: left; font-size: 0.8rem;"><code>@EventHandler
+public void onRevive(PlayerReanimatedEvent e) {
+    if (e.isSuccessful() && e.getReanimator() != null) {
+        Player medic = e.getReanimator();
+        economy.depositPlayer(medic, 100.0);
+        medic.sendMessage("§a+$100 for revival!");
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="feature-card">
+                        <h3><i class="fas fa-users"></i> Team System</h3>
+                        <pre style="text-align: left; font-size: 0.8rem;"><code>@EventHandler
+public void onRevive(PlayerReanimatedEvent e) {
+    Player patient = e.getPlayer();
+    Player medic = e.getReanimator();
+    
+    if (medic == null) return;
+    
+    String patientTeam = getTeam(patient);
+    String medicTeam = getTeam(medic);
+    
+    if (!patientTeam.equals(medicTeam)) {
+        medic.sendMessage("§cNot your team!");
+        // Note: Event isn't cancellable
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="feature-card">
+                        <h3><i class="fas fa-trophy"></i> Achievement System</h3>
+                        <pre style="text-align: left; font-size: 0.8rem;"><code>@EventHandler
+public void onRevive(PlayerReanimatedEvent e) {
+    if (e.isSuccessful() && e.getReanimator() != null) {
+        Player medic = e.getReanimator();
+        int revivals = incrementStat(medic, "revivals");
+        
+        if (revivals == 10) {
+            giveAchievement(medic, "First Aid");
+        } else if (revivals == 100) {
+            giveAchievement(medic, "Guardian Angel");
+        }
+    }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 3rem;">
+                <h2 class="section-title" style="font-size: 2rem;">Best Practices</h2>
+                
+                <div class="gameplay-item">
+                    <h3><i class="fas fa-check-circle"></i> Recommended Practices</h3>
+                    <ul>
+                        <li><strong>Null checks:</strong> Always check if <code>getReanimator()</code> returns null</li>
+                        <li><strong>KO verification:</strong> Use <code>isKO()</code> before KO operations</li>
+                        <li><strong>Event priorities:</strong> Use appropriate priorities for event handlers</li>
+                        <li><strong>Cache managers:</strong> Store manager references instead of fetching repeatedly</li>
+                        <li><strong>Soft dependencies:</strong> Use softdepend if ReanimateMC is optional</li>
+                    </ul>
+                </div>
+
+                <div class="gameplay-item" style="margin-top: 2rem;">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Common Pitfalls</h3>
+                    <ul>
+                        <li><strong>Missing null check:</strong> <code>getReanimator()</code> can return null (command usage, NPC revival)</li>
+                        <li><strong>Wrong event priority:</strong> Use HIGH/HIGHEST if you need to cancel before other plugins</li>
+                        <li><strong>Direct field access:</strong> Always use getter methods, don't access fields directly</li>
+                        <li><strong>Forgetting soft dependency:</strong> Declare in plugin.yml to avoid load order issues</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="margin-top: 3rem; text-align: center;">
+                <a href="npc-system.html" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> NPC 시스템
+                </a>
+                <a href="index.html" class="btn btn-primary">
+                    <i class="fas fa-home"></i> Back to 홈
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>ReanimateMC</h4>
+                <p>A revolutionary Minecraft plugin by Jachou</p>
+                <p class="version">Version 1.2.02</p>
+            </div>
+            <div class="footer-section">
+                <h4>Links</h4>
+                <ul>
+                    <li><a href="https://github.com/MatisseAD/ReanimateMC" target="_blank">GitHub</a></li>
+                    <li><a href="https://github.com/MatisseAD/ReanimateMC/issues" target="_blank">Report Issues</a></li>
+                    <li><a href="https://github.com/MatisseAD/ReanimateMC/releases" target="_blank">Downloads</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>문서</h4>
+                <ul>
+                    <li><a href="commands.html">명령어</a></li>
+                    <li><a href="permissions.html">권한</a></li>
+                    <li><a href="configuration.html">설정</a></li>
+                    <li><a href="api.html">API</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 ReanimateMC. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../assets/js/main.js"></script>
+</body>
+</html>

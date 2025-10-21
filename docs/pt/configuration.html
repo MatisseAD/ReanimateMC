@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuração - ReanimateMC Documentação</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-heart-pulse"></i>
+                <span>ReanimateMC</span>
+            </div>
+            <button class="nav-toggle" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="nav-links">
+                <a href="index.html">Início</a>
+                <a href="commands.html">Comandos</a>
+                <a href="permissions.html">Permissões</a>
+                <a href="configuration.html" class="active">Configuração</a>
+                <a href="npc-system.html">Sistema NPC</a>
+                <a href="api.html">API</a>
+            </div>
+            <div class="language-selector">
+                <i class="fas fa-globe"></i>
+                <select id="lang-select" onchange="changeLanguage(this.value)">
+                    <option value="en">English</option>
+                    <option value="fr">Français</option>
+                    <option value="es">Español</option>
+                    <option value="de">Deutsch</option>
+                    <option value="it">Italiano</option>
+                    <option value="ru">Русский</option>
+                    <option value="zh">中文</option>
+                    <option value="kr">한국어</option>
+                    <option value="pt" selected>Português</option>
+                </select>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="section">
+            <h1 class="section-title">Configuração Guide</h1>
+            <p style="text-align: center; color: #7f8c8d; margin-bottom: 3rem;">
+                Complete guide to configuring ReanimateMC
+            </p>
+
+            <div class="gameplay-item">
+                <h2><i class="fas fa-cog"></i> Configuração Overview</h2>
+                <p>
+                    ReanimateMC can be configured in two ways:
+                </p>
+                <ul>
+                    <li><strong>GUI Configuração:</strong> Use <code>/reanimatemc config</code> for an intuitive in-game interface</li>
+                    <li><strong>File Configuração:</strong> Edit <code>plugins/ReanimateMC/config.yml</code> directly</li>
+                </ul>
+                <p style="margin-top: 1rem;">
+                    After making changes to config.yml manually, use <code>/reanimatemc reload</code> to apply them.
+                </p>
+            </div>
+
+            <div style="margin-top: 3rem;">
+                <h2 class="section-title" style="font-size: 2rem;">General Settings</h2>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Setting</th>
+                            <th>Default</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>language</code></td>
+                            <td>"en"</td>
+                            <td>Plugin language (en, fr, es, de, it, ru, zh, kr, pt)</td>
+                        </tr>
+                        <tr>
+                            <td><code>first_run</code></td>
+                            <td>true</td>
+                            <td>Whether this is the first run of the plugin</td>
+                        </tr>
+                        <tr>
+                            <td><code>setup_completed</code></td>
+                            <td>false</td>
+                            <td>Whether initial setup has been completed</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="margin-top: 3rem;">
+                <h2 class="section-title" style="font-size: 2rem;">Revival System (reanimation)</h2>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Setting</th>
+                            <th>Default</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>require_special_item</code></td>
+                            <td>true</td>
+                            <td>Whether reviving requires holding a special item</td>
+                        </tr>
+                        <tr>
+                            <td><code>required_item</code></td>
+                            <td>GOLDEN_APPLE</td>
+                            <td>Item required for revival (Minecraft material name)</td>
+                        </tr>
+                        <tr>
+                            <td><code>duration_ticks</code></td>
+                            <td>100</td>
+                            <td>Time to complete revival (20 ticks = 1 second)</td>
+                        </tr>
+                        <tr>
+                            <td><code>health_restored</code></td>
+                            <td>4</td>
+                            <td>Hearts restored after revival (2 = 1 heart)</td>
+                        </tr>
+                        <tr>
+                            <td><code>cooldown</code></td>
+                            <td>60</td>
+                            <td>Cooldown between revivals in seconds</td>
+                        </tr>
+                        <tr>
+                            <td><code>revive_cooldown</code></td>
+                            <td>60</td>
+                            <td>Personal revival cooldown for the revived player</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="gameplay-item" style="margin-top: 2rem;">
+                    <h3>Example Configuração</h3>
+                    <pre><code>reanimation:
+  require_special_item: true
+  required_item: GOLDEN_APPLE
+  duration_ticks: 100      # 5 seconds
+  health_restored: 4       # 2 hearts
+  cooldown: 60             # 1 minute
+  revive_cooldown: 60      # 1 minute</code></pre>
+                </div>
+            </div>
+
+            <div style="margin-top: 3rem;">
+                <h2 class="section-title" style="font-size: 2rem;">KO System (knockout)</h2>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Setting</th>
+                            <th>Default</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>enabled</code></td>
+                            <td>true</td>
+                            <td>Enable/disable the KO system entirely</td>
+                        </tr>
+                        <tr>
+                            <td><code>duration_seconds</code></td>
+                            <td>30</td>
+                            <td>How long KO lasts before death</td>
+                        </tr>
+                        <tr>
+                            <td><code>movement_disabled</code></td>
+                            <td>true</td>
+                            <td>Disable movement during KO (except crawl)</td>
+                        </tr>
+                        <tr>
+                            <td><code>use_particles</code></td>
+                            <td>true</td>
+                            <td>Show particles around KO'd players</td>
+                        </tr>
+                        <tr>
+                            <td><code>heartbeat_sound</code></td>
+                            <td>true</td>
+                            <td>Play heartbeat sound during KO</td>
+                        </tr>
+                        <tr>
+                            <td><code>blindness</code></td>
+                            <td>true</td>
+                            <td>Apply blindness effect to KO'd players</td>
+                        </tr>
+                        <tr>
+                            <td><code>suicide_hold_seconds</code></td>
+                            <td>3</td>
+                            <td>Hold shift time to commit suicide while KO'd</td>
+                        </tr>
+                        <tr>
+                            <td><code>weakness_level</code></td>
+                            <td>1</td>
+                            <td>Weakness effect level (0 to disable)</td>
+                        </tr>
+                        <tr>
+                            <td><code>fatigue_level</code></td>
+                            <td>1</td>
+                            <td>Mining fatigue level (0 to disable)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="margin-top: 3rem;">
+                <h2 class="section-title" style="font-size: 2rem;">Execution System (execution)</h2>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Setting</th>
+                            <th>Default</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>enabled</code></td>
+                            <td>true</td>
+                            <td>Enable/disable execution system</td>
+                        </tr>
+                        <tr>
+                            <td><code>hold_duration_ticks</code></td>
+                            <td>40</td>
+                            <td>Hold time to execute (20 ticks = 1 second)</td>
+                        </tr>
+                        <tr>
+                            <td><code>message_broadcast</code></td>
+                            <td>true</td>
+                            <td>Broadcast execution messages to server</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="margin-top: 3rem;">
+                <h2 class="section-title" style="font-size: 2rem;">Revival Effects (effects_on_revive)</h2>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Setting</th>
+                            <th>Default</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>nausea</code></td>
+                            <td>5</td>
+                            <td>Nausea duration in seconds (0 to disable)</td>
+                        </tr>
+                        <tr>
+                            <td><code>slowness</code></td>
+                            <td>10</td>
+                            <td>Slowness duration in seconds (0 to disable)</td>
+                        </tr>
+                        <tr>
+                            <td><code>resistance</code></td>
+                            <td>10</td>
+                            <td>Resistance duration in seconds (0 to disable)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="margin-top: 3rem;">
+                <h2 class="section-title" style="font-size: 2rem;">Crawling System (prone)</h2>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Setting</th>
+                            <th>Default</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>enabled</code></td>
+                            <td>true</td>
+                            <td>Enable prone/crawling mechanics</td>
+                        </tr>
+                        <tr>
+                            <td><code>allow_crawl</code></td>
+                            <td>true</td>
+                            <td>Allow KO'd players to crawl</td>
+                        </tr>
+                        <tr>
+                            <td><code>crawl_slowness_level</code></td>
+                            <td>5</td>
+                            <td>Slowness level when crawling</td>
+                        </tr>
+                        <tr>
+                            <td><code>auto_crawl</code></td>
+                            <td>false</td>
+                            <td>Automatically enable crawling on KO</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="margin-top: 3rem;">
+                <h2 class="section-title" style="font-size: 2rem;">Other Settings</h2>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Setting</th>
+                            <th>Default</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>looting</td>
+                            <td><code>enabled</code></td>
+                            <td>true</td>
+                            <td>Allow looting KO'd player inventories</td>
+                        </tr>
+                        <tr>
+                            <td>tablist</td>
+                            <td><code>enabled</code></td>
+                            <td>true</td>
+                            <td>Show [KO] tag in player list</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="margin-top: 3rem;">
+                <h2 class="section-title" style="font-size: 2rem;">Sistema NPC Configuração</h2>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Setting</th>
+                            <th>Default</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>enabled</code></td>
+                            <td>true</td>
+                            <td>Enable/disable NPC summon system</td>
+                        </tr>
+                        <tr>
+                            <td><code>max_summons_per_player</code></td>
+                            <td>1</td>
+                            <td>Maximum NPCs per player at once</td>
+                        </tr>
+                        <tr>
+                            <td><code>summon_cooldown</code></td>
+                            <td>300</td>
+                            <td>Cooldown between summons in seconds (5 min)</td>
+                        </tr>
+                        <tr>
+                            <td><code>offline_timeout</code></td>
+                            <td>300</td>
+                            <td>Time before NPC despawns if owner offline (seconds)</td>
+                        </tr>
+                        <tr>
+                            <td><code>require_item</code></td>
+                            <td>false</td>
+                            <td>Require item to summon NPCs</td>
+                        </tr>
+                        <tr>
+                            <td><code>required_item</code></td>
+                            <td>NETHER_STAR</td>
+                            <td>Item required for summoning (if enabled)</td>
+                        </tr>
+                        <tr>
+                            <td><code>item_to_summon_golem</code></td>
+                            <td>GOLD_INGOT</td>
+                            <td>Specific item for golem summons</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="gameplay-item" style="margin-top: 2rem;">
+                    <h3>Example NPC Configuração</h3>
+                    <pre><code>npc_summon:
+  enabled: true
+  max_summons_per_player: 1
+  summon_cooldown: 300        # 5 minutes
+  offline_timeout: 300        # 5 minutes
+  require_item: false
+  required_item: NETHER_STAR
+  item_to_summon_golem: GOLD_INGOT</code></pre>
+                </div>
+            </div>
+
+            <div style="margin-top: 4rem;">
+                <h2 class="section-title" style="font-size: 2rem;">Configuração Tips</h2>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-gamepad"></i>
+                        </div>
+                        <h3>Server Types</h3>
+                        <ul style="text-align: left; font-size: 0.9rem;">
+                            <li><strong>PvP:</strong> Short KO duration (20-30s), enable execution</li>
+                            <li><strong>RP:</strong> Longer KO (60s+), disable execution, enable crawl</li>
+                            <li><strong>Hardcore:</strong> Short KO (15s), expensive revival items</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-tachometer-alt"></i>
+                        </div>
+                        <h3>Performance</h3>
+                        <ul style="text-align: left; font-size: 0.9rem;">
+                            <li>Disable particles if lagging</li>
+                            <li>Reduce heartbeat sounds</li>
+                            <li>Lower NPC summon limits</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-balance-scale"></i>
+                        </div>
+                        <h3>Balance</h3>
+                        <ul style="text-align: left; font-size: 0.9rem;">
+                            <li>Match revival time to server pace</li>
+                            <li>Adjust cooldowns for activity level</li>
+                            <li>Consider item economy for requirements</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 3rem; text-align: center;">
+                <a href="permissions.html" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Permissões
+                </a>
+                <a href="npc-system.html" class="btn btn-primary">
+                    <i class="fas fa-arrow-right"></i> Sistema NPC
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>ReanimateMC</h4>
+                <p>A revolutionary Minecraft plugin by Jachou</p>
+                <p class="version">Version 1.2.02</p>
+            </div>
+            <div class="footer-section">
+                <h4>Links</h4>
+                <ul>
+                    <li><a href="https://github.com/MatisseAD/ReanimateMC" target="_blank">GitHub</a></li>
+                    <li><a href="https://github.com/MatisseAD/ReanimateMC/issues" target="_blank">Report Issues</a></li>
+                    <li><a href="https://github.com/MatisseAD/ReanimateMC/releases" target="_blank">Downloads</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Documentação</h4>
+                <ul>
+                    <li><a href="commands.html">Comandos</a></li>
+                    <li><a href="permissions.html">Permissões</a></li>
+                    <li><a href="configuration.html">Configuração</a></li>
+                    <li><a href="api.html">API</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 ReanimateMC. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../assets/js/main.js"></script>
+</body>
+</html>
