@@ -182,7 +182,20 @@ public class NPCSummonManager {
             .filter(ReanimatorNPC::isValid)
             .collect(Collectors.toList());
     }
-    
+
+    public int getPlayerGolems(Player player) {
+        List<UUID> npcIds = playerSummons.getOrDefault(player.getUniqueId(), Collections.emptyList());
+        int count = 0;
+        for (UUID id : npcIds) {
+            ReanimatorNPC npc = activeNPCs.get(id);
+            if (npc != null && npc.isValid() && npc.getEntity() instanceof IronGolem) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+
     /**
      * Spawn the appropriate entity based on type
      */
