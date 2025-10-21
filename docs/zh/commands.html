@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Commands - ReanimateMC Documentation</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <title>命令 - ReanimateMC 文档</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -18,11 +18,11 @@
                 <i class="fas fa-bars"></i>
             </button>
             <div class="nav-links">
-                <a href="index.html">Home</a>
-                <a href="commands.html" class="active">Commands</a>
-                <a href="permissions.html">Permissions</a>
-                <a href="configuration.html">Configuration</a>
-                <a href="npc-system.html">NPC System</a>
+                <a href="index.html">主页</a>
+                <a href="commands.html" class="active">命令</a>
+                <a href="permissions.html">权限</a>
+                <a href="configuration.html">配置</a>
+                <a href="npc-system.html">NPC系统</a>
                 <a href="api.html">API</a>
             </div>
             <div class="language-selector">
@@ -34,7 +34,7 @@
                     <option value="de">Deutsch</option>
                     <option value="it">Italiano</option>
                     <option value="ru">Русский</option>
-                    <option value="zh">中文</option>
+                    <option value="zh" selected>中文</option>
                     <option value="kr">한국어</option>
                     <option value="pt">Português</option>
                 </select>
@@ -44,7 +44,7 @@
 
     <main class="container">
         <section class="section">
-            <h1 class="section-title">Commands Reference</h1>
+            <h1 class="section-title">命令 Reference</h1>
             <p style="text-align: center; color: #7f8c8d; margin-bottom: 3rem;">
                 Complete list of all available commands in ReanimateMC
             </p>
@@ -53,12 +53,12 @@
                 <h2><i class="fas fa-terminal"></i> Command Overview</h2>
                 <p>
                     All ReanimateMC commands start with <code>/reanimatemc</code> or the shorter alias <code>/rmc</code>.
-                    Commands are organized by category: Administrative, Player Management, NPC System, and Utility commands.
+                    命令 are organized by category: Administrative, Player Management, NPC系统, and Utility commands.
                 </p>
             </div>
 
             <div style="margin-top: 3rem;">
-                <h2 class="section-title" style="font-size: 2rem;">Administrative Commands</h2>
+                <h2 class="section-title" style="font-size: 2rem;">Administrative 命令</h2>
                 
                 <table>
                     <thead>
@@ -92,14 +92,14 @@
                 </table>
 
                 <div class="gameplay-item" style="margin-top: 2rem;">
-                    <h3><i class="fas fa-info-circle"></i> Administrative Commands Details</h3>
+                    <h3><i class="fas fa-info-circle"></i> Administrative 命令 Details</h3>
                     
                     <h4 style="margin-top: 1.5rem; color: #e74c3c;">/reanimatemc reload</h4>
                     <p><strong>Purpose:</strong> Reloads all configuration files and language files without restarting the server.</p>
                     <p><strong>When to use:</strong> After making changes to config.yml or language files.</p>
                     <p><strong>Example:</strong></p>
                     <pre><code>/reanimatemc reload</code></pre>
-                    <p><strong>Output:</strong> "Configuration and language reloaded!"</p>
+                    <p><strong>Output:</strong> "配置 and language reloaded!"</p>
 
                     <h4 style="margin-top: 1.5rem; color: #e74c3c;">/reanimatemc config</h4>
                     <p><strong>Purpose:</strong> Opens an interactive GUI where you can configure all plugin settings.</p>
@@ -117,7 +117,7 @@
             </div>
 
             <div style="margin-top: 4rem;">
-                <h2 class="section-title" style="font-size: 2rem;">Player Management Commands</h2>
+                <h2 class="section-title" style="font-size: 2rem;">Player Management 命令</h2>
                 
                 <table>
                     <thead>
@@ -157,7 +157,7 @@
                 </table>
 
                 <div class="gameplay-item" style="margin-top: 2rem;">
-                    <h3><i class="fas fa-info-circle"></i> Player Management Commands Details</h3>
+                    <h3><i class="fas fa-info-circle"></i> Player Management 命令 Details</h3>
                     
                     <h4 style="margin-top: 1.5rem; color: #e74c3c;">/reanimatemc revive &lt;player&gt;</h4>
                     <p><strong>Purpose:</strong> Instantly revives a knocked-out player without requiring items or time.</p>
@@ -203,7 +203,7 @@
             </div>
 
             <div style="margin-top: 4rem;">
-                <h2 class="section-title" style="font-size: 2rem;">NPC System Commands</h2>
+                <h2 class="section-title" style="font-size: 2rem;">NPC系统 命令</h2>
                 
                 <table>
                     <thead>
@@ -237,7 +237,7 @@
                 </table>
 
                 <div class="gameplay-item" style="margin-top: 2rem;">
-                    <h3><i class="fas fa-info-circle"></i> NPC System Commands Details</h3>
+                    <h3><i class="fas fa-info-circle"></i> NPC系统 命令 Details</h3>
                     
                     <h4 style="margin-top: 1.5rem; color: #e74c3c;">/reanimatemc summon &lt;type&gt; [player]</h4>
                     <p><strong>Purpose:</strong> Summons an AI-controlled NPC that can revive KO'd players.</p>
@@ -281,7 +281,7 @@
             </div>
 
             <div style="margin-top: 4rem;">
-                <h2 class="section-title" style="font-size: 2rem;">Utility Commands</h2>
+                <h2 class="section-title" style="font-size: 2rem;">Utility 命令</h2>
                 
                 <table>
                     <thead>
@@ -303,7 +303,7 @@
                 </table>
 
                 <div class="gameplay-item" style="margin-top: 2rem;">
-                    <h3><i class="fas fa-info-circle"></i> Utility Commands Details</h3>
+                    <h3><i class="fas fa-info-circle"></i> Utility 命令 Details</h3>
                     
                     <h4 style="margin-top: 1.5rem; color: #e74c3c;">/reanimatemc removeGlowingEffect &lt;player&gt;</h4>
                     <p><strong>Purpose:</strong> Removes the glowing effect from a player if they're stuck with it.</p>
@@ -338,21 +338,21 @@
                         <div class="feature-icon">
                             <i class="fas fa-user-shield"></i>
                         </div>
-                        <h3>Admin Commands</h3>
-                        <p>Configuration, reload, and setup commands require <code>reanimatemc.admin</code> permission.</p>
+                        <h3>Admin 命令</h3>
+                        <p>配置, reload, and setup commands require <code>reanimatemc.admin</code> permission.</p>
                     </div>
                     <div class="feature-card">
                         <div class="feature-icon">
                             <i class="fas fa-users"></i>
                         </div>
-                        <h3>Player Commands</h3>
+                        <h3>Player 命令</h3>
                         <p>Status and crawl commands are available to all players by default.</p>
                     </div>
                     <div class="feature-card">
                         <div class="feature-icon">
                             <i class="fas fa-robot"></i>
                         </div>
-                        <h3>NPC Commands</h3>
+                        <h3>NPC 命令</h3>
                         <p>Summon commands require specific permissions per NPC type.</p>
                     </div>
                 </div>
@@ -360,10 +360,10 @@
 
             <div style="margin-top: 3rem; text-align: center;">
                 <a href="permissions.html" class="btn btn-primary">
-                    <i class="fas fa-arrow-right"></i> View Permissions
+                    <i class="fas fa-arrow-right"></i> View 权限
                 </a>
                 <a href="configuration.html" class="btn btn-secondary">
-                    <i class="fas fa-cog"></i> Configuration Guide
+                    <i class="fas fa-cog"></i> 配置 Guide
                 </a>
             </div>
         </section>
@@ -385,11 +385,11 @@
                 </ul>
             </div>
             <div class="footer-section">
-                <h4>Documentation</h4>
+                <h4>文档</h4>
                 <ul>
-                    <li><a href="commands.html">Commands</a></li>
-                    <li><a href="permissions.html">Permissions</a></li>
-                    <li><a href="configuration.html">Configuration</a></li>
+                    <li><a href="commands.html">命令</a></li>
+                    <li><a href="permissions.html">权限</a></li>
+                    <li><a href="configuration.html">配置</a></li>
                     <li><a href="api.html">API</a></li>
                 </ul>
             </div>
@@ -399,6 +399,6 @@
         </div>
     </footer>
 
-    <script src="assets/js/main.js"></script>
+    <script src="../assets/js/main.js"></script>
 </body>
 </html>

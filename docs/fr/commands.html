@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Commands - ReanimateMC Documentation</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <title>Commandes - Documentation ReanimateMC</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -18,18 +18,18 @@
                 <i class="fas fa-bars"></i>
             </button>
             <div class="nav-links">
-                <a href="index.html">Home</a>
-                <a href="commands.html" class="active">Commands</a>
+                <a href="index.html">Accueil</a>
+                <a href="commands.html" class="active">Commandes</a>
                 <a href="permissions.html">Permissions</a>
                 <a href="configuration.html">Configuration</a>
-                <a href="npc-system.html">NPC System</a>
+                <a href="npc-system.html">Système NPC</a>
                 <a href="api.html">API</a>
             </div>
             <div class="language-selector">
                 <i class="fas fa-globe"></i>
                 <select id="lang-select" onchange="changeLanguage(this.value)">
                     <option value="en">English</option>
-                    <option value="fr">Français</option>
+                    <option value="fr" selected>Français</option>
                     <option value="es">Español</option>
                     <option value="de">Deutsch</option>
                     <option value="it">Italiano</option>
@@ -44,47 +44,47 @@
 
     <main class="container">
         <section class="section">
-            <h1 class="section-title">Commands Reference</h1>
+            <h1 class="section-title">Référence des Commandes</h1>
             <p style="text-align: center; color: #7f8c8d; margin-bottom: 3rem;">
-                Complete list of all available commands in ReanimateMC
+                Liste complète de toutes les commandes disponibles dans ReanimateMC
             </p>
 
             <div class="gameplay-item">
-                <h2><i class="fas fa-terminal"></i> Command Overview</h2>
+                <h2><i class="fas fa-terminal"></i> Aperçu des Commandes</h2>
                 <p>
-                    All ReanimateMC commands start with <code>/reanimatemc</code> or the shorter alias <code>/rmc</code>.
-                    Commands are organized by category: Administrative, Player Management, NPC System, and Utility commands.
+                    Toutes les commandes ReanimateMC commencent par <code>/reanimatemc</code> ou l'alias plus court <code>/rmc</code>.
+                    Les commandes sont organisées par catégorie : Administratives, Gestion des Joueurs, Système NPC et Commandes Utilitaires.
                 </p>
             </div>
 
             <div style="margin-top: 3rem;">
-                <h2 class="section-title" style="font-size: 2rem;">Administrative Commands</h2>
+                <h2 class="section-title" style="font-size: 2rem;">Commandes Administratives</h2>
                 
                 <table>
                     <thead>
                         <tr>
-                            <th>Command</th>
+                            <th>Commande</th>
                             <th>Description</th>
                             <th>Permission</th>
-                            <th>Usage</th>
+                            <th>Utilisation</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td><code>/reanimatemc reload</code></td>
-                            <td>Reload plugin configuration and language files</td>
+                            <td>Recharger la configuration et les fichiers de langue</td>
                             <td><code>reanimatemc.admin</code></td>
                             <td><code>/reanimatemc reload</code></td>
                         </tr>
                         <tr>
                             <td><code>/reanimatemc config</code></td>
-                            <td>Open GUI configuration interface</td>
+                            <td>Ouvrir l'interface de configuration GUI</td>
                             <td><code>reanimatemc.admin</code></td>
                             <td><code>/reanimatemc config</code></td>
                         </tr>
                         <tr>
                             <td><code>/reanimatemc setup</code></td>
-                            <td>Mark initial setup as complete</td>
+                            <td>Marquer la configuration initiale comme terminée</td>
                             <td><code>reanimatemc.admin</code></td>
                             <td><code>/reanimatemc setup</code></td>
                         </tr>
@@ -92,32 +92,32 @@
                 </table>
 
                 <div class="gameplay-item" style="margin-top: 2rem;">
-                    <h3><i class="fas fa-info-circle"></i> Administrative Commands Details</h3>
+                    <h3><i class="fas fa-info-circle"></i> Détails des Commandes Administratives</h3>
                     
                     <h4 style="margin-top: 1.5rem; color: #e74c3c;">/reanimatemc reload</h4>
-                    <p><strong>Purpose:</strong> Reloads all configuration files and language files without restarting the server.</p>
-                    <p><strong>When to use:</strong> After making changes to config.yml or language files.</p>
-                    <p><strong>Example:</strong></p>
+                    <p><strong>Objectif :</strong> Recharge tous les fichiers de configuration et de langue sans redémarrer le serveur.</p>
+                    <p><strong>Quand l'utiliser :</strong> Après avoir modifié config.yml ou les fichiers de langue.</p>
+                    <p><strong>Exemple :</strong></p>
                     <pre><code>/reanimatemc reload</code></pre>
-                    <p><strong>Output:</strong> "Configuration and language reloaded!"</p>
+                    <p><strong>Sortie :</strong> "Configuration et langue rechargées !"</p>
 
                     <h4 style="margin-top: 1.5rem; color: #e74c3c;">/reanimatemc config</h4>
-                    <p><strong>Purpose:</strong> Opens an interactive GUI where you can configure all plugin settings.</p>
-                    <p><strong>Features:</strong></p>
+                    <p><strong>Objectif :</strong> Ouvre une interface GUI interactive où vous pouvez configurer tous les paramètres du plugin.</p>
+                    <p><strong>Fonctionnalités :</strong></p>
                     <ul>
-                        <li>Toggle features on/off</li>
-                        <li>Modify numeric values (durations, cooldowns, etc.)</li>
-                        <li>Change required items</li>
-                        <li>Real-time configuration preview</li>
-                        <li>Save/Reset functionality</li>
+                        <li>Activer/désactiver les fonctionnalités</li>
+                        <li>Modifier les valeurs numériques (durées, temps de recharge, etc.)</li>
+                        <li>Changer les objets requis</li>
+                        <li>Aperçu de configuration en temps réel</li>
+                        <li>Fonctionnalité Sauvegarder/Réinitialiser</li>
                     </ul>
-                    <p><strong>Example:</strong></p>
+                    <p><strong>Exemple :</strong></p>
                     <pre><code>/reanimatemc config</code></pre>
                 </div>
             </div>
 
             <div style="margin-top: 4rem;">
-                <h2 class="section-title" style="font-size: 2rem;">Player Management Commands</h2>
+                <h2 class="section-title" style="font-size: 2rem;">Commandes de Gestion des Joueurs</h2>
                 
                 <table>
                     <thead>
@@ -157,7 +157,7 @@
                 </table>
 
                 <div class="gameplay-item" style="margin-top: 2rem;">
-                    <h3><i class="fas fa-info-circle"></i> Player Management Commands Details</h3>
+                    <h3><i class="fas fa-info-circle"></i> Player Management Commandes Details</h3>
                     
                     <h4 style="margin-top: 1.5rem; color: #e74c3c;">/reanimatemc revive &lt;player&gt;</h4>
                     <p><strong>Purpose:</strong> Instantly revives a knocked-out player without requiring items or time.</p>
@@ -203,7 +203,7 @@
             </div>
 
             <div style="margin-top: 4rem;">
-                <h2 class="section-title" style="font-size: 2rem;">NPC System Commands</h2>
+                <h2 class="section-title" style="font-size: 2rem;">Système NPC Commandes</h2>
                 
                 <table>
                     <thead>
@@ -237,7 +237,7 @@
                 </table>
 
                 <div class="gameplay-item" style="margin-top: 2rem;">
-                    <h3><i class="fas fa-info-circle"></i> NPC System Commands Details</h3>
+                    <h3><i class="fas fa-info-circle"></i> Système NPC Commandes Details</h3>
                     
                     <h4 style="margin-top: 1.5rem; color: #e74c3c;">/reanimatemc summon &lt;type&gt; [player]</h4>
                     <p><strong>Purpose:</strong> Summons an AI-controlled NPC that can revive KO'd players.</p>
@@ -281,7 +281,7 @@
             </div>
 
             <div style="margin-top: 4rem;">
-                <h2 class="section-title" style="font-size: 2rem;">Utility Commands</h2>
+                <h2 class="section-title" style="font-size: 2rem;">Utility Commandes</h2>
                 
                 <table>
                     <thead>
@@ -303,7 +303,7 @@
                 </table>
 
                 <div class="gameplay-item" style="margin-top: 2rem;">
-                    <h3><i class="fas fa-info-circle"></i> Utility Commands Details</h3>
+                    <h3><i class="fas fa-info-circle"></i> Utility Commandes Details</h3>
                     
                     <h4 style="margin-top: 1.5rem; color: #e74c3c;">/reanimatemc removeGlowingEffect &lt;player&gt;</h4>
                     <p><strong>Purpose:</strong> Removes the glowing effect from a player if they're stuck with it.</p>
@@ -338,21 +338,21 @@
                         <div class="feature-icon">
                             <i class="fas fa-user-shield"></i>
                         </div>
-                        <h3>Admin Commands</h3>
+                        <h3>Admin Commandes</h3>
                         <p>Configuration, reload, and setup commands require <code>reanimatemc.admin</code> permission.</p>
                     </div>
                     <div class="feature-card">
                         <div class="feature-icon">
                             <i class="fas fa-users"></i>
                         </div>
-                        <h3>Player Commands</h3>
+                        <h3>Player Commandes</h3>
                         <p>Status and crawl commands are available to all players by default.</p>
                     </div>
                     <div class="feature-card">
                         <div class="feature-icon">
                             <i class="fas fa-robot"></i>
                         </div>
-                        <h3>NPC Commands</h3>
+                        <h3>NPC Commandes</h3>
                         <p>Summon commands require specific permissions per NPC type.</p>
                     </div>
                 </div>
@@ -387,7 +387,7 @@
             <div class="footer-section">
                 <h4>Documentation</h4>
                 <ul>
-                    <li><a href="commands.html">Commands</a></li>
+                    <li><a href="commands.html">Commandes</a></li>
                     <li><a href="permissions.html">Permissions</a></li>
                     <li><a href="configuration.html">Configuration</a></li>
                     <li><a href="api.html">API</a></li>
@@ -399,6 +399,6 @@
         </div>
     </footer>
 
-    <script src="assets/js/main.js"></script>
+    <script src="../assets/js/main.js"></script>
 </body>
 </html>

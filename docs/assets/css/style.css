@@ -500,25 +500,68 @@ body {
     color: #95a5a6;
 }
 
+/* Mobile Menu Toggle */
+.nav-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .nav-container {
-        flex-direction: column;
-        gap: 1rem;
+        flex-wrap: wrap;
+        padding: 1rem;
+    }
+
+    .nav-toggle {
+        display: block;
+        order: 2;
+    }
+
+    .nav-brand {
+        order: 1;
+        font-size: 1.2rem;
+    }
+
+    .language-selector {
+        order: 3;
     }
 
     .nav-links {
+        order: 4;
+        width: 100%;
         flex-direction: column;
         gap: 0.5rem;
         text-align: center;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+    }
+
+    .nav-links.active {
+        max-height: 500px;
+        margin-top: 1rem;
+    }
+
+    .hero {
+        padding: 3rem 1rem;
     }
 
     .hero-title {
-        font-size: 2.5rem;
+        font-size: 2rem;
     }
 
     .hero-subtitle {
-        font-size: 1.3rem;
+        font-size: 1.2rem;
+    }
+
+    .hero-description {
+        font-size: 1rem;
     }
 
     .hero-stats {
@@ -528,6 +571,24 @@ body {
 
     .hero-buttons {
         flex-direction: column;
+        width: 100%;
+    }
+
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .container {
+        padding: 1rem;
+    }
+
+    .section {
+        padding: 2rem 0;
+    }
+
+    .section-title {
+        font-size: 1.8rem;
     }
 
     .features-grid,
@@ -535,6 +596,83 @@ body {
     .compatibility-grid,
     .resources-grid {
         grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .feature-card,
+    .quick-start-step,
+    .compatibility-card,
+    .resource-card,
+    .gameplay-item {
+        padding: 1.5rem;
+    }
+
+    .bg-light {
+        margin: 0 -1rem;
+        padding: 2rem 1rem;
+    }
+
+    table {
+        font-size: 0.85rem;
+    }
+
+    th, td {
+        padding: 0.75rem 0.5rem;
+    }
+
+    pre {
+        font-size: 0.85rem;
+        padding: 0.75rem;
+    }
+
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .language-selector select {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 1.5rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+
+    .hero-description {
+        font-size: 0.9rem;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+    }
+
+    .stat-value {
+        font-size: 1.1rem;
+    }
+
+    .feature-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+    }
+
+    .step-number {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
     }
 }
 

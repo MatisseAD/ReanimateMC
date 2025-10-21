@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Permissions - ReanimateMC Documentation</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <title>Permissões - ReanimateMC Documentação</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -18,11 +18,11 @@
                 <i class="fas fa-bars"></i>
             </button>
             <div class="nav-links">
-                <a href="index.html">Home</a>
-                <a href="commands.html">Commands</a>
-                <a href="permissions.html" class="active">Permissions</a>
-                <a href="configuration.html">Configuration</a>
-                <a href="npc-system.html">NPC System</a>
+                <a href="index.html">Início</a>
+                <a href="commands.html">Comandos</a>
+                <a href="permissions.html" class="active">Permissões</a>
+                <a href="configuration.html">Configuração</a>
+                <a href="npc-system.html">Sistema NPC</a>
                 <a href="api.html">API</a>
             </div>
             <div class="language-selector">
@@ -36,7 +36,7 @@
                     <option value="ru">Русский</option>
                     <option value="zh">中文</option>
                     <option value="kr">한국어</option>
-                    <option value="pt">Português</option>
+                    <option value="pt" selected>Português</option>
                 </select>
             </div>
         </div>
@@ -44,7 +44,7 @@
 
     <main class="container">
         <section class="section">
-            <h1 class="section-title">Permissions Reference</h1>
+            <h1 class="section-title">Permissões Reference</h1>
             <p style="text-align: center; color: #7f8c8d; margin-bottom: 3rem;">
                 Complete list of all permissions for ReanimateMC
             </p>
@@ -53,15 +53,15 @@
                 <h2><i class="fas fa-shield-halved"></i> Permission Overview</h2>
                 <p>
                     ReanimateMC uses a comprehensive permission system to control access to features and commands.
-                    Permissions are organized into categories: Core Permissions, Feature Permissions, NPC Permissions, and Command Permissions.
+                    Permissões are organized into categories: Core Permissões, Feature Permissões, NPC Permissões, and Command Permissões.
                 </p>
                 <p style="margin-top: 1rem;">
-                    <strong>Permission Plugin Required:</strong> You need a permission plugin like LuckPerms, PermissionsEx, or GroupManager to manage these permissions.
+                    <strong>Permission Plugin Required:</strong> You need a permission plugin like LuckPerms, PermissõesEx, or GroupManager to manage these permissions.
                 </p>
             </div>
 
             <div style="margin-top: 3rem;">
-                <h2 class="section-title" style="font-size: 2rem;">Core Permissions</h2>
+                <h2 class="section-title" style="font-size: 2rem;">Core Permissões</h2>
                 
                 <table>
                     <thead>
@@ -96,7 +96,7 @@
                 </table>
 
                 <div class="gameplay-item" style="margin-top: 2rem;">
-                    <h3><i class="fas fa-info-circle"></i> Core Permissions Details</h3>
+                    <h3><i class="fas fa-info-circle"></i> Core Permissões Details</h3>
                     
                     <h4 style="margin-top: 1.5rem; color: #e74c3c;">reanimatemc.admin</h4>
                     <p><strong>Default:</strong> OP only</p>
@@ -128,7 +128,7 @@
             </div>
 
             <div style="margin-top: 4rem;">
-                <h2 class="section-title" style="font-size: 2rem;">Feature Permissions</h2>
+                <h2 class="section-title" style="font-size: 2rem;">Feature Permissões</h2>
                 
                 <table>
                     <thead>
@@ -168,23 +168,23 @@
                 </table>
 
                 <div class="gameplay-item" style="margin-top: 2rem;">
-                    <h3><i class="fas fa-info-circle"></i> Feature Permissions Details</h3>
+                    <h3><i class="fas fa-info-circle"></i> Feature Permissões Details</h3>
                     
                     <h4 style="margin-top: 1.5rem; color: #e74c3c;">reanimatemc.loot</h4>
                     <p><strong>Default:</strong> OP only</p>
                     <p><strong>Allows:</strong> Opening and accessing the inventory of KO'd players.</p>
                     <p><strong>Important:</strong> This is a powerful permission. Consider carefully before granting to regular players.</p>
-                    <p><strong>Configuration:</strong> Looting can be completely disabled in config.yml with <code>looting.enabled: false</code></p>
+                    <p><strong>Configuração:</strong> Looting can be completely disabled in config.yml with <code>looting.enabled: false</code></p>
 
                     <h4 style="margin-top: 1.5rem; color: #e74c3c;">reanimatemc.crawl</h4>
                     <p><strong>Default:</strong> All players (TRUE)</p>
                     <p><strong>Allows:</strong> KO'd players to toggle between immobilized and crawling states using <code>/reanimatemc crawl</code></p>
-                    <p><strong>Configuration:</strong> Crawling must be enabled in config: <code>prone.allow_crawl: true</code></p>
+                    <p><strong>Configuração:</strong> Crawling must be enabled in config: <code>prone.allow_crawl: true</code></p>
                 </div>
             </div>
 
             <div style="margin-top: 4rem;">
-                <h2 class="section-title" style="font-size: 2rem;">NPC System Permissions</h2>
+                <h2 class="section-title" style="font-size: 2rem;">Sistema NPC Permissões</h2>
                 
                 <table>
                     <thead>
@@ -229,13 +229,13 @@
                 </table>
 
                 <div class="gameplay-item" style="margin-top: 2rem;">
-                    <h3><i class="fas fa-info-circle"></i> NPC Permissions Details</h3>
+                    <h3><i class="fas fa-info-circle"></i> NPC Permissões Details</h3>
                     
                     <h4 style="margin-top: 1.5rem; color: #e74c3c;">reanimatemc.summon</h4>
                     <p><strong>Default:</strong> No one (FALSE)</p>
                     <p><strong>Purpose:</strong> Base permission required for any summon commands. Players need this AND a specific type permission.</p>
 
-                    <h4 style="margin-top: 1.5rem; color: #e74c3c;">Type-Specific Permissions</h4>
+                    <h4 style="margin-top: 1.5rem; color: #e74c3c;">Type-Specific Permissões</h4>
                     <p><strong>How it works:</strong> Players must have BOTH <code>reanimatemc.summon</code> AND the specific type permission.</p>
                     <p><strong>Example setup:</strong></p>
                     <pre><code># VIP Group
@@ -327,7 +327,7 @@ reanimatemc.removeGlowingEffect: true</code></pre>
             </div>
 
             <div style="margin-top: 4rem;">
-                <h2 class="section-title" style="font-size: 2rem;">LuckPerms Configuration Examples</h2>
+                <h2 class="section-title" style="font-size: 2rem;">LuckPerms Configuração Examples</h2>
                 
                 <div class="gameplay-item">
                     <h3><i class="fab fa-accessible-icon"></i> Basic Setup</h3>
@@ -418,7 +418,7 @@ reanimatemc.removeGlowingEffect: true</code></pre>
                         <div class="feature-icon">
                             <i class="fas fa-lightbulb"></i>
                         </div>
-                        <h3>Default Permissions</h3>
+                        <h3>Default Permissões</h3>
                         <p>Keep <code>revive</code> and <code>execute</code> available to all players for core gameplay. Restrict <code>loot</code> to prevent abuse.</p>
                     </div>
 
@@ -450,10 +450,10 @@ reanimatemc.removeGlowingEffect: true</code></pre>
 
             <div style="margin-top: 3rem; text-align: center;">
                 <a href="commands.html" class="btn btn-secondary">
-                    <i class="fas fa-arrow-left"></i> View Commands
+                    <i class="fas fa-arrow-left"></i> View Comandos
                 </a>
                 <a href="configuration.html" class="btn btn-primary">
-                    <i class="fas fa-arrow-right"></i> Configuration Guide
+                    <i class="fas fa-arrow-right"></i> Configuração Guide
                 </a>
             </div>
         </section>
@@ -475,11 +475,11 @@ reanimatemc.removeGlowingEffect: true</code></pre>
                 </ul>
             </div>
             <div class="footer-section">
-                <h4>Documentation</h4>
+                <h4>Documentação</h4>
                 <ul>
-                    <li><a href="commands.html">Commands</a></li>
-                    <li><a href="permissions.html">Permissions</a></li>
-                    <li><a href="configuration.html">Configuration</a></li>
+                    <li><a href="commands.html">Comandos</a></li>
+                    <li><a href="permissions.html">Permissões</a></li>
+                    <li><a href="configuration.html">Configuração</a></li>
                     <li><a href="api.html">API</a></li>
                 </ul>
             </div>
@@ -489,6 +489,6 @@ reanimatemc.removeGlowingEffect: true</code></pre>
         </div>
     </footer>
 
-    <script src="assets/js/main.js"></script>
+    <script src="../assets/js/main.js"></script>
 </body>
 </html>
