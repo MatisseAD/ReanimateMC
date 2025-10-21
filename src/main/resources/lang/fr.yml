@@ -151,7 +151,7 @@ option_effect_resistance: "Durée résistance"
 update_available: "Nouvelle version disponible:"
 update_log: "Nouvelle version dispo: %version% -> %url%"
 update_command_available: "Mise à jour dispo: %version% — %url%"
-update_up_to_date: "Vous êtes à jour pour votre version de Minecraft."update_up_to_date: "Vous êtes à jour pour votre version Minecraft."
+update_up_to_date: "Vous êtes à jour pour votre version de Minecraft."
 
 # Système de NPCs invoqués
 command_summon_usage: "Usage: /reanimatemc summon <golem|healer|protector> [joueur]"

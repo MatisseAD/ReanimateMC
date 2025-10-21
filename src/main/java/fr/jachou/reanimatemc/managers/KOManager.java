@@ -21,8 +21,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
 
 public class KOManager {
     private JavaPlugin plugin;
@@ -122,7 +120,7 @@ public class KOManager {
         }
         int fatigueLvl = plugin.getConfig().getInt("knockout.fatigue_level", 0);
         if (fatigueLvl > 0) {
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, Integer.MAX_VALUE, fatigueLvl - 1, false, false));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, Integer.MAX_VALUE, fatigueLvl - 1, false, false));
         }
 
 
@@ -132,10 +130,10 @@ public class KOManager {
             boolean allowCrawl = plugin.getConfig().getBoolean("prone.allow_crawl", false);
             if (data.isCrawling() && allowCrawl) {
                 int crawlLevel = plugin.getConfig().getInt("prone.crawl_slowness_level", 5);
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, crawlLevel, false, false));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, Integer.MAX_VALUE, crawlLevel, false, false));
                 player.setSwimming(true);
             } else {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 255, false, false));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, Integer.MAX_VALUE, 255, false, false));
                 if (allowCrawl) {
                     player.setSwimming(true);
                 }
@@ -146,7 +144,7 @@ public class KOManager {
         } else {
             // Comportement initial (pour les cas où prone n'est pas activé)
             if (plugin.getConfig().getBoolean("knockout.movement_disabled", true)) {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 255, false, false));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, Integer.MAX_VALUE, 255, false, false));
             }
             if (blind) {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, Integer.MAX_VALUE, 0, false, false));
@@ -243,10 +241,10 @@ public class KOManager {
         plugin.getServer().getScheduler().cancelTask(data.getBarTaskId());
 
         // Suppression des effets d'immobilisation et d'aveuglement
-        player.removePotionEffect(PotionEffectType.SLOW);
+        player.removePotionEffect(PotionEffectType.SLOWNESS);
         player.removePotionEffect(PotionEffectType.BLINDNESS);
         player.removePotionEffect(PotionEffectType.WEAKNESS);
-        player.removePotionEffect(PotionEffectType.SLOW_DIGGING);
+        player.removePotionEffect(PotionEffectType.SLOWNESS);
         // Désactiver l'effet de glow
         player.setGlowing(false);
         player.setSwimming(false);
@@ -261,14 +259,14 @@ public class KOManager {
         double healthRestored = plugin.getConfig().getDouble("reanimation.health_restored", 4);
         player.setHealth(Math.min(player.getMaxHealth(), healthRestored));
 
-        // Application d’effets temporaires sur le joueur réanimé
+        // Application d'effets temporaires sur le joueur réanimé
         int nauseaDuration = plugin.getConfig().getInt("effects_on_revive.nausea", 5);
         int slownessDuration = plugin.getConfig().getInt("effects_on_revive.slowness", 10);
         int resistanceDuration = plugin.getConfig().getInt("effects_on_revive.resistance", 10);
 
-        player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, nauseaDuration * 20, 0));
-        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, slownessDuration * 20, 1));
-        player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, resistanceDuration * 20, 1));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.NAUSEA, nauseaDuration * 20, 0));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, slownessDuration * 20, 1));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, resistanceDuration * 20, 1));
 
         ReanimateMC.getInstance().getStatsManager().addRevive();
     }
@@ -283,17 +281,8 @@ public class KOManager {
             data.setSuicideTaskId(-1);
         }
         removeMount(victim, data);
-        ArmorStand label = data.getLabel();
-        if (label != null && label.isValid()) {
-            label.remove();
-        }
-        ArmorStand marker = data.getHelpMarker();
-        if (marker != null && marker.isValid()) {
-            marker.remove();
-            data.setHelpMarker(null);
-        }
-        victim.removePotionEffect(PotionEffectType.WEAKNESS);
-        victim.removePotionEffect(PotionEffectType.SLOW_DIGGING);
+        cleanupKOEffects(victim, data);
+        restoreListName(victim, data);
         koPlayers.remove(victim.getUniqueId());
 
         victim.setHealth(0);
@@ -325,12 +314,30 @@ public class KOManager {
             data.setHelpMarker(null);
         }
         player.removePotionEffect(PotionEffectType.WEAKNESS);
-        player.removePotionEffect(PotionEffectType.SLOW_DIGGING);
+        player.removePotionEffect(PotionEffectType.SLOWNESS);
         restoreListName(player, data);
         koPlayers.remove(player.getUniqueId());
 
         player.setHealth(0);
         player.sendMessage(ChatColor.RED + ReanimateMC.lang.get("suicide_complete"));
+    }
+
+    private void cleanupKOEffects(Player player, KOData data) {
+        ArmorStand label = data.getLabel();
+        if (label != null && label.isValid()) {
+            label.remove();
+        }
+        ArmorStand marker = data.getHelpMarker();
+        if (marker != null && marker.isValid()) {
+            marker.remove();
+            data.setHelpMarker(null);
+        }
+        player.removePotionEffect(PotionEffectType.WEAKNESS);
+        player.removePotionEffect(PotionEffectType.SLOWNESS);
+        player.removePotionEffect(PotionEffectType.SLOWNESS);
+        player.removePotionEffect(PotionEffectType.BLINDNESS);
+        player.setGlowing(false);
+        player.setSwimming(false);
     }
 
     public void cancelAllTasks() {
@@ -346,23 +353,9 @@ public class KOManager {
             if (seat != null && seat.isValid()) {
                 seat.remove();
             }
-            ArmorStand label = data.getLabel();
-            if (label != null && label.isValid()) {
-                label.remove();
-            }
-            ArmorStand marker = data.getHelpMarker();
-            if (marker != null && marker.isValid()) {
-                marker.remove();
-                data.setHelpMarker(null);
-            }
             Player p = Bukkit.getPlayer(uuid);
             if (p != null) {
-                p.removePotionEffect(PotionEffectType.WEAKNESS);
-                p.removePotionEffect(PotionEffectType.SLOW_DIGGING);
-                p.removePotionEffect(PotionEffectType.SLOW);
-                p.removePotionEffect(PotionEffectType.BLINDNESS);
-                p.setGlowing(false);
-                p.setSwimming(false);
+                cleanupKOEffects(p, data);
             }
         }
         koPlayers.clear();
@@ -378,18 +371,18 @@ public class KOManager {
         data.setCrawling(!currentState);
 
         // Retirer l'effet de lenteur actuel
-        player.removePotionEffect(PotionEffectType.SLOW);
+        player.removePotionEffect(PotionEffectType.SLOWNESS);
 
         if (data.isCrawling()) {
-            // Mode crawl : appliquer un effet de SLOW de niveau configuré (laisser un minimum de déplacement)
-            int crawlLevel = plugin.getConfig().getInt("prone.crawl_slowness_level", 5);
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, crawlLevel, false, false));
+            // Mode crawl : appliquer un effet de SLOWNESS de niveau configuré (laisser un minimum de déplacement)
+            int crawlLevel = plugin.getConfig().getInt("prone.crawl_SLOWNESSness_level", 5);
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, Integer.MAX_VALUE, crawlLevel, false, false));
             removeMount(player, data);
             player.setSwimming(true);
             player.sendMessage(ChatColor.GREEN + ReanimateMC.lang.get("crawl_enabled"));
         } else {
             // Retour à l'immobilisation complète (prone non-crawling)
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 255, false, false));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, Integer.MAX_VALUE, 255, false, false));
             if (data.getMount() == null || !data.getMount().isValid()) {
                 ArmorStand seat = createMount(player.getLocation());
                 seat.addPassenger(player);
@@ -431,10 +424,10 @@ public class KOManager {
             marker.remove();
             data.setHelpMarker(null);
         }
-        player.removePotionEffect(PotionEffectType.SLOW);
+        player.removePotionEffect(PotionEffectType.SLOWNESS);
         player.removePotionEffect(PotionEffectType.BLINDNESS);
         player.removePotionEffect(PotionEffectType.WEAKNESS);
-        player.removePotionEffect(PotionEffectType.SLOW_DIGGING);
+        player.removePotionEffect(PotionEffectType.SLOWNESS);
         player.setGlowing(false);
         player.setSwimming(false);
         restoreListName(player, data);

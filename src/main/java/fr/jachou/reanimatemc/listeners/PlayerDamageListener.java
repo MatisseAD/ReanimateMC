@@ -48,7 +48,7 @@ public class PlayerDamageListener implements Listener {
 
                 // Particules (ex. particules rouges) si activées
                 if (ReanimateMC.getInstance().getConfig().getBoolean("knockout.use_particles", true)) {
-                    player.getWorld().spawnParticle(Particle.REDSTONE, player.getLocation(), 10, 0.5, 0.5, 0.5,
+                    player.getWorld().spawnParticle(Particle.DUST, player.getLocation(), 10, 0.5, 0.5, 0.5,
                             new Particle.DustOptions(Color.RED, 1));
                 }
                 // Son de battement de cœur si activé

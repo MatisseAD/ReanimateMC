@@ -204,8 +204,8 @@ public class NPCSummonManager {
                 golem.setGlowing(true);
                 
                 // Increase health for protector
-                if (type == ReanimatorType.PROTECTOR && golem.getAttribute(Attribute.GENERIC_MAX_HEALTH) != null) {
-                    golem.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(200.0);
+                if (type == ReanimatorType.PROTECTOR && golem.getAttribute(Attribute.MAX_HEALTH) != null) {
+                    golem.getAttribute(Attribute.MAX_HEALTH).setBaseValue(200.0);
                     golem.setHealth(200.0);
                 }
                 
@@ -298,6 +298,22 @@ public class NPCSummonManager {
             }
             return;
         }
+
+        if (koManager.isKO(owner)) {
+            mob.setTarget(null);
+            mob.getPathfinder().moveTo(owner.getLocation());
+
+            if (entity.getLocation().distance(owner.getLocation()) < 5.0) {
+                if (npc.getType() == ReanimatorType.GOLEM || npc.getType() == ReanimatorType.HEALER) {
+
+                    koManager.revive(owner, owner);
+
+                    owner.getWorld().spawnParticle(Particle.HEART, owner.getLocation().add(0, 2, 0), 10, 0.5, 0.5, 0.5);
+                    owner.getWorld().playSound(owner.getLocation(), Sound.BLOCK_ENCHANTMENT_TABLE_USE, 1.0f, 1.5f);
+
+                }
+            }
+        }
         
         // Check if there's a target player to help
         Player target = null;
@@ -308,10 +324,13 @@ public class NPCSummonManager {
         // If target exists and is KO, move towards them
         if (target != null && koManager.isKO(target)) {
             mob.setTarget(null); // Don't attack anyone
+            mob.getPathfinder().moveTo(target.getLocation());
+            target.sendMessage("Le golem arrive");
             
             // Check if close enough to revive
-            if (entity.getLocation().distance(target.getLocation()) < 3.0) {
+            if (entity.getLocation().distance(target.getLocation()) < 5.0) {
                 // Perform reanimation based on type
+                target.sendMessage("Le golem arrive est à bonne distance");
                 if (npc.getType() == ReanimatorType.GOLEM || npc.getType() == ReanimatorType.HEALER) {
                     koManager.revive(target, owner);
                     

@@ -50,4 +50,5 @@ npc_summon:
   offline_timeout: 300
   require_item: false
   required_item: NETHER_STAR
+  item_to_summon_golem: GOLD_INGOT
 
