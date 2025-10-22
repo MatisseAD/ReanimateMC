@@ -1,6 +1,6 @@
 # ReanimateMC
 
-New wiki page : ![Wiki](https://matissead.github.io/ReanimateMC/)
+New wiki page : https://matissead.github.io/ReanimateMC/
 
 ![Version](https://img.shields.io/badge/version-Release_1.2.02-green.svg)
 ![Minecraft](https://img.shields.io/badge/Minecraft-1.20.1+-blue.svg)
