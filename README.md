@@ -2,7 +2,7 @@
 
 New wiki page : https://matissead.github.io/ReanimateMC/
 
-![Version](https://img.shields.io/badge/version-Release_1.2.02-green.svg)
+![Version](https://img.shields.io/badge/version-Release_1.2.10-green.svg)
 ![Minecraft](https://img.shields.io/badge/Minecraft-1.20.1+-blue.svg)
 ![Spigot](https://img.shields.io/badge/Spigot-Compatible-orange.svg)
 
