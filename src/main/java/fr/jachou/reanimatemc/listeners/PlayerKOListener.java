@@ -3,10 +3,16 @@ package fr.jachou.reanimatemc.listeners;
 import fr.jachou.reanimatemc.ReanimateMC;
 import fr.jachou.reanimatemc.managers.KOManager;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerCommandSendEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
+
+import java.util.List;
 
 public class PlayerKOListener implements Listener {
 
@@ -47,6 +53,30 @@ public class PlayerKOListener implements Listener {
         if (koManager.isKO(event.getPlayer())) {
             event.setCancelled(true);
             koManager.sendDistress(event.getPlayer());
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onCommandPreprocess(PlayerCommandPreprocessEvent event) {
+        Player player = event.getPlayer();
+
+        if ( (!koManager.isKO(player) || player.isOp()) && ReanimateMC.getInstance().getConfig().getBoolean("knockout.enable_commands_allowed") ) return;
+
+        List<String> allowed = ReanimateMC.getInstance().getConfig().getStringList("knockout.allowed_commands");
+
+        String msg = event.getMessage();
+        String cmd = msg.startsWith("/") ? msg.substring(1) : msg;
+        String label = cmd.split(" ")[0].toLowerCase();
+
+        String base = label.contains(":") ? label.substring(label.indexOf(':') + 1) : label;
+
+        boolean isAllowed = allowed.stream().map(String::toLowerCase).anyMatch(a ->
+                a.equals(label) || a.equals(base)
+        );
+
+        if (!isAllowed) {
+            event.setCancelled(true);
+            player.sendMessage(ReanimateMC.lang.get("no_permission_ko"));
         }
     }
 

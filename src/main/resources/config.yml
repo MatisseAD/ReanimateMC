@@ -20,6 +20,12 @@ knockout:
   suicide_hold_seconds: 3
   weakness_level: 1
   fatigue_level: 1
+  enable_commands_allowed: false
+  allowed_commands:
+    - msg
+    - r
+    - help
+    - reanimatemc:help
 
 execution:
   enabled: true

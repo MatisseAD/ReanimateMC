@@ -38,6 +38,7 @@ loot_no_permission: "У вас нет разрешения грабить игр
 ko_shift_click_cancelled: "Вы решили держаться."
 suicide_start: "Сдаетесь... вы умрете через %time%с"
 suicide_complete: "Вы сдались..."
+no_permission_ko: "У вас нет разрешения входить в состояние нокаута."
 
 command_gui_player_only: "Эта команда только для игроков."
 command_remove_glowing_usage: "Использование: /reanimatemc removeGlowingEffect <игрок>"

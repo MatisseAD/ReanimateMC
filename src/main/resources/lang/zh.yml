@@ -38,6 +38,7 @@ loot_no_permission: "你没有权限掠夺击倒的玩家。"
 ko_shift_click_cancelled: "你决定坚持下去。"
 suicide_start: "放弃中...你将在 %time%秒后死亡"
 suicide_complete: "你放弃了..."
+no_permission_ko: "你没有权限被击倒。"
 
 command_gui_player_only: "此命令仅限玩家使用。"
 command_remove_glowing_usage: "用法：/reanimatemc removeGlowingEffect <玩家>"

@@ -38,6 +38,7 @@ loot_no_permission: "당신은 기절한 대상의 아이템을 가져갈 권한
 ko_shift_click_cancelled: "조금 더 버텨 보기로 했습니다!"
 suicide_start: "포기중... %time%초 뒤에 사망합니다"
 suicide_complete: "당신은 포기했습니다..."
+no_permission_ko: "당신은 기절할 권한이 없습니다."
 
 command_gui_player_only: "오직 플레이어만이 GUI를 열 수 있습니다."
 command_remove_glowing_usage: "사용법: /reanimatemc removeGlowingEffect <대상>"

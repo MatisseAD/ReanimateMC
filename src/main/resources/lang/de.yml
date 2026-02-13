@@ -38,6 +38,7 @@ loot_no_permission: "Du hast keine Berechtigung, K.O.-Spieler zu plündern."
 ko_shift_click_cancelled: "Du hast dich entschieden, durchzuhalten."
 suicide_start: "Aufgeben... du stirbst in %time%s"
 suicide_complete: "Du hast aufgegeben..."
+no_permission_ko: "Du hast keine Berechtigung, K.O. zu werden."
 
 command_gui_player_only: "Nur Spieler können das GUI öffnen."
 command_remove_glowing_usage: "Benutzung: /reanimatemc removeGlowingEffect <Spieler>"

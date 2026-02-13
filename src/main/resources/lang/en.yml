@@ -38,6 +38,7 @@ loot_no_permission: "You do not have permission to loot KO’d players."
 ko_shift_click_cancelled: "You decided to endure."
 suicide_start: "Giving up... you will die in %time%s"
 suicide_complete: "You gave up..."
+no_permission_ko: "You do not have permission to execute this commande while K.O."
 
 command_gui_player_only: "Only players can open the GUI."
 command_remove_glowing_usage: "Usage: /reanimatemc removeGlowingEffect <player>"
