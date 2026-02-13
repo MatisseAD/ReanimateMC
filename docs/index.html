@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReanimateMC - Documentation</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-heart-pulse"></i>
+                <span>ReanimateMC</span>
+            </div>
+            <button class="nav-toggle" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="nav-links">
+                <a href="index.html" class="active">Home</a>
+                <a href="commands.html">Commands</a>
+                <a href="permissions.html">Permissions</a>
+                <a href="configuration.html">Configuration</a>
+                <a href="npc-system.html">NPC System</a>
+                <a href="api.html">API</a>
+            </div>
+            <div class="language-selector">
+                <i class="fas fa-globe"></i>
+                <select id="lang-select" onchange="changeLanguage(this.value)">
+                    <option value="en">English</option>
+                    <option value="fr">Français</option>
+                    <option value="es">Español</option>
+                    <option value="de">Deutsch</option>
+                    <option value="it">Italiano</option>
+                    <option value="ru">Русский</option>
+                    <option value="zh">中文</option>
+                    <option value="kr">한국어</option>
+                    <option value="pt">Português</option>
+                </select>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">ReanimateMC</h1>
+            <p class="hero-subtitle">Transform your server's death system</p>
+            <p class="hero-description">
+                A revolutionary Minecraft plugin that introduces a KO (Knockout) state instead of instant death.
+                Players can be revived by teammates or executed by enemies, creating dynamic and strategic gameplay.
+            </p>
+            <div class="hero-buttons">
+                <a href="#features" class="btn btn-primary">Learn More</a>
+                <a href="https://github.com/MatisseAD/ReanimateMC/releases" class="btn btn-secondary" target="_blank">
+                    <i class="fas fa-download"></i> Download
+                </a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <i class="fas fa-server"></i>
+                    <span class="stat-value">Minecraft 1.20.1+</span>
+                    <span class="stat-label">Server Version</span>
+                </div>
+                <div class="stat">
+                    <i class="fas fa-language"></i>
+                    <span class="stat-value">9 Languages</span>
+                    <span class="stat-label">Supported</span>
+                </div>
+                <div class="stat">
+                    <i class="fas fa-code"></i>
+                    <span class="stat-value">Full API</span>
+                    <span class="stat-label">For Developers</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section id="features" class="section">
+            <h2 class="section-title">Core Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bed"></i>
+                    </div>
+                    <h3>KO System</h3>
+                    <p>Players enter a knockout state instead of dying instantly when health reaches zero.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3>Revival Mechanics</h3>
+                    <p>Teammates can revive KO'd players using special items and the right technique.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-skull"></i>
+                    </div>
+                    <h3>Execution System</h3>
+                    <p>Option to permanently eliminate KO'd players by executing them.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-person-walking"></i>
+                    </div>
+                    <h3>Crawling Mode</h3>
+                    <p>KO'd players can toggle between immobilized and slow crawling states.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3>NPC Summons</h3>
+                    <p>Summon AI-controlled NPCs that can revive KO'd players and provide protection.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-signal"></i>
+                    </div>
+                    <h3>Distress Signals</h3>
+                    <p>KO'd players can send distress beacons to alert nearby teammates.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3>Offline KO Timer</h3>
+                    <p>KO countdown continues even when players disconnect from the server.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                    <h3>GUI Configuration</h3>
+                    <p>Easy-to-use in-game interface for configuring all plugin settings.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-language"></i>
+                    </div>
+                    <h3>Multi-Language</h3>
+                    <p>Complete translations in 9+ languages for global server compatibility.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="quick-start" class="section bg-light">
+            <h2 class="section-title">Quick Start</h2>
+            <div class="quick-start-grid">
+                <div class="quick-start-step">
+                    <div class="step-number">1</div>
+                    <h3>Installation</h3>
+                    <p>Download ReanimateMC.jar and place it in your server's <code>plugins/</code> directory.</p>
+                </div>
+                <div class="quick-start-step">
+                    <div class="step-number">2</div>
+                    <h3>Restart Server</h3>
+                    <p>Restart your server or use a plugin manager to load ReanimateMC.</p>
+                </div>
+                <div class="quick-start-step">
+                    <div class="step-number">3</div>
+                    <h3>Configure</h3>
+                    <p>Use <code>/reanimatemc config</code> to open the GUI and customize settings.</p>
+                </div>
+                <div class="quick-start-step">
+                    <div class="step-number">4</div>
+                    <h3>Play!</h3>
+                    <p>Your server now has the KO system active. Players will enter KO state instead of dying.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="gameplay" class="section">
+            <h2 class="section-title">How It Works</h2>
+            <div class="gameplay-content">
+                <div class="gameplay-item">
+                    <h3><i class="fas fa-heart-crack"></i> Entering KO State</h3>
+                    <p>When a player's health reaches zero, instead of dying, they enter a knockout state:</p>
+                    <ul>
+                        <li>Player lies down and becomes immobilized (or can crawl)</li>
+                        <li>Optional visual effects: blindness, particles, glowing</li>
+                        <li>Timer starts counting down (default: 30 seconds)</li>
+                        <li>Can be revived, executed, or will die when timer expires</li>
+                    </ul>
+                </div>
+                
+                <div class="gameplay-item">
+                    <h3><i class="fas fa-hand-holding-heart"></i> Revival Process</h3>
+                    <p>To revive a KO'd player:</p>
+                    <ol>
+                        <li>Approach the KO'd player</li>
+                        <li>Crouch (Shift key)</li>
+                        <li>Hold the required item (default: Golden Apple)</li>
+                        <li>Wait for the revival progress to complete (default: 5 seconds)</li>
+                        <li>Both players must remain still during revival</li>
+                    </ol>
+                </div>
+                
+                <div class="gameplay-item">
+                    <h3><i class="fas fa-skull-crossbones"></i> Execution</h3>
+                    <p>Any player can execute a KO'd player:</p>
+                    <ul>
+                        <li>Left-click on the KO'd player</li>
+                        <li>Hold for the configured duration (default: 2 seconds)</li>
+                        <li>Results in permanent death</li>
+                        <li>Optional broadcast message to server</li>
+                    </ul>
+                </div>
+                
+                <div class="gameplay-item">
+                    <h3><i class="fas fa-broadcast-tower"></i> Distress Signal</h3>
+                    <p>KO'd players can call for help:</p>
+                    <ul>
+                        <li>Press F (swap hands key) while KO'd</li>
+                        <li>Creates a beacon at your location</li>
+                        <li>Broadcasts coordinates to nearby players</li>
+                        <li>One-time use per KO</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="compatibility" class="section bg-light">
+            <h2 class="section-title">Compatibility</h2>
+            <div class="compatibility-grid">
+                <div class="compatibility-card">
+                    <h3>Server Software</h3>
+                    <ul class="compatibility-list">
+                        <li><i class="fas fa-check-circle"></i> Spigot</li>
+                        <li><i class="fas fa-check-circle"></i> Paper (Recommended)</li>
+                        <li><i class="fas fa-check-circle"></i> Bukkit</li>
+                        <li><i class="fas fa-check-circle"></i> Purpur</li>
+                    </ul>
+                </div>
+                <div class="compatibility-card">
+                    <h3>Minecraft Versions</h3>
+                    <ul class="compatibility-list">
+                        <li><i class="fas fa-info-circle"></i> Minimum: 1.20.1</li>
+                        <li><i class="fas fa-star"></i> Recommended: 1.20.4+</li>
+                        <li><i class="fas fa-check-circle"></i> Latest: 1.21.x</li>
+                    </ul>
+                </div>
+                <div class="compatibility-card">
+                    <h3>Plugin Integration</h3>
+                    <ul class="compatibility-list">
+                        <li><i class="fas fa-check-circle"></i> WorldGuard</li>
+                        <li><i class="fas fa-check-circle"></i> EssentialsX</li>
+                        <li><i class="fas fa-check-circle"></i> mcMMO</li>
+                        <li><i class="fas fa-check-circle"></i> Citizens</li>
+                        <li><i class="fas fa-check-circle"></i> MythicMobs</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="resources" class="section">
+            <h2 class="section-title">Resources</h2>
+            <div class="resources-grid">
+                <a href="commands.html" class="resource-card">
+                    <i class="fas fa-terminal"></i>
+                    <h3>Commands</h3>
+                    <p>Complete list of all available commands</p>
+                </a>
+                <a href="permissions.html" class="resource-card">
+                    <i class="fas fa-shield-halved"></i>
+                    <h3>Permissions</h3>
+                    <p>Detailed permissions documentation</p>
+                </a>
+                <a href="configuration.html" class="resource-card">
+                    <i class="fas fa-sliders"></i>
+                    <h3>Configuration</h3>
+                    <p>Configure all plugin settings</p>
+                </a>
+                <a href="npc-system.html" class="resource-card">
+                    <i class="fas fa-robot"></i>
+                    <h3>NPC System</h3>
+                    <p>Learn about NPC summons and AI</p>
+                </a>
+                <a href="api.html" class="resource-card">
+                    <i class="fas fa-code"></i>
+                    <h3>Developer API</h3>
+                    <p>Integrate ReanimateMC into your plugins</p>
+                </a>
+                <a href="https://github.com/MatisseAD/ReanimateMC" class="resource-card" target="_blank">
+                    <i class="fab fa-github"></i>
+                    <h3>GitHub</h3>
+                    <p>Source code and issue tracker</p>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>ReanimateMC</h4>
+                <p>A revolutionary Minecraft plugin by Jachou</p>
+                <p class="version">Version 1.2.02</p>
+            </div>
+            <div class="footer-section">
+                <h4>Links</h4>
+                <ul>
+                    <li><a href="https://github.com/MatisseAD/ReanimateMC" target="_blank">GitHub</a></li>
+                    <li><a href="https://github.com/MatisseAD/ReanimateMC/issues" target="_blank">Report Issues</a></li>
+                    <li><a href="https://github.com/MatisseAD/ReanimateMC/releases" target="_blank">Downloads</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Documentation</h4>
+                <ul>
+                    <li><a href="commands.html">Commands</a></li>
+                    <li><a href="permissions.html">Permissions</a></li>
+                    <li><a href="configuration.html">Configuration</a></li>
+                    <li><a href="api.html">API</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 ReanimateMC. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

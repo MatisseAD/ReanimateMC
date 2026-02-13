@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>명령어 - ReanimateMC 문서</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-heart-pulse"></i>
+                <span>ReanimateMC</span>
+            </div>
+            <button class="nav-toggle" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="nav-links">
+                <a href="index.html">홈</a>
+                <a href="commands.html" class="active">명령어</a>
+                <a href="permissions.html">권한</a>
+                <a href="configuration.html">설정</a>
+                <a href="npc-system.html">NPC 시스템</a>
+                <a href="api.html">API</a>
+            </div>
+            <div class="language-selector">
+                <i class="fas fa-globe"></i>
+                <select id="lang-select" onchange="changeLanguage(this.value)">
+                    <option value="en">English</option>
+                    <option value="fr">Français</option>
+                    <option value="es">Español</option>
+                    <option value="de">Deutsch</option>
+                    <option value="it">Italiano</option>
+                    <option value="ru">Русский</option>
+                    <option value="zh">中文</option>
+                    <option value="kr" selected>한국어</option>
+                    <option value="pt">Português</option>
+                </select>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="section">
+            <h1 class="section-title">명령어 Reference</h1>
+            <p style="text-align: center; color: #7f8c8d; margin-bottom: 3rem;">
+                Complete list of all available commands in ReanimateMC
+            </p>
+
+            <div class="gameplay-item">
+                <h2><i class="fas fa-terminal"></i> Command Overview</h2>
+                <p>
+                    All ReanimateMC commands start with <code>/reanimatemc</code> or the shorter alias <code>/rmc</code>.
+                    명령어 are organized by category: Administrative, Player Management, NPC 시스템, and Utility commands.
+                </p>
+            </div>
+
+            <div style="margin-top: 3rem;">
+                <h2 class="section-title" style="font-size: 2rem;">Administrative 명령어</h2>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Command</th>
+                            <th>Description</th>
+                            <th>Permission</th>
+                            <th>Usage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>/reanimatemc reload</code></td>
+                            <td>Reload plugin configuration and language files</td>
+                            <td><code>reanimatemc.admin</code></td>
+                            <td><code>/reanimatemc reload</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>/reanimatemc config</code></td>
+                            <td>Open GUI configuration interface</td>
+                            <td><code>reanimatemc.admin</code></td>
+                            <td><code>/reanimatemc config</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>/reanimatemc setup</code></td>
+                            <td>Mark initial setup as complete</td>
+                            <td><code>reanimatemc.admin</code></td>
+                            <td><code>/reanimatemc setup</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="gameplay-item" style="margin-top: 2rem;">
+                    <h3><i class="fas fa-info-circle"></i> Administrative 명령어 Details</h3>
+                    
+                    <h4 style="margin-top: 1.5rem; color: #e74c3c;">/reanimatemc reload</h4>
+                    <p><strong>Purpose:</strong> Reloads all configuration files and language files without restarting the server.</p>
+                    <p><strong>When to use:</strong> After making changes to config.yml or language files.</p>
+                    <p><strong>Example:</strong></p>
+                    <pre><code>/reanimatemc reload</code></pre>
+                    <p><strong>Output:</strong> "설정 and language reloaded!"</p>
+
+                    <h4 style="margin-top: 1.5rem; color: #e74c3c;">/reanimatemc config</h4>
+                    <p><strong>Purpose:</strong> Opens an interactive GUI where you can configure all plugin settings.</p>
+                    <p><strong>Features:</strong></p>
+                    <ul>
+                        <li>Toggle features on/off</li>
+                        <li>Modify numeric values (durations, cooldowns, etc.)</li>
+                        <li>Change required items</li>
+                        <li>Real-time configuration preview</li>
+                        <li>Save/Reset functionality</li>
+                    </ul>
+                    <p><strong>Example:</strong></p>
+                    <pre><code>/reanimatemc config</code></pre>
+                </div>
+            </div>
+
+            <div style="margin-top: 4rem;">
+                <h2 class="section-title" style="font-size: 2rem;">Player Management 명령어</h2>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Command</th>
+                            <th>Description</th>
+                            <th>Permission</th>
+                            <th>Usage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>/reanimatemc revive</code></td>
+                            <td>Forcefully revive a KO'd player</td>
+                            <td><code>reanimatemc.admin</code></td>
+                            <td><code>/reanimatemc revive &lt;player&gt;</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>/reanimatemc knockout</code></td>
+                            <td>Force a player into KO state</td>
+                            <td><code>reanimatemc.admin</code></td>
+                            <td><code>/reanimatemc knockout &lt;player&gt; [duration]</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>/reanimatemc status</code></td>
+                            <td>Check a player's current state</td>
+                            <td><code>reanimatemc.status</code></td>
+                            <td><code>/reanimatemc status &lt;player&gt;</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>/reanimatemc crawl</code></td>
+                            <td>Toggle crawling mode (KO'd players only)</td>
+                            <td><code>reanimatemc.crawl</code></td>
+                            <td><code>/reanimatemc crawl</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="gameplay-item" style="margin-top: 2rem;">
+                    <h3><i class="fas fa-info-circle"></i> Player Management 명령어 Details</h3>
+                    
+                    <h4 style="margin-top: 1.5rem; color: #e74c3c;">/reanimatemc revive &lt;player&gt;</h4>
+                    <p><strong>Purpose:</strong> Instantly revives a knocked-out player without requiring items or time.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>&lt;player&gt;</code> - The name of the KO'd player to revive (required)</li>
+                    </ul>
+                    <p><strong>Examples:</strong></p>
+                    <pre><code>/reanimatemc revive Steve
+/rmc revive PlayerName</code></pre>
+
+                    <h4 style="margin-top: 1.5rem; color: #e74c3c;">/reanimatemc knockout &lt;player&gt; [duration]</h4>
+                    <p><strong>Purpose:</strong> Forces a player into KO state, useful for testing or punishment.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>&lt;player&gt;</code> - The name of the player to KO (required)</li>
+                        <li><code>[duration]</code> - KO duration in seconds (optional, defaults to config value)</li>
+                    </ul>
+                    <p><strong>Examples:</strong></p>
+                    <pre><code>/reanimatemc knockout Steve
+/reanimatemc knockout Steve 60
+/rmc knockout PlayerName 45</code></pre>
+
+                    <h4 style="margin-top: 1.5rem; color: #e74c3c;">/reanimatemc status &lt;player&gt;</h4>
+                    <p><strong>Purpose:</strong> Displays whether a player is currently in KO state or alive.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>&lt;player&gt;</code> - The name of the player to check (required)</li>
+                    </ul>
+                    <p><strong>Examples:</strong></p>
+                    <pre><code>/reanimatemc status Steve
+/rmc status PlayerName</code></pre>
+                    <p><strong>Output:</strong> "Steve is K.O." or "Steve is Alive/Normal"</p>
+
+                    <h4 style="margin-top: 1.5rem; color: #e74c3c;">/reanimatemc crawl</h4>
+                    <p><strong>Purpose:</strong> Allows KO'd players to toggle between immobilized and crawling states.</p>
+                    <p><strong>Note:</strong> Can only be used by players who are currently KO'd.</p>
+                    <p><strong>Examples:</strong></p>
+                    <pre><code>/reanimatemc crawl
+/rmc crawl</code></pre>
+                    <p><strong>Output:</strong> "Crawl mode enabled" or "Crawl mode disabled"</p>
+                </div>
+            </div>
+
+            <div style="margin-top: 4rem;">
+                <h2 class="section-title" style="font-size: 2rem;">NPC 시스템 명령어</h2>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Command</th>
+                            <th>Description</th>
+                            <th>Permission</th>
+                            <th>Usage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>/reanimatemc summon</code></td>
+                            <td>Summon an NPC reanimator</td>
+                            <td><code>reanimatemc.summon</code></td>
+                            <td><code>/reanimatemc summon &lt;type&gt; [player]</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>/reanimatemc dismiss</code></td>
+                            <td>Dismiss your NPCs</td>
+                            <td><code>reanimatemc.summon</code></td>
+                            <td><code>/reanimatemc dismiss all</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>/reanimatemc npcs</code></td>
+                            <td>List your active NPCs</td>
+                            <td><code>reanimatemc.summon</code></td>
+                            <td><code>/reanimatemc npcs</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="gameplay-item" style="margin-top: 2rem;">
+                    <h3><i class="fas fa-info-circle"></i> NPC 시스템 명령어 Details</h3>
+                    
+                    <h4 style="margin-top: 1.5rem; color: #e74c3c;">/reanimatemc summon &lt;type&gt; [player]</h4>
+                    <p><strong>Purpose:</strong> Summons an AI-controlled NPC that can revive KO'd players.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>&lt;type&gt;</code> - NPC type: <code>golem</code>, <code>healer</code>, or <code>protector</code> (required)</li>
+                        <li><code>[player]</code> - Target player to revive (optional)</li>
+                    </ul>
+                    <p><strong>NPC Types:</strong></p>
+                    <ul>
+                        <li><strong>golem</strong> - Standard reanimator, follows owner and revives KO'd players</li>
+                        <li><strong>healer</strong> - Specialized reanimator with healing focus</li>
+                        <li><strong>protector</strong> - Reanimator that also attacks hostile mobs</li>
+                    </ul>
+                    <p><strong>Examples:</strong></p>
+                    <pre><code>/reanimatemc summon golem
+/reanimatemc summon healer Steve
+/reanimatemc summon protector
+/rmc summon golem PlayerName</code></pre>
+                    <p><strong>Requirements:</strong></p>
+                    <ul>
+                        <li>Specific permission for each NPC type</li>
+                        <li>Respects cooldowns (default 5 minutes)</li>
+                        <li>Maximum summons per player (default: 1)</li>
+                        <li>May require specific item if configured</li>
+                    </ul>
+
+                    <h4 style="margin-top: 1.5rem; color: #e74c3c;">/reanimatemc dismiss all</h4>
+                    <p><strong>Purpose:</strong> Dismisses all your active NPCs.</p>
+                    <p><strong>Examples:</strong></p>
+                    <pre><code>/reanimatemc dismiss all
+/rmc dismiss all</code></pre>
+                    <p><strong>Output:</strong> "Dismissed X NPC(s)."</p>
+
+                    <h4 style="margin-top: 1.5rem; color: #e74c3c;">/reanimatemc npcs</h4>
+                    <p><strong>Purpose:</strong> Shows a list of all your currently active NPCs with their types and ages.</p>
+                    <p><strong>Examples:</strong></p>
+                    <pre><code>/reanimatemc npcs
+/rmc npcs</code></pre>
+                </div>
+            </div>
+
+            <div style="margin-top: 4rem;">
+                <h2 class="section-title" style="font-size: 2rem;">Utility 명령어</h2>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Command</th>
+                            <th>Description</th>
+                            <th>Permission</th>
+                            <th>Usage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>/reanimatemc removeGlowingEffect</code></td>
+                            <td>Remove glowing effect from a player</td>
+                            <td><code>reanimatemc.removeGlowingEffect</code></td>
+                            <td><code>/reanimatemc removeGlowingEffect &lt;player&gt;</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="gameplay-item" style="margin-top: 2rem;">
+                    <h3><i class="fas fa-info-circle"></i> Utility 명령어 Details</h3>
+                    
+                    <h4 style="margin-top: 1.5rem; color: #e74c3c;">/reanimatemc removeGlowingEffect &lt;player&gt;</h4>
+                    <p><strong>Purpose:</strong> Removes the glowing effect from a player if they're stuck with it.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>&lt;player&gt;</code> - The name of the player (required)</li>
+                    </ul>
+                    <p><strong>Examples:</strong></p>
+                    <pre><code>/reanimatemc removeGlowingEffect Steve
+/rmc removeGlowingEffect PlayerName</code></pre>
+                </div>
+            </div>
+
+            <div style="margin-top: 4rem;">
+                <h2 class="section-title" style="font-size: 2rem;">Command Aliases</h2>
+                
+                <div class="gameplay-item">
+                    <p>For convenience, you can use the shorter alias <code>/rmc</code> instead of <code>/reanimatemc</code>:</p>
+                    <pre><code>/rmc reload
+/rmc config
+/rmc revive Steve
+/rmc summon golem
+/rmc status PlayerName</code></pre>
+                </div>
+            </div>
+
+            <div style="margin-top: 4rem;">
+                <h2 class="section-title" style="font-size: 2rem;">Quick Reference</h2>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <h3>Admin 명령어</h3>
+                        <p>설정, reload, and setup commands require <code>reanimatemc.admin</code> permission.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>Player 명령어</h3>
+                        <p>Status and crawl commands are available to all players by default.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h3>NPC 명령어</h3>
+                        <p>Summon commands require specific permissions per NPC type.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 3rem; text-align: center;">
+                <a href="permissions.html" class="btn btn-primary">
+                    <i class="fas fa-arrow-right"></i> View 권한
+                </a>
+                <a href="configuration.html" class="btn btn-secondary">
+                    <i class="fas fa-cog"></i> 설정 Guide
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>ReanimateMC</h4>
+                <p>A revolutionary Minecraft plugin by Jachou</p>
+                <p class="version">Version 1.2.02</p>
+            </div>
+            <div class="footer-section">
+                <h4>Links</h4>
+                <ul>
+                    <li><a href="https://github.com/MatisseAD/ReanimateMC" target="_blank">GitHub</a></li>
+                    <li><a href="https://github.com/MatisseAD/ReanimateMC/issues" target="_blank">Report Issues</a></li>
+                    <li><a href="https://github.com/MatisseAD/ReanimateMC/releases" target="_blank">Downloads</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>문서</h4>
+                <ul>
+                    <li><a href="commands.html">명령어</a></li>
+                    <li><a href="permissions.html">권한</a></li>
+                    <li><a href="configuration.html">설정</a></li>
+                    <li><a href="api.html">API</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 ReanimateMC. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../assets/js/main.js"></script>
+</body>
+</html>

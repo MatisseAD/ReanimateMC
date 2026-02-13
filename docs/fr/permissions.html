@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Permissions - Documentation ReanimateMC</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-heart-pulse"></i>
+                <span>ReanimateMC</span>
+            </div>
+            <button class="nav-toggle" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="nav-links">
+                <a href="index.html">Accueil</a>
+                <a href="commands.html">Commandes</a>
+                <a href="permissions.html" class="active">Permissions</a>
+                <a href="configuration.html">Configuration</a>
+                <a href="npc-system.html">Système NPC</a>
+                <a href="api.html">API</a>
+            </div>
+            <div class="language-selector">
+                <i class="fas fa-globe"></i>
+                <select id="lang-select" onchange="changeLanguage(this.value)">
+                    <option value="en">English</option>
+                    <option value="fr" selected>Français</option>
+                    <option value="es">Español</option>
+                    <option value="de">Deutsch</option>
+                    <option value="it">Italiano</option>
+                    <option value="ru">Русский</option>
+                    <option value="zh">中文</option>
+                    <option value="kr">한국어</option>
+                    <option value="pt">Português</option>
+                </select>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="section">
+            <h1 class="section-title">Permissions Reference</h1>
+            <p style="text-align: center; color: #7f8c8d; margin-bottom: 3rem;">
+                Complete list of all permissions for ReanimateMC
+            </p>
+
+            <div class="gameplay-item">
+                <h2><i class="fas fa-shield-halved"></i> Permission Overview</h2>
+                <p>
+                    ReanimateMC uses a comprehensive permission system to control access to features and commands.
+                    Permissions are organized into categories: Core Permissions, Feature Permissions, NPC Permissions, and Command Permissions.
+                </p>
+                <p style="margin-top: 1rem;">
+                    <strong>Permission Plugin Required:</strong> You need a permission plugin like LuckPerms, PermissionsEx, or GroupManager to manage these permissions.
+                </p>
+            </div>
+
+            <div style="margin-top: 3rem;">
+                <h2 class="section-title" style="font-size: 2rem;">Core Permissions</h2>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Permission</th>
+                            <th>Default</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>reanimatemc.admin</code></td>
+                            <td><span style="color: #f39c12;">OP</span></td>
+                            <td>Grants access to all administrative commands and GUI config</td>
+                        </tr>
+                        <tr>
+                            <td><code>reanimatemc.revive</code></td>
+                            <td><span style="color: #27ae60;">TRUE</span></td>
+                            <td>Ability to revive KO'd players manually</td>
+                        </tr>
+                        <tr>
+                            <td><code>reanimatemc.execute</code></td>
+                            <td><span style="color: #27ae60;">TRUE</span></td>
+                            <td>Ability to execute KO'd players permanently</td>
+                        </tr>
+                        <tr>
+                            <td><code>reanimatemc.bypass</code></td>
+                            <td><span style="color: #f39c12;">OP</span></td>
+                            <td>Bypass the KO system entirely - die instantly instead of entering KO</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="gameplay-item" style="margin-top: 2rem;">
+                    <h3><i class="fas fa-info-circle"></i> Core Permissions Details</h3>
+                    
+                    <h4 style="margin-top: 1.5rem; color: #e74c3c;">reanimatemc.admin</h4>
+                    <p><strong>Default:</strong> OP only</p>
+                    <p><strong>Grants access to:</strong></p>
+                    <ul>
+                        <li><code>/reanimatemc reload</code> - Reload configuration</li>
+                        <li><code>/reanimatemc config</code> - Open GUI configuration</li>
+                        <li><code>/reanimatemc setup</code> - Complete initial setup</li>
+                        <li><code>/reanimatemc revive</code> - Force revive players</li>
+                        <li><code>/reanimatemc knockout</code> - Force KO players</li>
+                        <li>All configuration changes via GUI</li>
+                    </ul>
+
+                    <h4 style="margin-top: 1.5rem; color: #e74c3c;">reanimatemc.revive</h4>
+                    <p><strong>Default:</strong> All players (TRUE)</p>
+                    <p><strong>Allows:</strong> Players to revive KO'd teammates by crouching near them with the required item.</p>
+                    <p><strong>Note:</strong> This is a core gameplay mechanic and should typically be available to all players.</p>
+
+                    <h4 style="margin-top: 1.5rem; color: #e74c3c;">reanimatemc.execute</h4>
+                    <p><strong>Default:</strong> All players (TRUE)</p>
+                    <p><strong>Allows:</strong> Players to execute KO'd players by holding left-click on them.</p>
+                    <p><strong>Note:</strong> Essential for PvP gameplay. Can be restricted on non-PvP servers.</p>
+
+                    <h4 style="margin-top: 1.5rem; color: #e74c3c;">reanimatemc.bypass</h4>
+                    <p><strong>Default:</strong> OP only</p>
+                    <p><strong>Effect:</strong> Players with this permission die instantly when health reaches zero, completely bypassing the KO system.</p>
+                    <p><strong>Use case:</strong> Staff members who need to respawn quickly, or VIP players who don't want to use the KO system.</p>
+                </div>
+            </div>
+
+            <div style="margin-top: 4rem;">
+                <h2 class="section-title" style="font-size: 2rem;">Feature Permissions</h2>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Permission</th>
+                            <th>Default</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>reanimatemc.knockout</code></td>
+                            <td><span style="color: #f39c12;">OP</span></td>
+                            <td>Force players into KO state via command</td>
+                        </tr>
+                        <tr>
+                            <td><code>reanimatemc.status</code></td>
+                            <td><span style="color: #27ae60;">TRUE</span></td>
+                            <td>Check player KO status via command</td>
+                        </tr>
+                        <tr>
+                            <td><code>reanimatemc.crawl</code></td>
+                            <td><span style="color: #27ae60;">TRUE</span></td>
+                            <td>Toggle crawling mode when KO'd</td>
+                        </tr>
+                        <tr>
+                            <td><code>reanimatemc.loot</code></td>
+                            <td><span style="color: #f39c12;">OP</span></td>
+                            <td>Access KO'd player inventories (looting)</td>
+                        </tr>
+                        <tr>
+                            <td><code>reanimatemc.removeGlowingEffect</code></td>
+                            <td><span style="color: #f39c12;">OP</span></td>
+                            <td>Remove glowing effects from players</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="gameplay-item" style="margin-top: 2rem;">
+                    <h3><i class="fas fa-info-circle"></i> Feature Permissions Details</h3>
+                    
+                    <h4 style="margin-top: 1.5rem; color: #e74c3c;">reanimatemc.loot</h4>
+                    <p><strong>Default:</strong> OP only</p>
+                    <p><strong>Allows:</strong> Opening and accessing the inventory of KO'd players.</p>
+                    <p><strong>Important:</strong> This is a powerful permission. Consider carefully before granting to regular players.</p>
+                    <p><strong>Configuration:</strong> Looting can be completely disabled in config.yml with <code>looting.enabled: false</code></p>
+
+                    <h4 style="margin-top: 1.5rem; color: #e74c3c;">reanimatemc.crawl</h4>
+                    <p><strong>Default:</strong> All players (TRUE)</p>
+                    <p><strong>Allows:</strong> KO'd players to toggle between immobilized and crawling states using <code>/reanimatemc crawl</code></p>
+                    <p><strong>Configuration:</strong> Crawling must be enabled in config: <code>prone.allow_crawl: true</code></p>
+                </div>
+            </div>
+
+            <div style="margin-top: 4rem;">
+                <h2 class="section-title" style="font-size: 2rem;">Système NPC Permissions</h2>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Permission</th>
+                            <th>Default</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>reanimatemc.summon</code></td>
+                            <td><span style="color: #e74c3c;">FALSE</span></td>
+                            <td>Base permission to summon any NPC</td>
+                        </tr>
+                        <tr>
+                            <td><code>reanimatemc.summon.use.golem</code></td>
+                            <td><span style="color: #e74c3c;">FALSE</span></td>
+                            <td>Permission to summon Iron Golem reanimators</td>
+                        </tr>
+                        <tr>
+                            <td><code>reanimatemc.summon.use.healer</code></td>
+                            <td><span style="color: #e74c3c;">FALSE</span></td>
+                            <td>Permission to summon Healing Golem reanimators</td>
+                        </tr>
+                        <tr>
+                            <td><code>reanimatemc.summon.use.protector</code></td>
+                            <td><span style="color: #e74c3c;">FALSE</span></td>
+                            <td>Permission to summon Protective Golem reanimators</td>
+                        </tr>
+                        <tr>
+                            <td><code>reanimatemc.summon.overridecost</code></td>
+                            <td><span style="color: #f39c12;">OP</span></td>
+                            <td>Bypass summon costs and cooldowns</td>
+                        </tr>
+                        <tr>
+                            <td><code>reanimatemc.summon.admin</code></td>
+                            <td><span style="color: #f39c12;">OP</span></td>
+                            <td>Admin control over all NPCs (dismiss any NPC)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="gameplay-item" style="margin-top: 2rem;">
+                    <h3><i class="fas fa-info-circle"></i> NPC Permissions Details</h3>
+                    
+                    <h4 style="margin-top: 1.5rem; color: #e74c3c;">reanimatemc.summon</h4>
+                    <p><strong>Default:</strong> No one (FALSE)</p>
+                    <p><strong>Purpose:</strong> Base permission required for any summon commands. Players need this AND a specific type permission.</p>
+
+                    <h4 style="margin-top: 1.5rem; color: #e74c3c;">Type-Specific Permissions</h4>
+                    <p><strong>How it works:</strong> Players must have BOTH <code>reanimatemc.summon</code> AND the specific type permission.</p>
+                    <p><strong>Example setup:</strong></p>
+                    <pre><code># VIP Group
+reanimatemc.summon: true
+reanimatemc.summon.use.golem: true
+
+# Premium Group
+reanimatemc.summon: true
+reanimatemc.summon.use.golem: true
+reanimatemc.summon.use.healer: true
+
+# Elite Group
+reanimatemc.summon: true
+reanimatemc.summon.use.golem: true
+reanimatemc.summon.use.healer: true
+reanimatemc.summon.use.protector: true</code></pre>
+
+                    <h4 style="margin-top: 1.5rem; color: #e74c3c;">NPC Type Comparison</h4>
+                    <ul>
+                        <li><strong>Golem</strong> - Basic reanimator, follows owner and revives KO'd players</li>
+                        <li><strong>Healer</strong> - Specialized in revival, faster revive times (potential future feature)</li>
+                        <li><strong>Protector</strong> - Can revive AND attacks hostile mobs, has more health</li>
+                    </ul>
+
+                    <h4 style="margin-top: 1.5rem; color: #e74c3c;">reanimatemc.summon.overridecost</h4>
+                    <p><strong>Default:</strong> OP only</p>
+                    <p><strong>Bypasses:</strong></p>
+                    <ul>
+                        <li>Cooldown timers (default: 5 minutes between summons)</li>
+                        <li>Item costs (if configured to require items)</li>
+                        <li>Max summons per player limit</li>
+                    </ul>
+
+                    <h4 style="margin-top: 1.5rem; color: #e74c3c;">reanimatemc.summon.admin</h4>
+                    <p><strong>Default:</strong> OP only</p>
+                    <p><strong>Allows:</strong> Dismissing any player's NPCs, viewing all active NPCs, and full control over the NPC system.</p>
+                </div>
+            </div>
+
+            <div style="margin-top: 4rem;">
+                <h2 class="section-title" style="font-size: 2rem;">Permission Groups Examples</h2>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>Default Players</h3>
+                        <pre style="text-align: left; font-size: 0.85rem;"><code>reanimatemc.revive: true
+reanimatemc.execute: true
+reanimatemc.status: true
+reanimatemc.crawl: true</code></pre>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <h3>VIP Players</h3>
+                        <pre style="text-align: left; font-size: 0.85rem;"><code>reanimatemc.revive: true
+reanimatemc.execute: true
+reanimatemc.status: true
+reanimatemc.crawl: true
+reanimatemc.summon: true
+reanimatemc.summon.use.golem: true</code></pre>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield"></i>
+                        </div>
+                        <h3>Moderators</h3>
+                        <pre style="text-align: left; font-size: 0.85rem;"><code>reanimatemc.*: true
+(except bypass and admin)
+reanimatemc.knockout: true
+reanimatemc.loot: true
+reanimatemc.removeGlowingEffect: true</code></pre>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <h3>Administrators</h3>
+                        <pre style="text-align: left; font-size: 0.85rem;"><code>reanimatemc.*: true
+(Full access to all features)</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 4rem;">
+                <h2 class="section-title" style="font-size: 2rem;">LuckPerms Configuration Examples</h2>
+                
+                <div class="gameplay-item">
+                    <h3><i class="fab fa-accessible-icon"></i> Basic Setup</h3>
+                    <p>Using LuckPerms commands to set up permissions:</p>
+                    
+                    <h4 style="margin-top: 1.5rem;">Default Group</h4>
+                    <pre><code>/lp group default permission set reanimatemc.revive true
+/lp group default permission set reanimatemc.execute true
+/lp group default permission set reanimatemc.status true
+/lp group default permission set reanimatemc.crawl true</code></pre>
+
+                    <h4 style="margin-top: 1.5rem;">VIP Group</h4>
+                    <pre><code>/lp creategroup vip
+/lp group vip parent add default
+/lp group vip permission set reanimatemc.summon true
+/lp group vip permission set reanimatemc.summon.use.golem true</code></pre>
+
+                    <h4 style="margin-top: 1.5rem;">Premium Group</h4>
+                    <pre><code>/lp creategroup premium
+/lp group premium parent add vip
+/lp group premium permission set reanimatemc.summon.use.healer true</code></pre>
+
+                    <h4 style="margin-top: 1.5rem;">Elite Group</h4>
+                    <pre><code>/lp creategroup elite
+/lp group elite parent add premium
+/lp group elite permission set reanimatemc.summon.use.protector true
+/lp group elite permission set reanimatemc.summon.overridecost true</code></pre>
+
+                    <h4 style="margin-top: 1.5rem;">Moderator Group</h4>
+                    <pre><code>/lp creategroup moderator
+/lp group moderator parent add default
+/lp group moderator permission set reanimatemc.knockout true
+/lp group moderator permission set reanimatemc.loot true
+/lp group moderator permission set reanimatemc.removeGlowingEffect true</code></pre>
+
+                    <h4 style="margin-top: 1.5rem;">Admin Group</h4>
+                    <pre><code>/lp creategroup admin
+/lp group admin permission set reanimatemc.* true</code></pre>
+                </div>
+            </div>
+
+            <div style="margin-top: 4rem;">
+                <h2 class="section-title" style="font-size: 2rem;">Permission Wildcards</h2>
+                
+                <div class="gameplay-item">
+                    <h3><i class="fas fa-asterisk"></i> Using Wildcards</h3>
+                    <p>You can use wildcards to grant multiple permissions at once:</p>
+                    
+                    <table style="margin-top: 1rem;">
+                        <thead>
+                            <tr>
+                                <th>Wildcard</th>
+                                <th>Effect</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>reanimatemc.*</code></td>
+                                <td>Grants ALL ReanimateMC permissions</td>
+                            </tr>
+                            <tr>
+                                <td><code>reanimatemc.summon.*</code></td>
+                                <td>Grants all summon-related permissions</td>
+                            </tr>
+                            <tr>
+                                <td><code>reanimatemc.summon.use.*</code></td>
+                                <td>Grants permission to summon all NPC types</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4 style="margin-top: 1.5rem;">Wildcard Examples</h4>
+                    <pre><code># Give all summon permissions
+/lp group vip permission set reanimatemc.summon.* true
+
+# Give all permissions except admin
+/lp group moderator permission set reanimatemc.* true
+/lp group moderator permission set reanimatemc.admin false
+/lp group moderator permission set reanimatemc.bypass false</code></pre>
+                </div>
+            </div>
+
+            <div style="margin-top: 4rem;">
+                <h2 class="section-title" style="font-size: 2rem;">Best Practices</h2>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <h3>Default Permissions</h3>
+                        <p>Keep <code>revive</code> and <code>execute</code> available to all players for core gameplay. Restrict <code>loot</code> to prevent abuse.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <h3>Monetization</h3>
+                        <p>NPC summon permissions work great as donor perks. Create tiers: Golem (VIP) → Healer (Premium) → Protector (Elite).</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <h3>Admin Access</h3>
+                        <p>Reserve <code>admin</code>, <code>bypass</code>, and <code>summon.admin</code> for trusted staff only to maintain server balance.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-balance-scale"></i>
+                        </div>
+                        <h3>Balance</h3>
+                        <p>Consider your server type: PvP servers may restrict execute, RP servers may disable it entirely via config.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 3rem; text-align: center;">
+                <a href="commands.html" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> View Commandes
+                </a>
+                <a href="configuration.html" class="btn btn-primary">
+                    <i class="fas fa-arrow-right"></i> Configuration Guide
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>ReanimateMC</h4>
+                <p>A revolutionary Minecraft plugin by Jachou</p>
+                <p class="version">Version 1.2.02</p>
+            </div>
+            <div class="footer-section">
+                <h4>Links</h4>
+                <ul>
+                    <li><a href="https://github.com/MatisseAD/ReanimateMC" target="_blank">GitHub</a></li>
+                    <li><a href="https://github.com/MatisseAD/ReanimateMC/issues" target="_blank">Report Issues</a></li>
+                    <li><a href="https://github.com/MatisseAD/ReanimateMC/releases" target="_blank">Downloads</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Documentation</h4>
+                <ul>
+                    <li><a href="commands.html">Commandes</a></li>
+                    <li><a href="permissions.html">Permissions</a></li>
+                    <li><a href="configuration.html">Configuration</a></li>
+                    <li><a href="api.html">API</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 ReanimateMC. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../assets/js/main.js"></script>
+</body>
+</html>
