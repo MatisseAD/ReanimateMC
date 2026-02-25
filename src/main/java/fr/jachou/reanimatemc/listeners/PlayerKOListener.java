@@ -60,7 +60,8 @@ public class PlayerKOListener implements Listener {
     public void onCommandPreprocess(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
 
-        if ( (!koManager.isKO(player) || player.isOp()) && ReanimateMC.getInstance().getConfig().getBoolean("knockout.enable_commands_allowed") ) return;
+        boolean commandRestrictionsEnabled = ReanimateMC.getInstance().getConfig().getBoolean("knockout.enable_commands_allowed");
+        if (!koManager.isKO(player) || player.isOp() || !commandRestrictionsEnabled) return;
 
         List<String> allowed = ReanimateMC.getInstance().getConfig().getStringList("knockout.allowed_commands");
 
