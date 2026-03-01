@@ -376,7 +376,7 @@ Maven dependency:
 <dependency>
     <groupId>fr.jachou</groupId>
     <artifactId>ReanimateMC</artifactId>
-    <version>1.2.02</version>
+    <version>1.2.12</version>
     <scope>provided</scope>
 </dependency>
 ```
