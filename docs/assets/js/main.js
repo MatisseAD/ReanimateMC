@@ -1,19 +1,55 @@
 // Language switcher functionality
 function changeLanguage(lang) {
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-    const pageName = currentPage.replace('.html', '');
+    const pageName = currentPage.replace('.html', '') || 'index';
     
     // Store language preference
     localStorage.setItem('preferredLanguage', lang);
     
+    // Detect if we're currently in a language subfolder
+    const currentPath = window.location.pathname;
+    const isInSubfolder = /\/(fr|es|de|it|ru|zh|kr|pt)\//.test(currentPath);
+    const prefix = isInSubfolder ? '../' : '';
+    
     // Redirect to language-specific page
     if (lang !== 'en') {
-        window.location.href = `${lang}/${pageName}.html`;
+        window.location.href = prefix + lang + '/' + pageName + '.html';
     } else {
-        // English is the default, no subfolder
-        window.location.href = `${pageName}.html`;
+        window.location.href = prefix + pageName + '.html';
     }
 }
+
+// Dark mode toggle
+function initDarkMode() {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    if (savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+    }
+    
+    const toggleBtn = document.getElementById('dark-mode-toggle');
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', function() {
+            const current = document.documentElement.getAttribute('data-theme');
+            const newTheme = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateDarkModeIcon(newTheme);
+        });
+        updateDarkModeIcon(savedTheme);
+    }
+}
+
+function updateDarkModeIcon(theme) {
+    const toggleBtn = document.getElementById('dark-mode-toggle');
+    if (toggleBtn) {
+        const icon = toggleBtn.querySelector('i');
+        if (icon) {
+            icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', initDarkMode);
 
 // Set language selector to current language on page load
 document.addEventListener('DOMContentLoaded', function() {
@@ -106,19 +142,30 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Copy code blocks on click
-    document.querySelectorAll('pre code').forEach(block => {
-        block.addEventListener('click', function() {
-            const text = this.textContent;
+    // Add copy buttons to code blocks
+    document.querySelectorAll('pre').forEach(pre => {
+        const wrapper = document.createElement('div');
+        wrapper.style.position = 'relative';
+        pre.parentNode.insertBefore(wrapper, pre);
+        wrapper.appendChild(pre);
+        
+        const copyBtn = document.createElement('button');
+        copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
+        copyBtn.className = 'copy-btn';
+        copyBtn.title = 'Copy to clipboard';
+        copyBtn.addEventListener('click', function() {
+            const code = pre.querySelector('code');
+            const text = code ? code.textContent : pre.textContent;
             navigator.clipboard.writeText(text).then(function() {
-                // Show copied notification
-                const notification = document.createElement('div');
-                notification.textContent = 'Copied!';
-                notification.style.cssText = 'position:fixed;top:20px;right:20px;background:#27ae60;color:white;padding:1rem 2rem;border-radius:8px;z-index:9999;';
-                document.body.appendChild(notification);
-                setTimeout(() => notification.remove(), 2000);
+                copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+                copyBtn.style.color = '#27ae60';
+                setTimeout(() => {
+                    copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
+                    copyBtn.style.color = '';
+                }, 2000);
             });
         });
+        pre.appendChild(copyBtn);
     });
 });
 
