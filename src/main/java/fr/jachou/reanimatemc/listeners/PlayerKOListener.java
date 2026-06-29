@@ -218,7 +218,6 @@ public class PlayerKOListener implements Listener {
                             .getBoolean("self_revive.cancel_on_move", true)) {
                 koManager.cancelSelfRevive(player, true);
             }
-            }
         }
     }
 
