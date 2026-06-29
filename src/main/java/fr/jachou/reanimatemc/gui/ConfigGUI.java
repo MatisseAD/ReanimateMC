@@ -83,6 +83,26 @@ public class ConfigGUI implements Listener {
                 new GuiOption("option_knockout_fatigue", 24, OptionType.INTEGER));
         GAMEPLAY_OPTIONS.put("execution.message_broadcast",
                 new GuiOption("option_execution_broadcast", 25, OptionType.BOOLEAN));
+        GAMEPLAY_OPTIONS.put("knockout.mobs_attack_ko",
+                new GuiOption("option_mobs_attack_ko", 26, OptionType.BOOLEAN));
+        GAMEPLAY_OPTIONS.put("knockout.knockback_disabled",
+                new GuiOption("option_knockback_disabled", 29, OptionType.BOOLEAN));
+        GAMEPLAY_OPTIONS.put("knockout.surrender_require_still",
+                new GuiOption("option_surrender_require_still", 30, OptionType.BOOLEAN));
+        GAMEPLAY_OPTIONS.put("knockout.crawl_nausea_enabled",
+                new GuiOption("option_crawl_nausea_enabled", 31, OptionType.BOOLEAN));
+        GAMEPLAY_OPTIONS.put("knockout.crawl_nausea_level",
+                new GuiOption("option_crawl_nausea_level", 32, OptionType.INTEGER));
+
+        // NPC options (slots 33-36)
+        GAMEPLAY_OPTIONS.put("npc_summon.enabled",
+                new GuiOption("option_npc_enabled", 33, OptionType.BOOLEAN));
+        GAMEPLAY_OPTIONS.put("npc_summon.invulnerable",
+                new GuiOption("option_npc_invulnerable", 34, OptionType.BOOLEAN));
+        GAMEPLAY_OPTIONS.put("npc_summon.protector.damage_transfer_ratio",
+                new GuiOption("option_npc_damage_transfer", 35, OptionType.DOUBLE));
+        GAMEPLAY_OPTIONS.put("npc_summon.protector.revive_if_no_healer",
+                new GuiOption("option_npc_protector_revive", 36, OptionType.BOOLEAN));
 
         // Interface (Ligne 4: slots 28-29)
         INTERFACE_OPTIONS.put("tablist.enabled",
@@ -115,7 +135,7 @@ public class ConfigGUI implements Listener {
     private static final List<String> LANGS = Arrays.asList("en", "fr", "es", "de", "pt", "it");
 
     private enum OptionType {
-        BOOLEAN, INTEGER, MATERIAL
+        BOOLEAN, INTEGER, DOUBLE, MATERIAL
     }
 
     private static class GuiOption {
@@ -264,6 +284,17 @@ public class ConfigGUI implements Listener {
                 lore.add("");
                 lore.add(ChatColor.GRAY + ReanimateMC.lang.get("click_modify_number"));
                 lore.add(ChatColor.GRAY + ReanimateMC.lang.get("shift_click_increment"));
+                break;
+
+            case DOUBLE:
+                double dval = cfg.getDouble(path, 0.0);
+                item = new ItemStack(Material.COMPARATOR);
+                meta = item.getItemMeta();
+                meta.setDisplayName(ChatColor.YELLOW + name);
+                lore.add(ChatColor.WHITE + ReanimateMC.lang.get("current_value", "value", String.format("%.2f", dval)));
+                lore.add("");
+                lore.add(ChatColor.GRAY + ReanimateMC.lang.get("click_decrease_005"));
+                lore.add(ChatColor.GRAY + ReanimateMC.lang.get("shift_click_increase_005"));
                 break;
 
             case MATERIAL:
@@ -611,6 +642,27 @@ public class ConfigGUI implements Listener {
                     handleIntegerEdit(player, configPath, option);
                 }
                 break;
+            case DOUBLE:
+                if (shiftClick) {
+                    double curD = cfg.getDouble(configPath, 0.0);
+                    double newD = Math.min(1.0, Math.round((curD + 0.05) * 100.0) / 100.0);
+                    cfg.set(configPath, newD);
+                    ReanimateMC.getInstance().saveConfig();
+                    inv.setItem(option.slot, createOptionItem(configPath, option));
+                    String stateD = String.format("%.2f", newD);
+                    player.sendMessage(ChatColor.GREEN + ReanimateMC.lang.get("message_gui_toggle",
+                            "option", ReanimateMC.lang.get(option.langKey), "state", stateD));
+                } else {
+                    double curD = cfg.getDouble(configPath, 0.0);
+                    double newD = Math.max(0.0, Math.round((curD - 0.05) * 100.0) / 100.0);
+                    cfg.set(configPath, newD);
+                    ReanimateMC.getInstance().saveConfig();
+                    inv.setItem(option.slot, createOptionItem(configPath, option));
+                    String stateD = String.format("%.2f", newD);
+                    player.sendMessage(ChatColor.GREEN + ReanimateMC.lang.get("message_gui_toggle",
+                            "option", ReanimateMC.lang.get(option.langKey), "state", stateD));
+                }
+                break;
             case MATERIAL:
                 handleMaterialEdit(player, configPath, option);
                 break;
@@ -699,6 +751,10 @@ public class ConfigGUI implements Listener {
         cfg.set("effects_on_revive.nausea", 5);
         cfg.set("effects_on_revive.slowness", 10);
         cfg.set("effects_on_revive.resistance", 10);
+
+        cfg.set("knockout.mobs_attack_ko", false);
+        cfg.set("knockout.knockback_disabled", true);
+        cfg.set("knockout.surrender_require_still", true);
 
         plugin.saveConfig();
     }

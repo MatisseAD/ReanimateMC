@@ -8,7 +8,13 @@ public class KOData {
     private int taskId;
     private boolean crawling;
     private int barTaskId;
-    private int suicideTaskId = -1;
+    private int suicideTaskId      = -1;
+    private int effectEnforcerId   = -1;
+    private long lastDistressTime  = 0L;
+    private long lastSneakTime     = 0L;
+    private long lastDamageTime    = 0L;
+    private int  selfReviveUses    = 0;
+    private int  selfReviveTaskId  = -1;
     private ArmorStand mount;
     private ArmorStand label;
     private ArmorStand helpMarker;
@@ -60,13 +66,27 @@ public class KOData {
         this.originalJumpStrength = originalJumpStrength;
     }
 
-    public int getSuicideTaskId() {
-        return suicideTaskId;
+    public int getSuicideTaskId()                    { return suicideTaskId; }
+    public void setSuicideTaskId(int id)             { this.suicideTaskId = id; }
+    public int getEffectEnforcerId()                 { return effectEnforcerId; }
+    public void setEffectEnforcerId(int id)          { this.effectEnforcerId = id; }
+
+    public long getLastDistressTime() {
+        return lastDistressTime;
     }
 
-    public void setSuicideTaskId(int suicideTaskId) {
-        this.suicideTaskId = suicideTaskId;
+    public void setLastDistressTime(long lastDistressTime) {
+        this.lastDistressTime = lastDistressTime;
     }
+
+    public long getLastSneakTime()                   { return lastSneakTime; }
+    public void setLastSneakTime(long t)             { this.lastSneakTime = t; }
+    public long getLastDamageTime()                  { return lastDamageTime; }
+    public void setLastDamageTime(long t)            { this.lastDamageTime = t; }
+    public int  getSelfReviveUses()                  { return selfReviveUses; }
+    public void incrementSelfReviveUses()            { this.selfReviveUses++; }
+    public int  getSelfReviveTaskId()                { return selfReviveTaskId; }
+    public void setSelfReviveTaskId(int id)          { this.selfReviveTaskId = id; }
 
     public void setKo(boolean isKo) {
         this.isKo = isKo;

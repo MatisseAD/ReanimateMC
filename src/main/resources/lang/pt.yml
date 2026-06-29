@@ -12,7 +12,6 @@ special_item_not_set: "O item especial não está configurado ou é inválido: %
 execution_in_progress: "Execução em andamento... Continue clicando com o botão esquerdo!"
 command_usage: "Uso: /reanimatemc <reload|revive|knockout|status|config> [jogador]"
 no_permission: "Permissão negada."
-config_reloaded: "Configuração e idioma recarregados!"
 command_revive_usage: "Uso: /reanimatemc revive <jogador>"
 player_not_found: "Jogador não encontrado."
 player_not_ko: "O jogador não está K.O."

@@ -12,7 +12,6 @@ special_item_not_set: "특별한 아이템이 지정되지 않았거나 존재�
 execution_in_progress: "처형중... 좌클릭을 계속 하세요!"
 command_usage: "사용법: /reanimatemc <reload|revive|knockout|status> [대상]"
 no_permission: "권한 거절됨."
-config_reloaded: "설정사항과 언어가 재설정됐습니다!"
 command_revive_usage: "사용법: /reanimatemc revive <대상>"
 player_not_found: "대상을 찾지 못했습니다."
 player_not_ko: "대상이 기절하지 않았습니다."

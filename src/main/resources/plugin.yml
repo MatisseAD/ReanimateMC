@@ -1,47 +1,101 @@
 name: ReanimateMC
 main: fr.jachou.reanimatemc.ReanimateMC
 version: ${project.version}
-description: A plugin that allows players to be knocked out and revived.
-api-version: 1.20
+description: A plugin that replaces instant death with a K.O. and reanimation system.
+api-version: 1.21
 authors:
   - Jachou
+softdepend:
+  - Vault
+  - PlaceholderAPI
+  - LuckPerms
 commands:
   reanimatemc:
     description: Main command for ReanimateMC
-    usage: "/<command> <reload|revive|knockout|status|crawl|config|summon|dismiss|npcs> [player]"
+    usage: "/<command> <help|reload|revive|selfrevive|knockout|status|summon|dismiss|extend|npcs|purge|kolist|version|info> [args]"
+    aliases: [rmc]
+  selfrevive:
+    description: Revive yourself while K.O.'d using items
+    usage: "/selfrevive"
+    aliases: [sr]
+  cancelselfrevive:
+    description: Cancel a self-revive in progress
+    usage: "/cancelselfrevive"
+    aliases: [cancelsr]
 
 permissions:
+
+  # ── Public (all players) ────────────────────────────────────────────────────
   reanimatemc.revive:
-    description: Allows reviving a KO’d player
+    description: Allows reviving a KO'd player
     default: true
   reanimatemc.execute:
-    description: Allows executing a KO’d player
+    description: Allows executing a KO'd player
     default: true
+  reanimatemc.status:
+    description: Allows checking K.O. status
+    default: true
+  reanimatemc.crawl:
+    description: Allows toggling crawl mode while KO'd
+    default: true
+
+  # ── NPC Summon (op only by default — grant explicitly via LuckPerms/permission plugin) ──
+  reanimatemc.summon:
+    description: Base permission required for any summon command. Must be combined with a type permission.
+    default: false
+  reanimatemc.summon.use.golem:
+    description: Allows summoning Iron Golem reanimators (requires reanimatemc.summon)
+    default: false
+  reanimatemc.summon.use.healer:
+    description: Allows summoning Healing Golem reanimators (requires reanimatemc.summon)
+    default: false
+  reanimatemc.summon.use.protector:
+    description: Allows summoning Protective Golem reanimators (requires reanimatemc.summon)
+    default: false
+
+  # ── Distress signal ──────────────────────────────────────────────────────────
+  reanimatemc.distress:
+    description: Allows sending a distress signal while KO'd via command or key
+    default: true
+  reanimatemc.selfrevive:
+    description: Allows using /rmc selfrevive (alias /sr) to revive yourself while K.O.'d
+    default: true
+
+  # ── Operator ────────────────────────────────────────────────────────────────
+  reanimatemc.knockout:
+    description: Allows force-knocking out a player via command
+    default: op
   reanimatemc.bypass:
     description: Bypass KO and die instantly
     default: op
+  reanimatemc.removeglow:
+    description: Allows removing the glowing effect from KO'd players
+    default: op
+  reanimatemc.config:
+    description: Allows opening the config GUI
+    default: op
   reanimatemc.admin:
-    description: Grants access to admin commands (reload, config, etc.)
+    description: Grants access to all admin commands (reload, purge, kolist, etc.)
     default: op
   reanimatemc.loot:
-    description: Allows looting KO’d players’ inventories
+    description: Allows looting KO'd players' inventories
     default: op
-
-  reanimatemc.summon:
-    description: Allows summoning NPC reanimators
-    default: false
-  reanimatemc.summon.use.golem:
-    description: Allows summoning Iron Golem reanimators
-    default: false
-  reanimatemc.summon.use.healer:
-    description: Allows summoning Healing Golem reanimators
-    default: false
-  reanimatemc.summon.use.protector:
-    description: Allows summoning Protective Golem reanimators
-    default: false
   reanimatemc.summon.overridecost:
     description: Bypass summon costs and cooldowns
     default: op
   reanimatemc.summon.admin:
-    description: Admin control over all NPCs
+    description: Admin control over all players' NPCs
     default: op
+
+  # ── LuckPerms lifetime overrides (assign explicitly per group/player) ───────
+  # Highest matching value wins over config default.
+  # Example: /lp group vip permission set reanimatemc.summon.lifetime.golem.600 true
+  reanimatemc.summon.lifetime.golem.600:
+    description: "Golem lifetime override: 10 minutes"
+    default: false
+  reanimatemc.summon.lifetime.healer.900:
+    description: "Healer lifetime override: 15 minutes"
+    default: false
+  reanimatemc.summon.lifetime.protector.1200:
+    description: "Protector lifetime override: 20 minutes"
+    default: false

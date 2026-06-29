@@ -1,6 +1,8 @@
 package fr.jachou.reanimatemc.managers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
@@ -15,9 +17,11 @@ import fr.jachou.reanimatemc.data.KOData;
 import fr.jachou.reanimatemc.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -77,10 +81,16 @@ public class KOManager {
         data.setEndTimestamp(System.currentTimeMillis() + (durationSeconds * 1000L));
         int taskId = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
             if (isKO(player)) {
-                removeMount(player, data);
-                restoreListName(player, data);
-                player.setHealth(0);
+                KOData d = koPlayers.get(player.getUniqueId());
+                plugin.getServer().getScheduler().cancelTask(d.getBarTaskId());
+                ArmorStand lb = d.getLabel();
+                if (lb != null && lb.isValid()) lb.remove();
+                ArmorStand mk = d.getHelpMarker();
+                if (mk != null && mk.isValid()) { mk.remove(); d.setHelpMarker(null); }
+                removeMount(player, d);
+                restoreListName(player, d);
                 koPlayers.remove(player.getUniqueId());
+                player.setHealth(0);
                 player.sendMessage(ChatColor.RED + ReanimateMC.lang.get("death_natural"));
             }
         }, durationSeconds * 20L);
@@ -123,8 +133,48 @@ public class KOManager {
             player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, Integer.MAX_VALUE, fatigueLvl - 1, false, false));
         }
 
+        // Nausea — only while crawling and when enabled in config
+        boolean nauseaEnabled = plugin.getConfig().getBoolean("knockout.crawl_nausea_enabled", true);
+        boolean isCrawlingNow = data.isCrawling() && plugin.getConfig().getBoolean("prone.allow_crawl", false);
+        if (nauseaEnabled && isCrawlingNow) {
+            int nauseaLvl = plugin.getConfig().getInt("knockout.crawl_nausea_level", 0);
+            player.addPotionEffect(new PotionEffect(PotionEffectType.NAUSEA, Integer.MAX_VALUE, nauseaLvl, false, false));
+        }
 
-        // Application de la posture prone avec une option de ramper
+        // Persistent enforcer — re-applies slowness and swimming every 20 ticks
+        int enforcerId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
+            if (!isKO(player)) return;
+            KOData d = koPlayers.get(player.getUniqueId());
+            if (d == null) return;
+            boolean allowCrawl = plugin.getConfig().getBoolean("prone.allow_crawl", false);
+            boolean crawling = d.isCrawling() && allowCrawl;
+            if (crawling) {
+                int crawlLvl = plugin.getConfig().getInt("prone.crawl_slowness_level", 5);
+                PotionEffect cur = player.getPotionEffect(PotionEffectType.SLOWNESS);
+                if (cur == null || cur.getAmplifier() != crawlLvl) {
+                    player.removePotionEffect(PotionEffectType.SLOWNESS);
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, Integer.MAX_VALUE, crawlLvl, false, false));
+                }
+                if (!player.isSwimming()) player.setSwimming(true);
+                // Nausea only while crawling
+                boolean nEnabled = plugin.getConfig().getBoolean("knockout.crawl_nausea_enabled", true);
+                if (nEnabled && !player.hasPotionEffect(PotionEffectType.NAUSEA)) {
+                    int nLvl = plugin.getConfig().getInt("knockout.crawl_nausea_level", 0);
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.NAUSEA, Integer.MAX_VALUE, nLvl, false, false));
+                } else if (!nEnabled) {
+                    player.removePotionEffect(PotionEffectType.NAUSEA);
+                }
+            } else {
+                // Not crawling — full stop, remove nausea
+                PotionEffect cur = player.getPotionEffect(PotionEffectType.SLOWNESS);
+                if (cur == null || cur.getAmplifier() != 255) {
+                    player.removePotionEffect(PotionEffectType.SLOWNESS);
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, Integer.MAX_VALUE, 255, false, false));
+                }
+                player.removePotionEffect(PotionEffectType.NAUSEA);
+            }
+        }, 20L, 20L);
+        data.setEffectEnforcerId(enforcerId);
         boolean blind = plugin.getConfig().getBoolean("knockout.blindness", true);
         if (plugin.getConfig().getBoolean("prone.enabled", false)) {
             boolean allowCrawl = plugin.getConfig().getBoolean("prone.allow_crawl", false);
@@ -151,17 +201,16 @@ public class KOManager {
             }
         }
 
-        // Rendre le joueur KO plus visible pour les autres
+        // Make the KO'd player glow so teammates can spot them
         player.setGlowing(true);
 
-        ArmorStand seat = createMount(player.getLocation());
-        if (!data.isCrawling()) {
-            seat.addPassenger(player);
-            data.setMount(seat);
-        } else {
-            data.setMount(null);
-            seat.remove();
-        }
+        // Force the prone/lying-down animation using the swim pose.
+        // setSwimming(true) renders the player horizontal on both Java and Bedrock
+        // without any mount entity. This is the closest approximation to a
+        // "lying down" animation available in the Paper API.
+        player.setSwimming(true);
+
+        data.setMount(null);
 
         player.sendMessage(ChatColor.RED + ReanimateMC.lang.get("ko_set"));
 
@@ -212,6 +261,14 @@ public class KOManager {
         return koPlayers.get(player.getUniqueId());
     }
 
+    /** Returns seconds remaining in the KO state, or 0 if not KO or no timestamp set. */
+    public long getRemainingKOSeconds(Player player) {
+        KOData data = koPlayers.get(player.getUniqueId());
+        if (data == null || data.getEndTimestamp() <= 0) return 0;
+        long rem = (data.getEndTimestamp() - System.currentTimeMillis()) / 1000L;
+        return Math.max(0, rem);
+    }
+
     public void revive(final Player player, final Player playerWhoRevive) {
         if (!isKO(player))
             return;
@@ -224,6 +281,8 @@ public class KOManager {
         plugin.getServer().getScheduler().cancelTask(data.getTaskId());
         if (data.getSuicideTaskId() != -1) {
             plugin.getServer().getScheduler().cancelTask(data.getSuicideTaskId());
+            if (data.getEffectEnforcerId() != -1) plugin.getServer().getScheduler().cancelTask(data.getEffectEnforcerId());
+            if (data.getSelfReviveTaskId() != -1) { plugin.getServer().getScheduler().cancelTask(data.getSelfReviveTaskId()); data.setSelfReviveTaskId(-1); }
             data.setSuicideTaskId(-1);
         }
         removeMount(player, data);
@@ -244,7 +303,7 @@ public class KOManager {
         player.removePotionEffect(PotionEffectType.SLOWNESS);
         player.removePotionEffect(PotionEffectType.BLINDNESS);
         player.removePotionEffect(PotionEffectType.WEAKNESS);
-        player.removePotionEffect(PotionEffectType.SLOWNESS);
+        player.removePotionEffect(PotionEffectType.NAUSEA);
         // Désactiver l'effet de glow
         player.setGlowing(false);
         player.setSwimming(false);
@@ -272,12 +331,14 @@ public class KOManager {
     }
 
     public void execute(final Player victim) {
-        if (!isKO(victim))
-            return;
+        if (!isKO(victim)) return;
         KOData data = koPlayers.get(victim.getUniqueId());
         plugin.getServer().getScheduler().cancelTask(data.getTaskId());
+        plugin.getServer().getScheduler().cancelTask(data.getBarTaskId());
         if (data.getSuicideTaskId() != -1) {
             plugin.getServer().getScheduler().cancelTask(data.getSuicideTaskId());
+            if (data.getEffectEnforcerId() != -1) plugin.getServer().getScheduler().cancelTask(data.getEffectEnforcerId());
+            if (data.getSelfReviveTaskId() != -1) { plugin.getServer().getScheduler().cancelTask(data.getSelfReviveTaskId()); data.setSelfReviveTaskId(-1); }
             data.setSuicideTaskId(-1);
         }
         removeMount(victim, data);
@@ -301,6 +362,8 @@ public class KOManager {
         plugin.getServer().getScheduler().cancelTask(data.getBarTaskId());
         if (data.getSuicideTaskId() != -1) {
             plugin.getServer().getScheduler().cancelTask(data.getSuicideTaskId());
+            if (data.getEffectEnforcerId() != -1) plugin.getServer().getScheduler().cancelTask(data.getEffectEnforcerId());
+            if (data.getSelfReviveTaskId() != -1) { plugin.getServer().getScheduler().cancelTask(data.getSelfReviveTaskId()); data.setSelfReviveTaskId(-1); }
             data.setSuicideTaskId(-1);
         }
         removeMount(player, data);
@@ -315,6 +378,7 @@ public class KOManager {
         }
         player.removePotionEffect(PotionEffectType.WEAKNESS);
         player.removePotionEffect(PotionEffectType.SLOWNESS);
+        player.removePotionEffect(PotionEffectType.NAUSEA);
         restoreListName(player, data);
         koPlayers.remove(player.getUniqueId());
 
@@ -334,8 +398,8 @@ public class KOManager {
         }
         player.removePotionEffect(PotionEffectType.WEAKNESS);
         player.removePotionEffect(PotionEffectType.SLOWNESS);
-        player.removePotionEffect(PotionEffectType.SLOWNESS);
         player.removePotionEffect(PotionEffectType.BLINDNESS);
+        player.removePotionEffect(PotionEffectType.NAUSEA);
         player.setGlowing(false);
         player.setSwimming(false);
     }
@@ -348,6 +412,9 @@ public class KOManager {
             plugin.getServer().getScheduler().cancelTask(data.getBarTaskId());
             if (data.getSuicideTaskId() != -1) {
                 plugin.getServer().getScheduler().cancelTask(data.getSuicideTaskId());
+            }
+            if (data.getEffectEnforcerId() != -1) {
+                plugin.getServer().getScheduler().cancelTask(data.getEffectEnforcerId());
             }
             ArmorStand seat = data.getMount();
             if (seat != null && seat.isValid()) {
@@ -374,22 +441,22 @@ public class KOManager {
         player.removePotionEffect(PotionEffectType.SLOWNESS);
 
         if (data.isCrawling()) {
-            // Mode crawl : appliquer un effet de SLOWNESS de niveau configuré (laisser un minimum de déplacement)
-            int crawlLevel = plugin.getConfig().getInt("prone.crawl_SLOWNESSness_level", 5);
+            int crawlLevel = plugin.getConfig().getInt("prone.crawl_slowness_level", 5);
             player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, Integer.MAX_VALUE, crawlLevel, false, false));
             removeMount(player, data);
             player.setSwimming(true);
+            // Apply nausea when crawl activates if enabled
+            boolean nauseaEnabled = plugin.getConfig().getBoolean("knockout.crawl_nausea_enabled", true);
+            if (nauseaEnabled) {
+                int nauseaLvl = plugin.getConfig().getInt("knockout.crawl_nausea_level", 0);
+                player.addPotionEffect(new PotionEffect(PotionEffectType.NAUSEA, Integer.MAX_VALUE, nauseaLvl, false, false));
+            }
             player.sendMessage(ChatColor.GREEN + ReanimateMC.lang.get("crawl_enabled"));
         } else {
-            // Retour à l'immobilisation complète (prone non-crawling)
             player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, Integer.MAX_VALUE, 255, false, false));
-            if (data.getMount() == null || !data.getMount().isValid()) {
-                ArmorStand seat = createMount(player.getLocation());
-                seat.addPassenger(player);
-                data.setMount(seat);
-            } else if (!data.getMount().getPassengers().contains(player)) {
-                data.getMount().addPassenger(player);
-            }
+            // Remove nausea when crawl deactivates
+            player.removePotionEffect(PotionEffectType.NAUSEA);
+            // No mount — see setKO comment
             player.setSwimming(false);
             player.sendMessage(ChatColor.GREEN + ReanimateMC.lang.get("crawl_disabled"));
         }
@@ -409,6 +476,8 @@ public class KOManager {
         plugin.getServer().getScheduler().cancelTask(data.getBarTaskId());
         if (data.getSuicideTaskId() != -1) {
             plugin.getServer().getScheduler().cancelTask(data.getSuicideTaskId());
+            if (data.getEffectEnforcerId() != -1) plugin.getServer().getScheduler().cancelTask(data.getEffectEnforcerId());
+            if (data.getSelfReviveTaskId() != -1) { plugin.getServer().getScheduler().cancelTask(data.getSelfReviveTaskId()); data.setSelfReviveTaskId(-1); }
         }
         ArmorStand seat = data.getMount();
         if (seat != null && seat.isValid()) {
@@ -432,6 +501,60 @@ public class KOManager {
         player.setSwimming(false);
         restoreListName(player, data);
         koPlayers.remove(player.getUniqueId());
+    }
+
+    /**
+     * Scans all loaded worlds for orphaned KO ArmorStands — invisible marker stands
+     * whose custom name matches the KO countdown pattern ("KO - Xs") or the HELP!
+     * distress marker — and removes them.
+     *
+     * <p>Also removes any label/helpMarker entities tracked in active KOData records
+     * that are no longer valid, as a secondary safety net.
+     *
+     * @return total number of entities removed
+     */
+    public int purgeOrphanedHolograms() {
+        int removed = 0;
+
+        // Collect UUIDs of currently tracked labels so we don't double-remove them
+        java.util.Set<UUID> trackedIds = new java.util.HashSet<>();
+        for (KOData d : koPlayers.values()) {
+            if (d.getLabel() != null)      trackedIds.add(d.getLabel().getUniqueId());
+            if (d.getHelpMarker() != null) trackedIds.add(d.getHelpMarker().getUniqueId());
+        }
+
+        for (org.bukkit.World world : Bukkit.getWorlds()) {
+            for (org.bukkit.entity.Entity entity : world.getEntitiesByClass(ArmorStand.class)) {
+                ArmorStand stand = (ArmorStand) entity;
+                if (!stand.isMarker() || !stand.isInvisible()) continue;
+
+                String name = stand.getCustomName();
+                if (name == null) continue;
+
+                boolean isKOLabel    = name.matches("(?i).*KO\\s*-\\s*\\d+s?.*");
+                boolean isHelpMarker = name.contains("HELP!");
+
+                if ((isKOLabel || isHelpMarker) && !trackedIds.contains(stand.getUniqueId())) {
+                    stand.remove();
+                    removed++;
+                }
+            }
+        }
+
+        // Also clean up stale tracked entities that are invalid
+        for (KOData d : koPlayers.values()) {
+            ArmorStand lb = d.getLabel();
+            if (lb != null && !lb.isValid()) { d.setLabel(null); removed++; }
+            ArmorStand mk = d.getHelpMarker();
+            if (mk != null && !mk.isValid()) { d.setHelpMarker(null); removed++; }
+        }
+
+        return removed;
+    }
+
+    /** Returns a read-only view of currently KO'd player UUIDs. */
+    public java.util.Set<UUID> getKOPlayerUUIDs() {
+        return java.util.Collections.unmodifiableSet(koPlayers.keySet());
     }
 
     public long pullOfflineKO(UUID uuid) {
@@ -458,9 +581,249 @@ public class KOManager {
         return -1L;
     }
 
+    /**
+     * Sends a distress signal on behalf of the player without checking the
+     * per-player cooldown. Used by the PROTECTOR golem so it can always alert
+     * teammates when the owner goes KO, regardless of recent signals.
+     */
+    // ── Self-revive system ────────────────────────────────────────────────────
+
+    /** Called by PlayerDamageListener to track when the player last took damage. */
+    public void trackLastDamage(Player player) {
+        KOData data = koPlayers.get(player.getUniqueId());
+        if (data != null) data.setLastDamageTime(System.currentTimeMillis());
+    }
+
+    /**
+     * Attempts to start a self-revive for the given K.O.'d player.
+     *
+     * <p>Validates: system enabled, player is KO, not already channeling,
+     * max uses not exceeded, cooldown not active, combat check, items present.
+     * On success, starts a timed progress bar. Consuming items and applying
+     * post-revive effects happen on completion.
+     *
+     * @return {@code true} if the channel started, {@code false} with message sent.
+     */
+    public boolean startSelfRevive(Player player) {
+        if (!plugin.getConfig().getBoolean("self_revive.enabled", true)) {
+            player.sendMessage(ChatColor.RED + ReanimateMC.lang.get("selfrevive_disabled"));
+            return false;
+        }
+        if (!isKO(player)) {
+            player.sendMessage(ChatColor.RED + ReanimateMC.lang.get("not_in_ko"));
+            return false;
+        }
+
+        KOData data = koPlayers.get(player.getUniqueId());
+
+        if (data.getSelfReviveTaskId() != -1) {
+            player.sendMessage(ChatColor.RED + ReanimateMC.lang.get("selfrevive_already_channeling"));
+            return false;
+        }
+
+        int maxUses = plugin.getConfig().getInt("self_revive.max_uses_per_ko", 1);
+        if (maxUses > 0 && data.getSelfReviveUses() >= maxUses) {
+            player.sendMessage(ChatColor.RED + ReanimateMC.lang.get("selfrevive_max_uses",
+                    "max", String.valueOf(maxUses)));
+            return false;
+        }
+
+        long cooldownMs = plugin.getConfig().getLong("self_revive.cooldown_seconds", 120) * 1000L;
+        // Per-player cooldown stored in offlineConfig (reuses lastDistressTime slot for simplicity —
+        // we use a dedicated config key to avoid collision with distress)
+        if (cooldownMs > 0 && hasSelfReviveCooldown(player, cooldownMs)) {
+            long remaining = selfReviveCooldownRemaining(player, cooldownMs);
+            player.sendMessage(ChatColor.RED + ReanimateMC.lang.get("selfrevive_cooldown",
+                    "time", String.valueOf(remaining)));
+            return false;
+        }
+
+        int combatBlock = plugin.getConfig().getInt("self_revive.combat_block_seconds", 0);
+        if (combatBlock > 0) {
+            long elapsed = System.currentTimeMillis() - data.getLastDamageTime();
+            if (elapsed < combatBlock * 1000L) {
+                long remaining = combatBlock - (elapsed / 1000L);
+                player.sendMessage(ChatColor.RED + ReanimateMC.lang.get("selfrevive_combat_block",
+                        "time", String.valueOf(remaining)));
+                return false;
+            }
+        }
+
+        // Item check
+        boolean requireItems = plugin.getConfig().getBoolean("self_revive.require_items", true);
+        List<ItemStack> requiredItems = new ArrayList<>();
+        if (requireItems) {
+            List<java.util.Map<?, ?>> itemList = plugin.getConfig()
+                    .getMapList("self_revive.required_items");
+            for (java.util.Map<?, ?> entry : itemList) {
+                String matName = String.valueOf(entry.get("material"));
+                int amount = entry.get("amount") instanceof Number
+                        ? ((Number) entry.get("amount")).intValue() : 1;
+                Material mat = Material.matchMaterial(matName);
+                if (mat == null) continue;
+                requiredItems.add(new ItemStack(mat, amount));
+            }
+            for (ItemStack req : requiredItems) {
+                if (!player.getInventory().containsAtLeast(req, req.getAmount())) {
+                    player.sendMessage(ChatColor.RED + ReanimateMC.lang.get("selfrevive_missing_items",
+                            "item", req.getType().name().replace("_", " ").toLowerCase(),
+                            "amount", String.valueOf(req.getAmount())));
+                    return false;
+                }
+            }
+        }
+
+        // All checks passed — start channel
+        player.sendMessage(ChatColor.GREEN + ReanimateMC.lang.get("selfrevive_start"));
+        int totalTicks = plugin.getConfig().getInt("self_revive.duration_ticks", 200);
+        final int[] elapsed = {0};
+        final List<ItemStack> finalItems = requiredItems;
+        final boolean requireFinal = requireItems;
+
+        int taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
+            if (!isKO(player)) { cancelSelfRevive(player, false); return; }
+            elapsed[0]++;
+            int pct = (int) ((elapsed[0] / (double) totalTicks) * 100);
+            String bar = buildSelfReviveBar(pct);
+            Utils.sendActionBar(player, ChatColor.YELLOW + ReanimateMC.lang.get(
+                    "selfrevive_progress_bar", "bar", bar, "pct", String.valueOf(pct)));
+
+            if (elapsed[0] >= totalTicks) {
+                completeSelfRevive(player, data, finalItems, requireFinal);
+            }
+        }, 0L, 1L);
+
+        data.setSelfReviveTaskId(taskId);
+        setSelfReviveCooldownStart(player);
+        return true;
+    }
+
+    /**
+     * Cancels an in-progress self-revive channel.
+     *
+     * @param sendMessage whether to notify the player of the cancellation.
+     */
+    public void cancelSelfRevive(Player player, boolean sendMessage) {
+        KOData data = koPlayers.get(player.getUniqueId());
+        if (data == null || data.getSelfReviveTaskId() == -1) return;
+        Bukkit.getScheduler().cancelTask(data.getSelfReviveTaskId());
+        data.setSelfReviveTaskId(-1);
+        if (sendMessage) {
+            player.sendMessage(ChatColor.RED + ReanimateMC.lang.get("selfrevive_cancelled"));
+        }
+    }
+
+    /** Returns true if the player is currently channeling a self-revive. */
+    public boolean isChannelingSelfRevive(Player player) {
+        KOData data = koPlayers.get(player.getUniqueId());
+        return data != null && data.getSelfReviveTaskId() != -1;
+    }
+
+    private void completeSelfRevive(Player player, KOData data,
+                                     List<ItemStack> items, boolean consume) {
+        cancelSelfRevive(player, false);
+        data.incrementSelfReviveUses();
+
+        if (consume) {
+            for (ItemStack req : items) {
+                player.getInventory().removeItem(req);
+            }
+        }
+
+        // Revive the player
+        revive(player, player);
+
+        // Post-revive effects (different from teammate revive — harsher)
+        int nauseaSec  = plugin.getConfig().getInt("self_revive.effects_on_selfrevive.nausea", 10);
+        int slowSec    = plugin.getConfig().getInt("self_revive.effects_on_selfrevive.slowness", 15);
+        int resSec     = plugin.getConfig().getInt("self_revive.effects_on_selfrevive.resistance", 5);
+        if (nauseaSec  > 0) player.addPotionEffect(new PotionEffect(PotionEffectType.NAUSEA,     nauseaSec * 20,  0));
+        if (slowSec    > 0) player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS,   slowSec * 20,    1));
+        if (resSec     > 0) player.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, resSec * 20,     0));
+
+        player.sendMessage(ChatColor.GREEN + ReanimateMC.lang.get("selfrevive_success"));
+    }
+
+    private String buildSelfReviveBar(int pct) {
+        int total  = 10;
+        int filled = (int) Math.round(pct / 10.0);
+        return ChatColor.YELLOW + "█".repeat(filled) + ChatColor.DARK_GRAY + "█".repeat(total - filled);
+    }
+
+    // Cooldown stored per-player using lastDistressTime reuse would conflict;
+    // store as a transient long in KOData via lastDamageTime (separate field).
+    private final Map<UUID, Long> selfReviveCooldownMap = new HashMap<>();
+
+    private void setSelfReviveCooldownStart(Player player) {
+        selfReviveCooldownMap.put(player.getUniqueId(), System.currentTimeMillis());
+    }
+
+    private boolean hasSelfReviveCooldown(Player player, long cooldownMs) {
+        Long start = selfReviveCooldownMap.get(player.getUniqueId());
+        if (start == null) return false;
+        return (System.currentTimeMillis() - start) < cooldownMs;
+    }
+
+    private long selfReviveCooldownRemaining(Player player, long cooldownMs) {
+        Long start = selfReviveCooldownMap.get(player.getUniqueId());
+        if (start == null) return 0;
+        long elapsed = System.currentTimeMillis() - start;
+        return Math.max(0, (cooldownMs - elapsed) / 1000L);
+    }
+
+    public void sendDistressForced(Player player) {
+        if (!isKO(player)) return;
+        if (!ReanimateMC.getInstance().getConfig().getBoolean("knockout.distress.enabled", true)) return;
+
+        KOData data = koPlayers.get(player.getUniqueId());
+        data.setLastDistressTime(System.currentTimeMillis());
+
+        ArmorStand existing = data.getHelpMarker();
+        if (existing != null && existing.isValid()) existing.remove();
+        data.setHelpMarker(null);
+
+        ArmorStand marker = (ArmorStand) player.getWorld().spawnEntity(
+                player.getLocation(), EntityType.ARMOR_STAND);
+        marker.setInvisible(true);
+        marker.setMarker(true);
+        marker.setCustomNameVisible(true);
+        marker.setGravity(false);
+        marker.setGlowing(true);
+        marker.setCustomName(ChatColor.RED + "HELP!");
+        data.setHelpMarker(marker);
+
+        String msg = ReanimateMC.lang.get("distress_broadcast", "player", player.getName(),
+                "x", String.valueOf(player.getLocation().getBlockX()),
+                "y", String.valueOf(player.getLocation().getBlockY()),
+                "z", String.valueOf(player.getLocation().getBlockZ()));
+        Bukkit.broadcastMessage(ChatColor.GOLD + msg);
+        player.sendMessage(ChatColor.GREEN + ReanimateMC.lang.get("distress_sent"));
+    }
+
     public void sendDistress(Player player) {
         if (!isKO(player)) return;
+        if (!ReanimateMC.getInstance().getConfig().getBoolean("knockout.distress.enabled", true)) {
+            player.sendMessage(ChatColor.RED + ReanimateMC.lang.get("distress_disabled"));
+            return;
+        }
+        if (!player.hasPermission("reanimatemc.distress") && !player.isOp()) {
+            player.sendMessage(ChatColor.RED + ReanimateMC.lang.get("no_permission"));
+            return;
+        }
+
         KOData data = koPlayers.get(player.getUniqueId());
+        long cooldownMs = ReanimateMC.getInstance().getConfig()
+                .getLong("knockout.distress.cooldown_seconds", 15) * 1000L;
+        long now = System.currentTimeMillis();
+        long elapsed = now - data.getLastDistressTime();
+        if (elapsed < cooldownMs) {
+            long remaining = (cooldownMs - elapsed) / 1000L;
+            player.sendMessage(ChatColor.RED + ReanimateMC.lang.get("distress_cooldown",
+                    "time", String.valueOf(remaining)));
+            return;
+        }
+        data.setLastDistressTime(now);
+
         ArmorStand existing = data.getHelpMarker();
         if (existing != null && existing.isValid()) {
             existing.remove();
