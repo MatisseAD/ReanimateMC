@@ -25,7 +25,8 @@ import java.util.UUID;
 public class ReanimationListener implements Listener {
     private KOManager koManager;
     private final Map<UUID, BukkitTask> activeReviveTasks = new HashMap<>();
-    private final Map<UUID, Long> lastInteract = new HashMap<>();
+    private final Map<UUID, Long>       lastInteract      = new HashMap<>();
+    private final Map<UUID, org.bukkit.Location> reviverPositions = new HashMap<>();
 
     public ReanimationListener(KOManager koManager) {
         this.koManager = koManager;
@@ -99,6 +100,7 @@ public class ReanimationListener implements Listener {
 
         // Store so we can cancel if needed
         activeReviveTasks.put(reviver.getUniqueId(), bukkitTask);
+        reviverPositions.put(reviver.getUniqueId(), reviver.getLocation().clone());
         reviver.sendMessage(ChatColor.GREEN + ReanimateMC.lang.get("revive_start"));
     }
 
@@ -139,8 +141,19 @@ public class ReanimationListener implements Listener {
                 return;
             }
             if (!reviver.isSneaking()) {
-                cancelRevive("Revival canceled: you stopped sneaking.");
+                cancelRevive(ReanimateMC.lang.get("revive_cancelled_sneak"));
                 return;
+            }
+
+            // Reviver must stay still
+            org.bukkit.Location startPos = reviverPositions.get(reviver.getUniqueId());
+            if (startPos != null) {
+                org.bukkit.Location cur = reviver.getLocation();
+                if (Math.abs(cur.getX() - startPos.getX()) > 0.05
+                        || Math.abs(cur.getZ() - startPos.getZ()) > 0.05) {
+                    cancelRevive(ReanimateMC.lang.get("revive_cancelled_moved"));
+                    return;
+                }
             }
             if (requiredStack != null) {
                 ItemStack current = reviver.getInventory().getItemInMainHand();
@@ -192,11 +205,10 @@ public class ReanimationListener implements Listener {
         }
 
         private void cancelRevive(String message) {
-            if (reviver.isOnline()) {
-                reviver.sendMessage(ChatColor.RED + message);
-            }
+            if (reviver.isOnline()) reviver.sendMessage(ChatColor.RED + message);
             taskRef.cancel();
             activeReviveTasks.remove(reviver.getUniqueId());
+            reviverPositions.remove(reviver.getUniqueId());
         }
     }
 }

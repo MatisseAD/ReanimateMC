@@ -8,8 +8,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 public class ExecutionListener implements Listener {
-    private KOManager koManager;
+    private final KOManager koManager;
+    private final Map<UUID, UUID> pendingExecutions = new HashMap<>(); // victim -> executioner
 
     public ExecutionListener(KOManager koManager) {
         this.koManager = koManager;
@@ -28,17 +33,22 @@ public class ExecutionListener implements Listener {
         if (!ReanimateMC.getInstance().getConfig().getBoolean("execution.enabled"))
             return;
 
-        // If this hit just caused the KO, don't instantly execute
-        if (victim.getHealth() - event.getFinalDamage() <= 0)
-            return;
-
         event.setCancelled(true);
 
-        damager.sendMessage(ChatColor.RED + ReanimateMC.lang.get("execution_in_progress"));
-        int holdDuration = ReanimateMC.getInstance().getConfig().getInt("execution.hold_duration_ticks");
+        // If another player is already executing this victim, block the new attempt
+        UUID currentExecutioner = pendingExecutions.get(victim.getUniqueId());
+        if (currentExecutioner != null && !currentExecutioner.equals(damager.getUniqueId())) {
+            damager.sendMessage(ChatColor.RED + ReanimateMC.lang.get("execution_in_progress"));
+            return;
+        }
 
-        // Après le délai, si le joueur est toujours K.O., l'exécution s’effectue
+        damager.sendMessage(ChatColor.RED + ReanimateMC.lang.get("execution_in_progress"));
+        int holdDuration = ReanimateMC.getInstance().getConfig().getInt("execution.hold_duration_ticks", 40);
+
+        pendingExecutions.put(victim.getUniqueId(), damager.getUniqueId());
+
         ReanimateMC.getInstance().getServer().getScheduler().runTaskLater(ReanimateMC.getInstance(), () -> {
+            pendingExecutions.remove(victim.getUniqueId());
             if (koManager.isKO(victim)) {
                 koManager.execute(victim);
             }

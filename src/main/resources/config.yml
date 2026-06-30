@@ -1,60 +1,321 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# ReanimateMC Configuration
+# Plugin version: ${project.version}
+# ─────────────────────────────────────────────────────────────────────────────
+#
+# QUICK REFERENCE
+#
+# Effect levels (weakness_level, fatigue_level, crawl_slowness_level, etc.)
+#   These are Bukkit amplifier values where 1 = Level I, 2 = Level II, etc.
+#   The amplifier increases the strength of the effect, not its duration.
+#   Example: slowness_level: 1 = Slowness I (slight slow)
+#            slowness_level: 5 = Slowness V (very slow crawl)
+#            slowness_level: 255 = complete immobilization
+#
+# Durations (effects_on_revive, effects_on_selfrevive)
+#   Values are in SECONDS. They are temporary effects applied right after
+#   a player wakes up from K.O. to simulate disorientation and weakness:
+#   - nausea:     screen wobble effect (simulates waking up dazed)
+#   - slowness:   reduced movement speed (simulates injury)
+#   - resistance: brief damage reduction so the player isn't immediately
+#                 knocked out again by the same threat
+#
+# distress block
+#   Controls the signal K.O.'d players send to call for help.
+#   - enabled:              toggle the entire system on/off
+#   - cooldown_seconds:     minimum time between signals (prevents spam)
+#   - drop_key_trigger:     pressing Q (drop key) while K.O. sends the signal
+#   - bedrock_doubletap_ms: double-tap sneak within this window sends the signal
+#                           (0 = disabled). Useful for Bedrock mobile players
+#                           who have limited input options while downed.
+#
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Language for all plugin messages. Available: en, es, fr, de, it, nl, ru, zh, kr, pl, pt
 language: "en"
+
 first_run: true
 setup_completed: false
 
+# ─────────────────────────────────────────────────────────────────────────────
+# REVIVAL SYSTEM
+# Controls how players revive K.O.'d teammates manually (crouching near them).
+# ─────────────────────────────────────────────────────────────────────────────
 reanimation:
+  # Require the reviver to hold a specific item in their main hand.
   require_special_item: true
+  # The item required to revive (Bukkit Material name).
   required_item: GOLDEN_APPLE
+  # How long the reviver must crouch near the target (in ticks, 20 ticks = 1 second).
   duration_ticks: 100
+  # HP restored to the revived player (in half-hearts: 4 = 2 full hearts).
   health_restored: 4
+  # Cooldown (seconds) before the same player can be revived again.
   cooldown: 60
   revive_cooldown: 60
 
+# ─────────────────────────────────────────────────────────────────────────────
+# KNOCKOUT SYSTEM
+# ─────────────────────────────────────────────────────────────────────────────
 knockout:
+  # Enable or disable the entire K.O. system. If false, players die normally.
   enabled: true
+  # How many seconds a player has to be revived before dying from K.O.
   duration_seconds: 30
+  # Prevent all movement while K.O.'d (overridden by prone.allow_crawl).
   movement_disabled: true
+  # Show particle effects around K.O.'d players.
   use_particles: true
+  # Play a heartbeat sound while K.O.'d.
   heartbeat_sound: true
+  # Apply blindness effect while K.O.'d.
   blindness: true
+  # How many seconds the player must hold sneak to surrender (die voluntarily).
   suicide_hold_seconds: 3
+  # Weakness effect level while K.O.'d (1 = Weakness I, 2 = Weakness II, etc.).
   weakness_level: 1
+  # Slowness effect level while K.O.'d and not crawling (1 = fully immobilized).
   fatigue_level: 1
+  # Zero out knockback on K.O.'d players so they stay where they fell.
+  knockback_disabled: true
+  # Allow mobs to continue attacking K.O.'d players. Set to false to make mobs
+  # ignore downed players (recommended for survival servers).
+  mobs_attack_ko: false
+  # Require the player to remain completely still during the surrender countdown.
+  # If they move, the timer resets.
+  surrender_require_still: true
+  # Apply nausea to K.O.'d players while crawl mode is active.
+  crawl_nausea_enabled: true
+  # Nausea amplifier while crawling (1 = Nausea I, 2 = Nausea II, etc.).
+  crawl_nausea_level: 1
+
+  # Restrict which commands K.O.'d players can use.
   enable_commands_allowed: false
   allowed_commands:
     - msg
     - r
     - help
     - reanimatemc:help
+    - rmc distress
+    - reanimatemc distress
+    - rmc selfrevive
+    - reanimatemc selfrevive
+    - rmc sr
+    - reanimatemc sr
+    - rmc cancelselfrevive
+    - rmc cancelsr
 
+  # Distress signal settings (sent when a K.O.'d player calls for help).
+  distress:
+    # Enable the distress signal system entirely.
+    enabled: true
+    # Seconds between distress signals to prevent spam.
+    cooldown_seconds: 15
+    # Allow pressing Q (drop key) while K.O.'d to send a distress signal.
+    drop_key_trigger: true
+    # Time window in ms for double-tap sneak to trigger a distress signal.
+    # Set to 0 to disable. On Bedrock this acts as an additional input method.
+    bedrock_doubletap_ms: 400
+
+# ─────────────────────────────────────────────────────────────────────────────
+# EXECUTION SYSTEM
+# ─────────────────────────────────────────────────────────────────────────────
 execution:
+  # Allow players to permanently execute K.O.'d players by holding left-click.
   enabled: true
+  # How long to hold left-click to execute (in ticks, 40 = 2 seconds).
   hold_duration_ticks: 40
+  # Broadcast a message to all players when someone is executed.
   message_broadcast: true
 
+# ─────────────────────────────────────────────────────────────────────────────
+# EFFECTS AFTER REVIVAL
+# Temporary effects applied to the revived player immediately after waking up.
+# Values are in seconds.
+# ─────────────────────────────────────────────────────────────────────────────
 effects_on_revive:
+  # Nausea duration in seconds (simulates disorientation after waking up).
   nausea: 5
+  # Slowness duration in seconds (simulates weakness from injury).
   slowness: 10
+  # Resistance duration in seconds (brief invulnerability to avoid instant re-K.O.).
   resistance: 10
 
+# ─────────────────────────────────────────────────────────────────────────────
+# PRONE / CRAWL SYSTEM
+# ─────────────────────────────────────────────────────────────────────────────
 prone:
+  # Enable the prone/crawl mechanic while K.O.'d.
   enabled: true
+  # Allow K.O.'d players to toggle crawling with /rmc crawl.
+  # Crawling lets them move slowly rather than being fully immobilized.
   allow_crawl: true
+  # Slowness amplifier while crawling (5 = very slow, 1 = walking pace).
   crawl_slowness_level: 5
+  # Automatically put the player in crawl mode when they enter K.O.
   auto_crawl: false
+  # Allow K.O.'d players to jump while crawling.
+  crawl_allow_jump: false
 
+# ─────────────────────────────────────────────────────────────────────────────
+# LOOTING SYSTEM
+# ─────────────────────────────────────────────────────────────────────────────
 looting:
+  # Allow other players to loot a K.O.'d player's inventory.
   enabled: true
 
+# ─────────────────────────────────────────────────────────────────────────────
+# TAB LIST
+# ─────────────────────────────────────────────────────────────────────────────
 tablist:
+  # Show a [KO] tag next to K.O.'d players in the player list.
   enabled: true
 
-npc_summon:
+# ─────────────────────────────────────────────────────────────────────────────
+# SELF-REVIVE SYSTEM
+# Allows K.O.'d players to revive themselves using items, at the cost of
+# a longer wait time and more resources than a teammate revive.
+# ─────────────────────────────────────────────────────────────────────────────
+self_revive:
+  # Enable or disable the self-revive system entirely.
   enabled: true
+  # Require the player to hold specific items in their inventory to self-revive.
+  require_items: true
+  # Items required (Bukkit Material name and amount). All items must be present.
+  # They are consumed only on successful completion.
+  required_items:
+    - material: GOLDEN_APPLE
+      amount: 2
+  # How long the self-revive channel takes (ticks, 20 = 1 second).
+  # Longer than a teammate revive to balance solo play.
+  duration_ticks: 200
+  # HP restored after a successful self-revive (half-hearts).
+  health_restored: 2
+  # Seconds before the same player can use self-revive again.
+  cooldown_seconds: 120
+  # Maximum times a player can self-revive per K.O. session (0 = unlimited).
+  max_uses_per_ko: 1
+  # Cancel the self-revive if the player moves during the channel.
+  cancel_on_move: true
+  # Cancel the self-revive if the player takes any damage during the channel.
+  cancel_on_damage: true
+  # Block self-revive if the player was recently in combat (seconds since last hit).
+  # Set to 0 to disable the combat check.
+  combat_block_seconds: 0
+  # Temporary effects applied after a successful self-revive.
+  effects_on_selfrevive:
+    # Nausea duration in seconds.
+    nausea: 10
+    # Slowness duration in seconds.
+    slowness: 15
+    # Resistance duration in seconds (brief protection after waking up alone).
+    resistance: 5
+
+# ─────────────────────────────────────────────────────────────────────────────
+# NPC REANIMATOR SYSTEM
+# Iron Golem NPCs that follow players and revive / heal / protect them.
+# ─────────────────────────────────────────────────────────────────────────────
+npc_summon:
+  # Enable or disable the entire NPC system.
+  enabled: true
+  # Maximum number of active NPCs per player (across all types combined).
   max_summons_per_player: 1
-  summon_cooldown: 300
+  # Seconds before an NPC is dismissed if its owner stays offline.
   offline_timeout: 300
+  # Ticks without movement before the NPC teleports directly to the owner.
+  stuck_ticks_threshold: 5
+  # Make all NPCs fully invulnerable to all damage.
+  invulnerable: false
+  # Require the player to hold an item to summon any NPC.
   require_item: false
   required_item: NETHER_STAR
   item_to_summon_golem: GOLD_INGOT
+  # HP fraction at which the owner receives a low-HP action-bar warning (0.30 = 30%).
+  low_hp_threshold: 0.30
+  # Vault economy cost per 60 seconds when using /rmc extend.
+  extend_cost_per_minute: 100.0
 
+  # ── GOLEM — standard reanimator ──────────────────────────────────────────
+  # Follows the owner, revives them when K.O., and defends against attackers.
+  golem:
+    # Maximum HP of this golem type.
+    max_hp: 80
+    # Seconds before the golem despawns automatically.
+    lifetime_seconds: 600
+    # Seconds before the same player can summon another golem of this type.
+    summon_cooldown: 300
+    # Vault economy cost to summon (0.0 = free).
+    summon_cost: 0.0
+    follow_start_distance: 10.0
+    follow_stop_distance: 3.0
+    revive_distance: 5.0
+    # Duration of the revive progress bar (ticks, 20 ticks = 1 second).
+    revive_duration_ticks: 100
+    teleport_threshold: 20.0
+    # Radius (blocks) to scan for threats when defending the owner.
+    combat_radius: 12.0
+
+  # ── HEALER — support reanimator ──────────────────────────────────────────
+  # Revives, heals, and supports the entire team.
+  healer:
+    max_hp: 120
+    lifetime_seconds: 600
+    summon_cooldown: 300
+    summon_cost: 0.0
+    follow_start_distance: 10.0
+    follow_stop_distance: 3.0
+    revive_distance: 5.0
+    # Healer revives faster than GOLEM (60 ticks = ~3 seconds).
+    revive_duration_ticks: 60
+    teleport_threshold: 20.0
+    # Max distance from the owner the healer will move to heal an ally.
+    max_leash_distance: 12.0
+    # HP below which the healer moves toward an injured player.
+    low_hp_threshold: 16.0
+    # Radius to scan for K.O.'d allies to auto-revive.
+    scan_radius: 16.0
+    # Owner HP below which the healer applies Regeneration.
+    aura_hp_threshold: 6.0
+    # Extra HP granted to the player immediately after being revived.
+    bonus_hp_on_revive: 4.0
+    # Seconds between each heal tick.
+    periodic_heal_interval: 10
+    # HP healed to the owner per heal tick (in half-hearts).
+    periodic_heal_amount: 2.0
+    # Max distance from the healer to the owner for the owner heal to apply.
+    periodic_heal_range: 8.0
+    # HP healed to each nearby ally per tick.
+    ally_heal_amount: 1.0
+    # Radius to scan for allies to heal.
+    ally_heal_range: 12.0
+    # Also restore HP to the healer itself each tick.
+    heal_self: true
+    self_heal_amount: 1.0
+    # Also restore HP to nearby allied golems (Golem and Protector types).
+    heal_golems: true
+    golem_heal_amount: 3.0
+    # Show a rotating circular particle aura on each heal tick.
+    aura_particle_enabled: true
+    # Radius of the circular aura animation (blocks).
+    aura_particle_radius: 3
+
+  # ── PROTECTOR — tank reanimator ──────────────────────────────────────────
+  # High HP, intercepts owner damage, fights attackers. Cannot heal.
+  protector:
+    max_hp: 200
+    lifetime_seconds: 600
+    summon_cooldown: 60
+    summon_cost: 0.0
+    follow_start_distance: 10.0
+    follow_stop_distance: 3.0
+    revive_distance: 5.0
+    # Protector revives slowly — it is not its primary role (160 ticks = ~8 seconds).
+    revive_duration_ticks: 160
+    teleport_threshold: 20.0
+    combat_radius: 12.0
+    intercept_distance: 6.0
+    # Fraction of incoming owner damage absorbed by the protector (0.75 = 75%).
+    damage_transfer_ratio: 0.75
+    # Allow the protector to revive the owner only when no HEALER NPC is active.
+    # Set to false to make the protector never revive anyone.
+    revive_if_no_healer: true

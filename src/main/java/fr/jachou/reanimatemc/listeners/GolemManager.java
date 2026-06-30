@@ -12,8 +12,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Random;
-
 public class GolemManager implements Listener {
 
     @EventHandler
@@ -21,25 +19,19 @@ public class GolemManager implements Listener {
         Player p = event.getPlayer();
         Entity e = event.getRightClicked();
 
-
-        // Le joueur doit être accroupi
         if (!p.isSneaking()) {
             return;
         }
 
-        // Vérifie que la fonctionnalité golem est activée
         if (!ReanimateMC.getInstance().getConfig().getBoolean("npc_summon.enabled", false)) {
             return;
         }
 
-        // Vérifie que l'entité est bien un golem de fer
         if (!(e instanceof IronGolem)) {
             return;
         }
 
-        // Récupère le matériau requis depuis la configuration
         String itemName = ReanimateMC.getInstance().getConfig().getString("npc_summon.item_to_summon_golem", "GOLD_INGOT");
-
         Material requiredMaterial = Material.matchMaterial(itemName);
 
         if (requiredMaterial == null) {
@@ -48,31 +40,32 @@ public class GolemManager implements Listener {
         }
 
         ItemStack inHand = p.getInventory().getItemInMainHand();
-
-        if (inHand == null || inHand.getType() != requiredMaterial) {
-            return; // Le joueur n'a pas le bon item
-        }
-
-        if (ReanimateMC.getInstance().getNpcSummonManager().getPlayerGolems(p) >= ReanimateMC.getInstance().getConfig().getInt("npc_summon.max_summons_per_player")) {
+        if (inHand.getType() != requiredMaterial) {
             return;
         }
 
-        // Supprime l'entité golem actuelle
-        e.remove();
-
-        // Choisit un type de réanimateur aléatoire
-        ReanimatorNPC.ReanimatorType type = getReanimatorType();
-
-        // Vérifie et invoque le PNJ réanimateur
-        if (ReanimateMC.getInstance().getNpcSummonManager() != null) {
-            ReanimateMC.getInstance().getNpcSummonManager().summon(p, type, p);
-        } else {
-            p.sendMessage(ChatColor.RED + "Summon manager is not initialized.");
+        int maxSummons = ReanimateMC.getInstance().getConfig().getInt("npc_summon.max_summons_per_player", 1);
+        if (ReanimateMC.getInstance().getNpcSummonManager().getPlayerGolems(p) >= maxSummons) {
+            return;
         }
 
-        // Consomme un item de la main et met à jour l'inventaire
-        int newAmount = inHand.getAmount() - 1;
+        // Pick the highest-tier type the player has permission for
+        ReanimatorNPC.ReanimatorType type = resolveAllowedType(p);
+        if (type == null) {
+            p.sendMessage(ChatColor.RED + ReanimateMC.lang.get("no_permission"));
+            return;
+        }
 
+        e.remove();
+
+        if (ReanimateMC.getInstance().getNpcSummonManager() != null) {
+            ReanimateMC.getInstance().getNpcSummonManager().summon(p, type, null);
+        } else {
+            p.sendMessage(ChatColor.RED + "Summon manager is not initialized.");
+            return;
+        }
+
+        int newAmount = inHand.getAmount() - 1;
         if (newAmount <= 0) {
             p.getInventory().setItemInMainHand(null);
         } else {
@@ -82,16 +75,20 @@ public class GolemManager implements Listener {
         p.updateInventory();
     }
 
-    private static ReanimatorNPC.ReanimatorType getReanimatorType() {
-        Random random = new Random();
-        int level = random.nextInt(3) + 1;
-
-        if (level == 1) {
-            return ReanimatorNPC.ReanimatorType.HEALER;
-        } else if (level == 2) {
-            return ReanimatorNPC.ReanimatorType.GOLEM;
-        } else {
+    /**
+     * Returns the highest-tier ReanimatorType the player has permission for,
+     * or null if they have no type permission at all.
+     */
+    private ReanimatorNPC.ReanimatorType resolveAllowedType(Player player) {
+        if (player.hasPermission("reanimatemc.summon.use.protector")) {
             return ReanimatorNPC.ReanimatorType.PROTECTOR;
         }
+        if (player.hasPermission("reanimatemc.summon.use.healer")) {
+            return ReanimatorNPC.ReanimatorType.HEALER;
+        }
+        if (player.hasPermission("reanimatemc.summon.use.golem")) {
+            return ReanimatorNPC.ReanimatorType.GOLEM;
+        }
+        return null;
     }
 }

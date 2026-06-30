@@ -11,7 +11,10 @@ package fr.jachou.reanimatemc;
 import fr.jachou.reanimatemc.commands.ReanimateMCCommand;
 import fr.jachou.reanimatemc.externals.Metrics;
 import fr.jachou.reanimatemc.gui.ConfigGUI;
+import fr.jachou.reanimatemc.hooks.PlaceholderHook;
+import fr.jachou.reanimatemc.hooks.VaultHook;
 import fr.jachou.reanimatemc.listeners.*;
+import fr.jachou.reanimatemc.listeners.NPCDamageListener;
 import fr.jachou.reanimatemc.listeners.SetupReminderListener;
 import fr.jachou.reanimatemc.managers.KOManager;
 import fr.jachou.reanimatemc.managers.NPCSummonManager;
@@ -35,6 +38,7 @@ public final class ReanimateMC extends JavaPlugin {
     private KOManager koManager;
     private StatsManager statsManager;
     private NPCSummonManager npcSummonManager;
+    private VaultHook vault;
     public static Lang lang;
     private ConfigGUI configGui;
     private UpdateNotifier notifier;
@@ -51,6 +55,9 @@ public final class ReanimateMC extends JavaPlugin {
     public void onEnable() {
         instance = this;
         saveDefaultConfig(); // Création (si nécessaire) du fichier config.yml
+        // Merge any new keys from the bundled config into the existing file on disk
+        getConfig().options().copyDefaults(true);
+        saveConfig();
 
         // Langues
         lang = new Lang(this);
@@ -65,15 +72,26 @@ public final class ReanimateMC extends JavaPlugin {
         // Initialisation du gestionnaire des états K.O.
         koManager = new KOManager(this);
 
+        // Vault hook (soft dependency)
+        vault = new VaultHook(this);
+
         // Initialisation du gestionnaire de NPCs
-        npcSummonManager = new NPCSummonManager(this, koManager);
+        npcSummonManager = new NPCSummonManager(this, koManager, vault);
+
+        // PlaceholderAPI expansion (soft dependency)
+        if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            new PlaceholderHook(this, koManager, npcSummonManager).register();
+            getLogger().info("[ReanimateMC] PlaceholderAPI expansion registered.");
+        }
 
         // Instantiate and register GUI listener
         configGui = new ConfigGUI(this);
         getServer().getPluginManager().registerEvents(configGui, this);
 
         // Enregistrement des écouteurs d’événements
-        getServer().getPluginManager().registerEvents(new PlayerDamageListener(koManager), this);
+        getServer().getPluginManager().registerEvents(new PlayerDamageListener(koManager, npcSummonManager), this);
+        getServer().getPluginManager().registerEvents(new NPCDamageListener(npcSummonManager), this);
+        getServer().getPluginManager().registerEvents(new KOProtectionListener(koManager), this);
         getServer().getPluginManager().registerEvents(new ReanimationListener(koManager), this);
         getServer().getPluginManager().registerEvents(new ExecutionListener(koManager), this);
         getServer().getPluginManager().registerEvents(new LootListener(), this);
@@ -83,8 +101,18 @@ public final class ReanimateMC extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new GolemManager(), this);
 
         // Enregistrement de la commande principale
-        getCommand("reanimatemc").setExecutor(new ReanimateMCCommand(koManager, configGui, npcSummonManager));
-        getCommand("reanimatemc").setTabCompleter(new ReanimateMCCommand(koManager, configGui, npcSummonManager));
+        ReanimateMCCommand commandHandler = new ReanimateMCCommand(koManager, configGui, npcSummonManager);
+        getCommand("reanimatemc").setExecutor(commandHandler);
+        getCommand("reanimatemc").setTabCompleter(commandHandler);
+        // Standalone aliases so /selfrevive and /sr work directly
+        if (getCommand("selfrevive") != null) {
+            getCommand("selfrevive").setExecutor(commandHandler);
+            getCommand("selfrevive").setTabCompleter(commandHandler);
+        }
+        if (getCommand("cancelselfrevive") != null) {
+            getCommand("cancelselfrevive").setExecutor(commandHandler);
+            getCommand("cancelselfrevive").setTabCompleter(commandHandler);
+        }
 
         // Tâche pour vérfier si les joueurs ont l'effet glowing
         new BukkitRunnable() {
@@ -154,5 +182,9 @@ public final class ReanimateMC extends JavaPlugin {
 
     public NPCSummonManager getNpcSummonManager() {
         return npcSummonManager;
+    }
+
+    public VaultHook getVault() {
+        return vault;
     }
 }
