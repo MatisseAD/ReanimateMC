@@ -86,7 +86,18 @@ public class ReanimatorNPC {
     }
 
     public ReanimatorNPC(UUID ownerId, String ownerName, Entity entity, ReanimatorType type, long lifetimeSeconds) {
-        this.id          = UUID.randomUUID();
+        this(ownerId, ownerName, entity, type, lifetimeSeconds, null);
+    }
+
+    /**
+     * Constructor for persistence restore: accepts a pre-existing NPC ID instead of generating a new one.
+     * Used when loading NPCs from disk to maintain the same NPC identity across restarts.
+     *
+     * @param npcId if null, generates UUID.randomUUID(); if provided, uses the restored ID
+     */
+    public ReanimatorNPC(UUID ownerId, String ownerName, Entity entity, ReanimatorType type,
+                         long lifetimeSeconds, UUID npcId) {
+        this.id          = npcId != null ? npcId : UUID.randomUUID();
         this.ownerId     = ownerId;
         this.ownerName   = ownerName;
         this.entity      = entity;

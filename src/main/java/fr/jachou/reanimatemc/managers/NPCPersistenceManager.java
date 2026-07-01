@@ -53,6 +53,8 @@ public class NPCPersistenceManager {
             if (expiresAt > 0 && (expiresAt - now) < 5000) continue;
 
             YamlConfiguration entry = new YamlConfiguration();
+            entry.set("npcId",     npc.getId().toString());
+            entry.set("entityUuid", npc.getEntity().getUniqueId().toString());
             entry.set("owner",     npc.getOwnerId().toString());
             entry.set("ownerName", npc.getOwnerName());
             entry.set("type",      npc.getType().name());
@@ -94,6 +96,8 @@ public class NPCPersistenceManager {
             if (!(obj instanceof YamlConfiguration)) continue;
             YamlConfiguration entry = (YamlConfiguration) obj;
             try {
+                UUID npcId      = UUID.fromString(entry.getString("npcId", ""));
+                UUID entityUuid = UUID.fromString(entry.getString("entityUuid", ""));
                 UUID ownerId    = UUID.fromString(entry.getString("owner", ""));
                 String ownerName= entry.getString("ownerName", "unknown");
                 ReanimatorType type = ReanimatorType.valueOf(entry.getString("type", "GOLEM"));
@@ -111,7 +115,7 @@ public class NPCPersistenceManager {
                 Player owner = Bukkit.getPlayer(ownerId);
                 if (owner == null || !owner.isOnline()) continue;
 
-                result.add(new PendingRestore(owner, type, remainingSeconds, targetId));
+                result.add(new PendingRestore(owner, type, remainingSeconds, targetId, npcId, entityUuid));
             } catch (IllegalArgumentException ignored) { }
         }
 
@@ -128,12 +132,17 @@ public class NPCPersistenceManager {
         public final ReanimatorType type;
         public final long lifetimeSeconds; // 0 = unlimited
         public final UUID targetId;
+        public final UUID npcId;
+        public final UUID entityUuid;
 
-        public PendingRestore(Player owner, ReanimatorType type, long lifetimeSeconds, UUID targetId) {
+        public PendingRestore(Player owner, ReanimatorType type, long lifetimeSeconds, UUID targetId,
+                              UUID npcId, UUID entityUuid) {
             this.owner           = owner;
             this.type            = type;
             this.lifetimeSeconds = lifetimeSeconds;
             this.targetId        = targetId;
+            this.npcId           = npcId;
+            this.entityUuid      = entityUuid;
         }
     }
 }
