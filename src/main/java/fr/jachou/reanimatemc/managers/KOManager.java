@@ -19,8 +19,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Warden;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
@@ -146,6 +148,7 @@ public class KOManager {
             if (!isKO(player)) return;
             KOData d = koPlayers.get(player.getUniqueId());
             if (d == null) return;
+            neutralizeNearbyWardens(player);
             boolean allowCrawl = plugin.getConfig().getBoolean("prone.allow_crawl", false);
             boolean crawling = d.isCrawling() && allowCrawl;
             if (crawling) {
@@ -215,6 +218,27 @@ public class KOManager {
         player.sendMessage(ChatColor.RED + ReanimateMC.lang.get("ko_set"));
 
         ReanimateMC.getInstance().getStatsManager().addKnockout();
+    }
+
+    /**
+     * Resets any nearby Warden's anger and target toward a KO'd player.
+     * The Warden builds anger from vibrations and smell independently of
+     * the normal target-selection goal, so it can still lock onto a player
+     * without ever firing an EntityTarget event. Running this alongside the
+     * reactive listeners keeps the player effectively invisible to it while KO'd.
+     */
+    private void neutralizeNearbyWardens(Player player) {
+        if (plugin.getConfig().getBoolean("knockout.mobs_attack_ko", false)) return;
+        double radius = 32.0;
+        for (Entity entity : player.getNearbyEntities(radius, radius, radius)) {
+            if (!(entity instanceof Warden warden)) continue;
+            if (warden.getAnger(player) > 0) {
+                warden.clearAnger(player);
+            }
+            if (warden.getTarget() == player) {
+                warden.setTarget(null);
+            }
+        }
     }
 
     private void restoreListName(Player player, KOData data) {
