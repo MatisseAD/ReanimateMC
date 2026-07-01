@@ -404,8 +404,8 @@ public class NPCSummonManager {
         List<NPCPersistenceManager.PendingRestore> pending = persistence.load();
         for (NPCPersistenceManager.PendingRestore pr : pending) {
             Player target = pr.targetId != null ? Bukkit.getPlayer(pr.targetId) : null;
-            // Use the saved remaining lifetime, not the config default
-            summonWithLifetime(pr.owner, pr.type, target, pr.lifetimeSeconds);
+            // Use the saved remaining lifetime and npcId, not config defaults
+            summonWithLifetime(pr.owner, pr.type, target, pr.lifetimeSeconds, pr.npcId);
         }
         if (!pending.isEmpty()) {
             plugin.getLogger().info("[ReanimateMC] Restored " + pending.size() + " NPC(s) from disk.");
@@ -413,14 +413,20 @@ public class NPCSummonManager {
     }
 
     /**
-     * Internal summon that overrides the lifetime from config with an explicit
-     * value. Used by persistence restore so golems don't get a fresh lifetime
-     * when the owner reconnects — they keep their remaining time.
+     * Internal summon that overrides the lifetime from config with an explicit value.
+     * Used by persistence restore so golems don't get a fresh lifetime when the owner
+     * reconnects — they keep their remaining time and NPC identity.
      *
      * @param lifetimeSeconds remaining seconds (0 = unlimited)
+     * @param npcId if null, generates a new UUID; if provided, uses the restored ID
      */
     private boolean summonWithLifetime(Player summoner, ReanimatorType type,
                                         Player targetPlayer, long lifetimeSeconds) {
+        return summonWithLifetime(summoner, type, targetPlayer, lifetimeSeconds, null);
+    }
+
+    private boolean summonWithLifetime(Player summoner, ReanimatorType type,
+                                        Player targetPlayer, long lifetimeSeconds, UUID npcId) {
         Player owner = (targetPlayer != null) ? targetPlayer : summoner;
         long lifetime = lifetimeSeconds > 0 ? lifetimeSeconds
                 : plugin.getConfig().getLong("npc_summon." + type.name().toLowerCase() + ".lifetime_seconds", 600L);
@@ -430,7 +436,7 @@ public class NPCSummonManager {
         if (entity == null) return false;
 
         ReanimatorNPC npc = new ReanimatorNPC(owner.getUniqueId(), owner.getName(),
-                entity, type, lifetime);
+                entity, type, lifetime, npcId);
         NPCSummonedEvent event = new NPCSummonedEvent(summoner, npc);
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled()) { entity.remove(); return false; }
